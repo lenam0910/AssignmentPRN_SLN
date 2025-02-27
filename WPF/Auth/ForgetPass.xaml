@@ -1,0 +1,79 @@
+﻿<Window x:Class="WPF.ForgetPass"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Quên mật khẩu" Height="400" Width="450" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize" Background="#F0F2F5">
+
+    <Grid>
+
+        <!-- Khung chính -->
+        <Border Background="White" CornerRadius="12" Padding="20"
+                Width="380" Height="330" HorizontalAlignment="Center" VerticalAlignment="Center"
+                BorderBrush="#D1D1D1" BorderThickness="1" Effect="{DynamicResource DropShadowEffect}">
+            <StackPanel>
+                <Button x:Name="btnBackToLogin" Content="←Trở về"
+            Background="Transparent" Foreground="Blue"  FontWeight="Bold"
+            BorderThickness="0" Cursor="Hand"
+            HorizontalAlignment="Left" Padding="5"
+            Click="BackToLogin_Click">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Foreground" Value="Blue"/>
+                            <Setter Property="FontSize" Value="14"/>
+                            <Setter Property="Padding" Value="5,5,5,5"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Foreground" Value="DarkBlue"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <!-- Tiêu đề -->
+                <TextBlock x:Name="lblTitle" Text="Quên Mật Khẩu" FontSize="22" FontWeight="Bold"
+                           Foreground="#2C3E50" HorizontalAlignment="Center" Margin="0,10"/>
+
+                <StackPanel x:Name="emailPanel" Margin="0,15" Visibility="Visible">
+                    <TextBlock Text="Nhập Email của bạn" FontSize="14" Foreground="Gray"/>
+                    <TextBox x:Name="txtEmail" Width="320" Height="40"
+             BorderBrush="Gray" BorderThickness="1" Padding="10"
+             PreviewLostKeyboardFocus="txtEmail_PreviewLostKeyboardFocus"/>
+                    <Button x:Name="btnSendEmail" Content="Gửi mã xác nhận" Width="160" Height="40"
+            Background="#0078D4" Foreground="White" FontWeight="Bold"
+            BorderThickness="0" Cursor="Hand" Margin="0,10,0,0"
+            HorizontalAlignment="Center" Click="SendEmail_Click"/>
+
+                    <!-- Nút "Chưa có tài khoản? Đăng ký" -->
+                    <Button x:Name="btnRegister" Content="Chưa có tài khoản? Đăng ký" Width="200" Height="35"
+            Background="Transparent" Foreground="Blue" FontWeight="Bold"
+            BorderThickness="0" Cursor="Hand" Margin="0,10,0,0"
+            HorizontalAlignment="Center" Click="Register_Click"/>
+                </StackPanel>
+
+
+                <!-- Nhập OTP -->
+                <StackPanel x:Name="otpPanel" Margin="0,15" Visibility="Collapsed">
+                    <TextBlock Text="Nhập mã xác nhận" FontSize="14" Foreground="Gray"/>
+                    <TextBox x:Name="txtOTP" Width="320" Height="40"
+                             BorderBrush="Gray" BorderThickness="1" Padding="10"/>
+                    <Button x:Name="btnVerifyOTP" Content="Xác nhận mã" Width="160" Height="40"
+                            Background="#0078D4" Foreground="White" FontWeight="Bold"
+                            BorderThickness="0" Cursor="Hand" Margin="0,15,0,0"
+                            HorizontalAlignment="Center" Click="VerifyOTP_Click"/>
+                </StackPanel>
+
+                <!-- Nhập mật khẩu mới -->
+                <StackPanel x:Name="passwordPanel" Margin="0,15" Visibility="Collapsed">
+                    <TextBlock Text="Nhập mật khẩu mới" FontSize="14" Foreground="Gray"/>
+                    <PasswordBox x:Name="txtNewPassword" Width="320" Height="40"
+                                 BorderBrush="Gray" BorderThickness="1" Padding="10"/>
+                    <Button x:Name="btnResetPassword" Content="Đặt lại mật khẩu" Width="180" Height="40"
+                            Background="#28A745" Foreground="White" FontWeight="Bold"
+                            BorderThickness="0" Cursor="Hand" Margin="0,15,0,0"
+                            HorizontalAlignment="Center" Click="ResetPassword_Click"/>
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

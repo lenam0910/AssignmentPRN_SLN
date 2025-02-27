@@ -1,0 +1,70 @@
+﻿<Page x:Class="WPF.Supplier.InventoryManagement"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Quản Lý Kho Hàng" Height="450" Width="800">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Header -->
+        <TextBlock Text="Phân Phối Hàng" FontSize="24" FontWeight="Bold" Foreground="#37474F" HorizontalAlignment="Center" Margin="10" Grid.ColumnSpan="2"/>
+
+        <!-- Left side: DataGrid to show Inventory -->
+        <DataGrid x:Name="InventoryDataGrid" AutoGenerateColumns="False" Height="300" Margin="20" SelectionMode="Single" Grid.Column="0" CanUserAddRows="False"
+                  IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Sản phẩm" Binding="{Binding Product.ProductName}" Width="2*"/>
+                <DataGridTextColumn Header="Số lượng" Binding="{Binding Quantity}" Width="*"/>
+                <DataGridTextColumn Header="Trạng thái" Binding="{Binding StockStatus}" Width="*"/>
+                <DataGridTemplateColumn Header="Thao tác" Width="150">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="Sửa" Padding="5" Margin="2" Click="EditInventory_Click"/>
+                                <Button Content="Xóa" Padding="5" Margin="2" Click="DeleteInventory_Click" Background="#D32F2F" Foreground="White"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Right side: Form to Add/Edit Inventory -->
+        <StackPanel Grid.Column="1" Margin="20">
+            <TextBlock FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <!-- ComboBox to select Warehouse -->
+            <TextBlock Text="Chọn Kho" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
+            <ComboBox x:Name="WarehouseComboBox" Margin="0,5" SelectionChanged="WarehouseComboBox_SelectionChanged"/>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Sản phẩm" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
+                <TextBlock x:Name="txtRemain" FontSize="10" FontWeight="Heavy" Foreground="Green" Margin="10,0,0,0"/>
+
+            </StackPanel>
+            <ComboBox x:Name="txtProductName" Margin="0,5" SelectionChanged="txtProductName_SelectionChanged"/>
+
+
+            <TextBlock Text="Số lượng" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
+            <TextBox x:Name="txtQuantity" Margin="0,5"/>
+
+            <TextBlock Text="Trạng thái" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
+            <ComboBox x:Name="txtStockStatus" Margin="0,5">
+                <ComboBoxItem Content="Nhập"/>
+                <ComboBoxItem Content="Xuất"/>
+            </ComboBox>
+
+            <TextBlock Text="Lưu ý" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
+            <TextBox x:Name="txtNote" Margin="0,5"/>
+            <!-- Buttons to Add/Update -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,20">
+                <Button Content="Lưu" Width="120" Height="40" Background="#4CAF50" Foreground="White" Click="SaveInventory_Click" Margin="10"/>
+                <Button Content="Hủy" Width="120" Height="40" Background="#F44336" Foreground="White" Click="CancelEdit_Click" Margin="10"/>
+            </StackPanel>
+        </StackPanel>
+
+    </Grid>
+</Page>

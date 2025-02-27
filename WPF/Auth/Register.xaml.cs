@@ -1,0 +1,192 @@
+﻿using System;
+using System.Text.RegularExpressions;
+using System.Windows;
+using WPF;
+using DataAccess.Models;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
+using Service;
+using System.IO;
+using System.Windows.Media.Imaging;
+
+namespace WPF
+{
+    public partial class Register : Window
+    {
+        private string saveDirectory = @"C:\Users\ADMIN\Desktop\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\";
+        private readonly UserService service;
+        private string selectedFilePath;
+        private string fileName;
+        private string destinationPath = null;
+        public Register()
+        {
+            InitializeComponent();
+            service = new UserService();
+        }
+
+        
+
+bool ValidateInputs()
+        {
+            DateOnly.TryParse(dobPicker.Text, out DateOnly dob);
+
+            string userName = uname.Text.Trim();
+            string pass = pwd.Password.Trim();
+            string fullName = fullname.Text.Trim();
+            string emailText = email.Text.Trim();
+            string phoneText = phone.Text.Trim();
+            string Address = txtAddress.Text.Trim();
+            string area = txtArea.Text.Trim();
+            string role = radioCheck().RoleName;
+            // Kiểm tra không được để trống
+            if (string.IsNullOrEmpty(fullName) || string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(role) ||                           
+                string.IsNullOrEmpty(pass) || string.IsNullOrEmpty(emailText) || string.IsNullOrEmpty(phoneText) || string.IsNullOrEmpty(Address)
+                || string.IsNullOrEmpty(area))
+            {
+                System.Windows.MessageBox.Show("Vui lòng điền đầy đủ thông tin!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+            if (service.checkDuplicateUserName(userName))
+            {
+                System.Windows.MessageBox.Show("Tên đăng nhập đã tồn tại!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            if (dob.Year >= 2007)
+            {
+                System.Windows.MessageBox.Show("Yêu cầu 18 tuổi !", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            // Kiểm tra Email hợp lệ
+            if (!Regex.IsMatch(emailText, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                System.Windows.MessageBox.Show("Email không hợp lệ!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            // Kiểm tra số điện thoại (chỉ chứa số, độ dài từ 9-15 số)
+            if (!Regex.IsMatch(phoneText, @"^\d{10}$"))
+            {
+                System.Windows.MessageBox.Show("Số điện thoại phải là số và có từ 9 đến 15 chữ số!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return false;
+            }
+
+            return true;
+        }
+
+        private Role radioCheck()
+        {
+            if (rdASupplier.IsChecked == true)
+            {
+                return service.GetRole("Supplier");
+            }
+            else
+            {
+                return service.GetRole("User");
+            }
+        }
+
+        private User setUser()
+        {
+            if (!ValidateInputs()) return null;
+            DateOnly.TryParse(dobPicker.Text, out DateOnly dob);
+            User u = new()
+            {
+                Username = uname.Text.Trim(),
+                Password = HashPassword(pwd.Password.Trim()), // Mã hóa mật khẩu
+                FullName = fullname.Text.Trim(),
+                Email = email.Text.Trim(),
+                Phone = phone.Text.Trim(),
+                Gender = genderComboBox.Text,
+                DateOfBirth = dob,
+                Address = txtAddress.Text + " | " + txtArea.Text,
+                RoleId = radioCheck().RoleId,
+                Avatar = destinationPath
+            };
+            saveAvatar();
+            return u;
+        }
+
+        private string HashPassword(string password)
+        {
+            return Convert.ToBase64String(System.Security.Cryptography.SHA256.Create()
+                .ComputeHash(System.Text.Encoding.UTF8.GetBytes(password)));
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                User user = setUser();
+                if (user == null) return; 
+
+                if (service.CreateUser(user))
+                {
+                    System.Windows.MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    this.Hide();
+                    Login login = new();
+                    login.Show();
+                }
+                else
+                {
+                    System.Windows.MessageBox.Show("Đăng ký thất bại. Vui lòng thử lại!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Microsoft.EntityFrameworkCore.DbUpdateException ex)
+            {
+                System.Windows.MessageBox.Show($"Lỗi khi lưu vào database: {ex.InnerException?.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Lỗi không xác định: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void clear()
+        {
+            uname.Text = "";
+            pwd.Password = "";
+            fullname.Text = "";
+            email.Text = "";
+            phone.Text = "";
+            genderComboBox.Text = "";
+            dobPicker.Text = "";
+            rdASupplier.IsChecked = false;
+            txtAddress.Text = "";
+            txtArea.Text = "";
+            rdUser.IsChecked = true;
+            avatarImage.Source = null;
+        }
+        private void clearForm_Click(object sender, RoutedEventArgs e)
+        {
+            clear();
+        }
+
+        private void UploadAvatar_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                selectedFilePath = openFileDialog.FileName;
+                fileName = Path.GetFileName(selectedFilePath);
+                destinationPath = Path.Combine(saveDirectory, fileName);
+
+                // Tạo thư mục nếu chưa có
+                Directory.CreateDirectory(saveDirectory);
+
+
+
+                // Hiển thị ảnh lên UI
+                avatarImage.Source = new BitmapImage(new Uri(selectedFilePath));
+                avatarImage.Visibility = Visibility.Visible;
+
+            }
+        }
+
+        private void saveAvatar()
+        {
+            File.Copy(selectedFilePath, destinationPath, true);
+        }
+    }
+}

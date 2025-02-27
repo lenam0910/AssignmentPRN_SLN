@@ -1,0 +1,182 @@
+﻿<Window x:Class="WPF.Register"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Đăng ký" Height="Auto" Width="Auto" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize" Background="#F0F0F0">
+
+    <Grid>
+        <Border Background="White" CornerRadius="10" Padding="20"
+                Width="Auto" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center"
+                BorderBrush="#DDDDDD" BorderThickness="1">
+            <StackPanel>
+
+                <!-- Tiêu đề -->
+                <TextBlock Text="Đăng ký" FontSize="22" FontWeight="Bold"
+                           Foreground="#333333" HorizontalAlignment="Center" Margin="0,5"/>
+
+                <!-- Nhập Full Name -->
+                <StackPanel Margin="0,5">
+                    <TextBlock Text="Họ Tên" FontSize="14" Foreground="Gray"/>
+                    <TextBox x:Name="fullname" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
+                </StackPanel>
+
+                <!-- Nhập Email -->
+                <StackPanel Margin="0,5">
+                    <TextBlock Text="Email" FontSize="14" Foreground="Gray"/>
+                    <TextBox x:Name="email" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
+                </StackPanel>
+
+                <!-- Nhập Phone -->
+                <StackPanel Margin="0,5">
+                    <TextBlock Text="SĐT" FontSize="14" Foreground="Gray"/>
+                    <TextBox x:Name="phone" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
+                </StackPanel>
+
+                <!-- Nhập Username -->
+                <StackPanel Margin="0,5">
+                    <TextBlock Text="Tên đăng nhập" FontSize="14" Foreground="Gray"/>
+                    <TextBox x:Name="uname" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
+                </StackPanel>
+
+                <!-- Nhập Password -->
+                <StackPanel Margin="0,5">
+                    <TextBlock Text="Mật khẩu" FontSize="14" Foreground="Gray"/>
+                    <PasswordBox x:Name="pwd" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
+                </StackPanel>
+
+                <!-- Nhập Địa chỉ -->
+                <StackPanel Margin="0,5">
+                    <TextBlock Text="Địa chỉ" FontSize="14" Foreground="Gray"/>
+                    <TextBox x:Name="txtAddress" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
+                </StackPanel>
+                <!-- Nhập khu vực -->
+                <StackPanel Margin="0,5">
+                    <TextBlock Text="Khu vực" FontSize="14" Foreground="Gray"/>
+                    <ComboBox x:Name="txtArea" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1">
+                        <ComboBoxItem Content="An Giang"/>
+                        <ComboBoxItem Content="Bà Rịa - Vũng Tàu"/>
+                        <ComboBoxItem Content="Bắc Giang"/>
+                        <ComboBoxItem Content="Bắc Kạn"/>
+                        <ComboBoxItem Content="Bạc Liêu"/>
+                        <ComboBoxItem Content="Bắc Ninh"/>
+                        <ComboBoxItem Content="Bến Tre"/>
+                        <ComboBoxItem Content="Bình Định"/>
+                        <ComboBoxItem Content="Bình Dương"/>
+                        <ComboBoxItem Content="Bình Phước"/>
+                        <ComboBoxItem Content="Bình Thuận"/>
+                        <ComboBoxItem Content="Cà Mau"/>
+                        <ComboBoxItem Content="Cần Thơ"/>
+                        <ComboBoxItem Content="Cao Bằng"/>
+                        <ComboBoxItem Content="Đà Nẵng"/>
+                        <ComboBoxItem Content="Đắk Lắk"/>
+                        <ComboBoxItem Content="Đắk Nông"/>
+                        <ComboBoxItem Content="Điện Biên"/>
+                        <ComboBoxItem Content="Đồng Nai"/>
+                        <ComboBoxItem Content="Đồng Tháp"/>
+                        <ComboBoxItem Content="Gia Lai"/>
+                        <ComboBoxItem Content="Hà Giang"/>
+                        <ComboBoxItem Content="Hà Nam"/>
+                        <ComboBoxItem Content="Hà Nội"/>
+                        <ComboBoxItem Content="Hà Tĩnh"/>
+                        <ComboBoxItem Content="Hải Dương"/>
+                        <ComboBoxItem Content="Hải Phòng"/>
+                        <ComboBoxItem Content="Hậu Giang"/>
+                        <ComboBoxItem Content="Hòa Bình"/>
+                        <ComboBoxItem Content="Hưng Yên"/>
+                        <ComboBoxItem Content="Khánh Hòa"/>
+                        <ComboBoxItem Content="Kiên Giang"/>
+                        <ComboBoxItem Content="Kon Tum"/>
+                        <ComboBoxItem Content="Lai Châu"/>
+                        <ComboBoxItem Content="Lâm Đồng"/>
+                        <ComboBoxItem Content="Lạng Sơn"/>
+                        <ComboBoxItem Content="Lào Cai"/>
+                        <ComboBoxItem Content="Long An"/>
+                        <ComboBoxItem Content="Nam Định"/>
+                        <ComboBoxItem Content="Nghệ An"/>
+                        <ComboBoxItem Content="Ninh Bình"/>
+                        <ComboBoxItem Content="Ninh Thuận"/>
+                        <ComboBoxItem Content="Phú Thọ"/>
+                        <ComboBoxItem Content="Phú Yên"/>
+                        <ComboBoxItem Content="Quảng Bình"/>
+                        <ComboBoxItem Content="Quảng Nam"/>
+                        <ComboBoxItem Content="Quảng Ngãi"/>
+                        <ComboBoxItem Content="Quảng Ninh"/>
+                        <ComboBoxItem Content="Quảng Trị"/>
+                        <ComboBoxItem Content="Sóc Trăng"/>
+                        <ComboBoxItem Content="Sơn La"/>
+                        <ComboBoxItem Content="Tây Ninh"/>
+                        <ComboBoxItem Content="Thái Bình"/>
+                        <ComboBoxItem Content="Thái Nguyên"/>
+                        <ComboBoxItem Content="Thanh Hóa"/>
+                        <ComboBoxItem Content="Thừa Thiên Huế"/>
+                        <ComboBoxItem Content="Tiền Giang"/>
+                        <ComboBoxItem Content="TP Hồ Chí Minh"/>
+                        <ComboBoxItem Content="Trà Vinh"/>
+                        <ComboBoxItem Content="Tuyên Quang"/>
+                        <ComboBoxItem Content="Vĩnh Long"/>
+                        <ComboBoxItem Content="Vĩnh Phúc"/>
+                        <ComboBoxItem Content="Yên Bái"/>
+                    </ComboBox>
+                </StackPanel>
+
+                <!-- Nhập Date of Birth -->
+                <StackPanel Margin="0,5">
+                    <TextBlock Text="Ngày tháng năm sinh" FontSize="14" Foreground="Gray"/>
+                    <DatePicker x:Name="dobPicker" Width="250" Height="30"/>
+                </StackPanel>
+
+                <!-- Chọn Gender -->
+                <StackPanel Margin="0,5">
+                    <TextBlock Text="Giới tính" FontSize="14" Foreground="Gray"/>
+                    <ComboBox x:Name="genderComboBox" Width="250" Height="30">
+                        <ComboBoxItem Content="Nam"/>
+                        <ComboBoxItem Content="Nữ"/>
+                        <ComboBoxItem Content="Khác"/>
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Margin="0,10">
+                    <TextBlock Text="Ảnh đại diện" FontSize="14" Foreground="Gray"/>
+                    <Image x:Name="avatarImage" Width="100" Height="100" Stretch="UniformToFill" 
+           HorizontalAlignment="Center" Margin="0,5" Visibility="Collapsed"/>
+                    <Button Content="Chọn ảnh" Width="100" Height="30" Click="UploadAvatar_Click"/>
+                </StackPanel>
+
+                <!-- Chọn Role -->
+                <StackPanel Margin="0,10">
+                    <TextBlock Text="Vai trò" FontSize="14" Foreground="Gray"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <RadioButton Name="rdUser" Content="Người dùng" GroupName="UserRoles" IsChecked="True"/>
+                        <RadioButton Name="rdASupplier" Content="Nhà cung cấp" GroupName="UserRoles" Margin="20,0,0,0"/>
+                    </StackPanel>
+                </StackPanel>
+                <!-- Chọn Role -->
+                <StackPanel Margin="10,10" Orientation="Horizontal" HorizontalAlignment ="Center">
+                   
+                    <Button Margin="20, 0"  Content="Đăng ký" Width="120" Height="35" 
+                        Background="#0078D4" Foreground="White" FontWeight="Bold"
+                        BorderThickness="0" Cursor="Hand"
+                        Click="Button_Click">
+                        <Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Background" Value="#0078D4"/>
+                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="FontWeight" Value="Bold"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                                <Setter Property="BorderThickness" Value="0"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#005FA3"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button x:Name="clearForm" Margin="4,0" Content="Xóa form" FontSize="14" Foreground="Black" Background="Transparent" BorderThickness="0" Click="clearForm_Click"/>
+
+                    <!-- Nút Register -->
+                </StackPanel>
+
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>
