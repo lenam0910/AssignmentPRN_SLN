@@ -80,16 +80,16 @@
                     <TextBlock Text="Sửa Kho" FontSize="20" FontWeight="Bold"
                        HorizontalAlignment="Center" Margin="0,10"/>
                     <StackPanel Margin="0,5">
-                        <TextBlock Text="Tên kho" FontSize="16" HorizontalAlignment="Left"/>
-                        <TextBox x:Name="txtEditWarehouseName" Margin="0,5" Height="35"/>
+                        <TextBlock Text="Tên kho" FontWeight="Bold"  HorizontalAlignment="Left"/>
+                        <TextBox x:Name="txtEditWarehouseName"  Height="35"/>
                     </StackPanel>
                     <StackPanel Margin="0,5">
-                        <TextBlock Text="Vị trí" FontSize="16" HorizontalAlignment="Left"/>
-                        <TextBox x:Name="txtEditLocation" Margin="0,5" Height="35"/>
+                        <TextBlock Text="Vị trí" FontWeight="Bold" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="txtEditLocation"  Height="35"/>
                     </StackPanel>
                     <StackPanel Margin="0,5">
-                        <TextBlock Text="Sức chứa" FontSize="16" HorizontalAlignment="Left"/>
-                        <TextBox x:Name="txtEditCapacity" Margin="0,5" Height="35"/>
+                        <TextBlock Text="Sức chứa"  FontWeight="Bold" HorizontalAlignment="Left"/>
+                        <TextBox x:Name="txtEditCapacity"  Height="35"/>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,20,10,0">
                         <Button Content="Lưu" Width="120" Height="35" Background="#0078D4" Foreground="White" Click="SaveEditWarehouse_Click" Margin="5"/>
@@ -110,11 +110,11 @@
                     <TextBlock Text="Chi Tiết Kho Hàng" FontSize="20" FontWeight="Bold"
                                HorizontalAlignment="Center" Margin="0,10"/>
                     <TextBlock Text="Tên Kho:" FontWeight="Bold"/>
-                    <TextBlock x:Name="txtViewWarehouseName" Margin="10"/>
+                    <TextBlock x:Name="txtViewWarehouseName" />
                     <TextBlock Text="Vị Trí:" FontWeight="Bold"/>
-                    <TextBlock x:Name="txtViewLocation" Margin="10"/>
+                    <TextBlock x:Name="txtViewLocation"/>
                     <TextBlock Text="Sức Chứa:" FontWeight="Bold"/>
-                    <TextBlock x:Name="txtViewCapacity" Margin="10"/>
+                    <TextBlock x:Name="txtViewCapacity" />
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,20,10,0">
                         <Button Content="Đóng" Width="120" Height="35" Background="#0078D4" Foreground="White" Click="CloseViewWarehousePopup_Click"/>
                     </StackPanel>
