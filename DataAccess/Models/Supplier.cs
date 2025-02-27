@@ -25,7 +25,7 @@ public partial class Supplier
 
     public virtual ICollection<TransactionLog> TransactionLogs { get; set; } = new List<TransactionLog>();
 
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual UserSupplier? UserSupplier { get; set; }
 
     public virtual ICollection<Warehouse> Warehouses { get; set; } = new List<Warehouse>();
 }

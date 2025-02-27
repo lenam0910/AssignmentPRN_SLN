@@ -2,23 +2,69 @@
 using System.Windows.Controls;
 using DataAccess.Models;
 using Service;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace WPF.Supplier
 {
     public partial class WarehouseManagement : Page
     {
-        private WarehousesService warehouseService;
-        public User user = null;
+        private readonly WarehousesService warehouseService;
+        private readonly ProductService productService;
+        private readonly InventoryService inventoryService;
+        private readonly User user;
+
         public WarehouseManagement()
         {
             InitializeComponent();
             warehouseService = new WarehousesService();
+            productService = new ProductService();
+            inventoryService = new InventoryService();
             user = Application.Current.Properties["UserAccount"] as User;
         }
 
-        private void LoadWarehouses(int id)
+        private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            WarehouseDataGrid.ItemsSource = warehouseService.getAllBySupplierId(id);
+            if (user?.SupplierId != null)
+            {
+                LoadWarehouses(user.SupplierId.Value);
+            }
+            else
+            {
+                MessageBox.Show("Không tìm thấy thông tin nhà cung cấp.");
+            }
+        }
+
+        private void LoadWarehouses(int supplierId)
+        {
+            WarehouseDataGrid.ItemsSource = warehouseService.getAllBySupplierId(supplierId);
+        }
+
+        private void WarehouseDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (WarehouseDataGrid.SelectedItem is Warehouse selectedWarehouse)
+            {
+                LoadProducts(selectedWarehouse.WarehouseId);
+            }
+        }
+
+        private void LoadProducts(int warehouseId)
+        {
+            var inventoryItems = inventoryService.GetInventoryListByWarehouseId(warehouseId);
+            var lstProduct = productService.GetAllProducts();
+            var products = new List<Product>();
+            foreach (var product in inventoryItems)
+            {
+                foreach (var item in lstProduct)
+                {
+                    if(product.ProductId == item.ProductId)
+                    {
+                        products.Add(item);
+                    }
+                }
+            }
+
+            ProductListBox.ItemsSource = products;
         }
 
         private void AddWarehouse_Click(object sender, RoutedEventArgs e)
@@ -45,40 +91,31 @@ namespace WPF.Supplier
         {
             if (WarehouseDataGrid.SelectedItem is Warehouse selectedWarehouse)
             {
-                if (warehouseService.DeleteWarehouses(selectedWarehouse))
+                var inventoryItems = inventoryService.GetInventoryListByWarehouseId(selectedWarehouse.WarehouseId);
+                if (inventoryItems.Any())
                 {
-                    MessageBox.Show("Xoá kho hàng thành công!");
-                    LoadWarehouses(user.SupplierId.Value);
+                    MessageBox.Show("Không thể xóa kho hàng vì vẫn còn sản phẩm tồn kho.");
+                    return;
                 }
-                else
+
+                var result = MessageBox.Show($"Bạn có chắc muốn xóa kho hàng: {selectedWarehouse.WarehouseName}?", "Xác nhận", MessageBoxButton.YesNo);
+                if (result == MessageBoxResult.Yes)
                 {
-                    MessageBox.Show("Xoá kho hàng thất bại!");
+                    if (warehouseService.DeleteWarehouses(selectedWarehouse))
+                    {
+                        MessageBox.Show("Xoá kho hàng thành công!");
+                        LoadWarehouses(user.SupplierId.Value);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Xoá kho hàng thất bại!");
+                    }
                 }
             }
             else
             {
                 MessageBox.Show("Hãy chọn kho hàng để xoá!");
             }
-        }
-
-        private void ViewWarehouse_Click(object sender, RoutedEventArgs e)
-        {
-            if (WarehouseDataGrid.SelectedItem is Warehouse selectedWarehouse)
-            {
-                ViewWarehousePopup.Visibility = Visibility.Visible;
-                txtViewWarehouseName.Text = selectedWarehouse.WarehouseName;
-                txtViewLocation.Text = selectedWarehouse.Location;
-                txtViewCapacity.Text = selectedWarehouse.Capacity.ToString();
-            }
-            else
-            {
-                MessageBox.Show("Hãy chọn kho hàng để xem!");
-            }
-        }
-
-        private void CloseViewWarehousePopup_Click(object sender, RoutedEventArgs e)
-        {
-            ViewWarehousePopup.Visibility = Visibility.Collapsed;
         }
 
         private void SaveWarehouse_Click(object sender, RoutedEventArgs e)
@@ -102,6 +139,7 @@ namespace WPF.Supplier
                 MessageBox.Show("Thêm kho hàng thành công!");
                 PopupOverlay.Visibility = Visibility.Collapsed;
                 LoadWarehouses(user.SupplierId.Value);
+                clear();
             }
             else
             {
@@ -112,26 +150,51 @@ namespace WPF.Supplier
         private void CancelWarehouse_Click(object sender, RoutedEventArgs e)
         {
             PopupOverlay.Visibility = Visibility.Collapsed;
-        }
-
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            LoadWarehouses(user.SupplierId.Value);
-        }
-
-        private void CancelEditWarehouse_Click(object sender, RoutedEventArgs e)
-        {
-
+            clear();
         }
 
         private void SaveEditWarehouse_Click(object sender, RoutedEventArgs e)
         {
+            if (!int.TryParse(txtEditCapacity.Text, out int capacity) || capacity <= 0)
+            {
+                MessageBox.Show("Hãy nhập số lượng >0!");
+                return;
+            }
 
+            if (WarehouseDataGrid.SelectedItem is Warehouse selectedWarehouse)
+            {
+                selectedWarehouse.WarehouseName = txtEditWarehouseName.Text;
+                selectedWarehouse.Location = txtEditLocation.Text;
+                selectedWarehouse.Capacity = capacity;
+
+                if (warehouseService.UpdateWarehouses(selectedWarehouse))
+                {
+                    MessageBox.Show("Sửa kho hàng thành công!");
+                    EditWarehousePopup.Visibility = Visibility.Collapsed;
+                    LoadWarehouses(user.SupplierId.Value);
+                }
+                else
+                {
+                    MessageBox.Show("Sửa kho hàng thất bại!");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Hãy chọn kho hàng để sửa!");
+            }
         }
 
-        private void WarehouseDataGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CancelEditWarehouse_Click(object sender, RoutedEventArgs e)
         {
+            EditWarehousePopup.Visibility = Visibility.Collapsed;
+            WarehouseDataGrid.SelectedItem = null;
+        }
 
+        private void clear()
+        {
+            txtWarehouseName.Clear();
+            txtLocation.Clear();
+            txtCapacity.Clear();
         }
     }
 }

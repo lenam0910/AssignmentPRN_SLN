@@ -21,7 +21,19 @@ namespace Service
         {
             return supplierRepository.GetSupplierById(id);
         }
-
+        public Supplier GetSuppliersByUserId(int userId)
+        {
+            var lst = supplierRepository.GetAllSuppliers();
+            var lstDis = new Supplier();
+            foreach (Supplier items in lst)
+            {
+                if (items.IsDeleted == false && )
+                {
+                    lstDis.Add(items);
+                }
+            }
+            return lstDis;
+        }
         public List<Supplier> GetAllSuppliers()
         {
             var lst = supplierRepository.GetAllSuppliers();

@@ -1,0 +1,74 @@
+﻿<Page x:Class="WPF.Supplier.UpdateProfilePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Cập Nhật Thông Tin">
+    <Grid Background="White" Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Tiêu đề -->
+        <TextBlock Text="Cập Nhật Thông Tin" FontSize="24" FontWeight="Bold" Foreground="#37474F"
+                   HorizontalAlignment="Center" Margin="0,10,0,20"/>
+
+        <!-- Nội dung chính -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <!-- Thông tin User -->
+                <ColumnDefinition Width="1*"/>
+                <!-- Thông tin Supplier -->
+            </Grid.ColumnDefinitions>
+
+            <!-- Cập nhật thông tin User -->
+            <Border BorderBrush="#BDBDBD" BorderThickness="1" CornerRadius="10" Padding="20" Margin="10">
+                <StackPanel>
+                    <TextBlock Text="Thông Tin Người Dùng" FontSize="18" FontWeight="Bold" Foreground="#37474F" Margin="0,0,0,10"/>
+                    <Image x:Name="imgUserAvatar" Width="100" Height="100" HorizontalAlignment="Center"/>
+                    <Button Content="Chọn Ảnh" Click="ChangeUserAvatar_Click" HorizontalAlignment="Center" Margin="5"/>
+
+                    <TextBlock Text="Họ Tên:"/>
+                    <TextBox x:Name="txtFullName" Margin="0,5"/>
+
+                    <TextBlock Text="Email:"/>
+                    <TextBox x:Name="txtUserEmail" Margin="0,5"/>
+
+                    <TextBlock Text="Password:"/>
+                    <PasswordBox x:Name="txtPassword" Margin="0,5"/>
+
+
+                    <TextBlock Text="Số Điện Thoại:"/>
+                    <TextBox x:Name="txtUserPhone" Margin="0,5"/>
+
+                    <TextBlock Text="Địa Chỉ:"/>
+                    <TextBox x:Name="txtUserAddress" Margin="0,5"/>
+
+                    <Button Content="Lưu Người Dùng" Background="#4CAF50" Foreground="White" Click="SaveUser_Click" Margin="10,10,0,0"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Cập nhật thông tin Supplier -->
+            <Border BorderBrush="#BDBDBD" BorderThickness="1" CornerRadius="10" Padding="20" Margin="10" Grid.Column="1">
+                <StackPanel>
+                    <TextBlock Text="Thông Tin Nhà Cung Cấp" FontSize="18" FontWeight="Bold" Foreground="#37474F" Margin="0,0,0,10"/>
+                    <Image x:Name="imgSupplierAvatar" Width="100" Height="100" HorizontalAlignment="Center"/>
+                    <Button Content="Chọn Ảnh" Click="ChangeSupplierAvatar_Click" HorizontalAlignment="Center" Margin="5"/>
+
+                    <TextBlock Text="Tên Nhà Cung Cấp:"/>
+                    <TextBox x:Name="txtSupplierName" Margin="0,5"/>
+
+                    <TextBlock Text="Email:"/>
+                    <TextBox x:Name="txtSupplierEmail" Margin="0,5"/>
+
+                   
+
+                    <TextBlock Text="Số Điện Thoại:"/>
+                    <TextBox x:Name="txtSupplierPhone" Margin="0,5"/>
+
+                    <Button Content="Lưu Nhà Cung Cấp" Background="#2196F3" Foreground="White" Click="SaveSupplier_Click" Margin="10,10,0,0"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

@@ -43,14 +43,16 @@ namespace WPF.Supplier
             
                 txtBlockHead.Text = " " + user.Username;
                 txtNameSupplier.Text = "Dashboard " + supplier.SupplierName;
+            MainFrame.Navigate(new StatisticsPage());
+
 
         }
 
-       
+
 
         private void Nav_Account(object sender, RoutedEventArgs e)
         {
-
+            MainFrame.Navigate(new UpdateProfilePage());
         }
 
         private void Logout_Click(object sender, RoutedEventArgs e)

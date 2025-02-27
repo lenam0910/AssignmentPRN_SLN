@@ -27,8 +27,6 @@ public partial class User
 
     public string? Address { get; set; }
 
-    public int? SupplierId { get; set; }
-
     public bool IsDeleted { get; set; }
 
     public bool IsLinkedToSupplier { get; set; }
@@ -37,7 +35,7 @@ public partial class User
 
     public virtual Role Role { get; set; } = null!;
 
-    public virtual Supplier? Supplier { get; set; }
-
     public virtual ICollection<TransactionLog> TransactionLogs { get; set; } = new List<TransactionLog>();
+
+    public virtual UserSupplier? UserSupplier { get; set; }
 }
