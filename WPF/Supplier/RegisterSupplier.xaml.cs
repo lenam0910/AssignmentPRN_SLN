@@ -29,8 +29,10 @@ namespace WPF.Supplier
         private string destinationPath = null;
         private SupplierService supplierService;
         private UserService userService;
+        private UserSupplierService userSupplierService;
         public RegisterSupplier()
         {
+            userSupplierService = new UserSupplierService();
             InitializeComponent();
             supplierService = new();
             userService = new();
@@ -49,31 +51,26 @@ namespace WPF.Supplier
                 Avatar = destinationPath
             };
 
-            if (!supplierService.SaveSupplier(supplier))
+            if (supplierService.SaveSupplier(supplier))
             {
-
-                MessageBox.Show("Đăng ký nhà cung cấp thất bại!");
-                return;
-            }
-
-            if (supplier == null)
-            {
-                MessageBox.Show("Không tìm thấy nhà cung cấp sau khi lưu!");
-                return;
-            }
-            user.SupplierId = supplier.SupplierId; 
-            if (userService.UpdateUser(user))
-            {
+                UserSupplier userSupplier = new UserSupplier();
+                userSupplier.SupplierId = supplier.SupplierId;
+                userSupplier.UserId = user.UserId;
+                userSupplierService.Add(userSupplier);
                 saveAvatarSupplier();
+
                 SupplierDashboard supplierDashboard = new SupplierDashboard();
                 MessageBox.Show("Đăng ký thông tin nhà cung cấp thành công!");
                 supplierDashboard.Show();
                 this.Hide();
             }
+
             else
             {
-                MessageBox.Show("Cập nhật thông tin người dùng thất bại!");
+                MessageBox.Show("Đăng ký thông tin nhà cung cấp thất bại!");
             }
+
+
         }
 
 

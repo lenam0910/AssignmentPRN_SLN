@@ -45,7 +45,7 @@ public partial class AssignmentPrnContext : DbContext
     {
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A2B32FC52D3");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A2BD8DF123B");
 
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.CategoryName).HasMaxLength(100);
@@ -54,7 +54,7 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<Inventory>(entity =>
         {
-            entity.HasKey(e => e.InventoryId).HasName("PK__Inventor__F5FDE6D3463B1F1E");
+            entity.HasKey(e => e.InventoryId).HasName("PK__Inventor__F5FDE6D34B9FDFF6");
 
             entity.ToTable("Inventory");
 
@@ -87,7 +87,7 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAFF78E69B6");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAF747021B3");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.OrderDate)
@@ -101,12 +101,12 @@ public partial class AssignmentPrnContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Orders__UserID__49C3F6B7");
+                .HasConstraintName("FK__Orders__UserID__48CFD27E");
         });
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__D3B9D30C14DF57DB");
+            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__D3B9D30C65EC946F");
 
             entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
@@ -117,22 +117,22 @@ public partial class AssignmentPrnContext : DbContext
             entity.HasOne(d => d.Order).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.OrderId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderDeta__Order__4CA06362");
+                .HasConstraintName("FK__OrderDeta__Order__4BAC3F29");
 
             entity.HasOne(d => d.Product).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderDeta__Produ__4D94879B");
+                .HasConstraintName("FK__OrderDeta__Produ__4CA06362");
 
             entity.HasOne(d => d.Warehouse).WithMany(p => p.OrderDetails)
                 .HasForeignKey(d => d.WarehouseId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__OrderDeta__Wareh__4E88ABD4");
+                .HasConstraintName("FK__OrderDeta__Wareh__4D94879B");
         });
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6ED3B3B4166");
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6ED5CFA0E6B");
 
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.Avatar).HasMaxLength(255);
@@ -156,9 +156,9 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Roles__8AFACE3A6F7A1F45");
+            entity.HasKey(e => e.RoleId).HasName("PK__Roles__8AFACE3AC754B58B");
 
-            entity.HasIndex(e => e.RoleName, "UQ__Roles__8A2B616084B05BD1").IsUnique();
+            entity.HasIndex(e => e.RoleName, "UQ__Roles__8A2B61602A5AF4F3").IsUnique();
 
             entity.Property(e => e.RoleId).HasColumnName("RoleID");
             entity.Property(e => e.RoleName).HasMaxLength(20);
@@ -166,9 +166,9 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<Supplier>(entity =>
         {
-            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__4BE66694F9B8E3FC");
+            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__4BE66694DE431E67");
 
-            entity.HasIndex(e => e.Email, "UQ__Supplier__A9D105343EA1F18D").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Supplier__A9D10534C2B79B1F").IsUnique();
 
             entity.Property(e => e.SupplierId).HasColumnName("SupplierID");
             entity.Property(e => e.Avatar).HasMaxLength(255);
@@ -180,7 +180,7 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<TransactionLog>(entity =>
         {
-            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__55433A4B2B297C34");
+            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__55433A4B2DA614FA");
 
             entity.Property(e => e.TransactionId).HasColumnName("TransactionID");
             entity.Property(e => e.ChangeDate)
@@ -196,28 +196,28 @@ public partial class AssignmentPrnContext : DbContext
             entity.HasOne(d => d.Product).WithMany(p => p.TransactionLogs)
                 .HasForeignKey(d => d.ProductId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Transacti__Produ__52593CB8");
+                .HasConstraintName("FK__Transacti__Produ__5165187F");
 
             entity.HasOne(d => d.Supplier).WithMany(p => p.TransactionLogs)
                 .HasForeignKey(d => d.SupplierId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Transacti__Suppl__5441852A");
+                .HasConstraintName("FK__Transacti__Suppl__534D60F1");
 
             entity.HasOne(d => d.User).WithMany(p => p.TransactionLogs)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Transacti__UserI__5535A963");
+                .HasConstraintName("FK__Transacti__UserI__5441852A");
 
             entity.HasOne(d => d.Warehouse).WithMany(p => p.TransactionLogs)
                 .HasForeignKey(d => d.WarehouseId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Transacti__Wareh__534D60F1");
+                .HasConstraintName("FK__Transacti__Wareh__52593CB8");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC72B373E1");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCACC44425DD");
 
-            entity.HasIndex(e => e.Username, "UQ__Users__536C85E4A3DD75B6").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__Users__536C85E4213CB764").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Address).HasMaxLength(255);
@@ -233,16 +233,16 @@ public partial class AssignmentPrnContext : DbContext
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__Users__RoleID__4316F928");
+                .HasConstraintName("FK__Users__RoleID__4222D4EF");
         });
 
         modelBuilder.Entity<UserSupplier>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__UserSupp__1788CCAC0A031D29");
+            entity.HasKey(e => e.UserId).HasName("PK__UserSupp__1788CCACE4146073");
 
             entity.ToTable("UserSupplier");
 
-            entity.HasIndex(e => e.SupplierId, "UQ__UserSupp__4BE66695527FA420").IsUnique();
+            entity.HasIndex(e => e.SupplierId, "UQ__UserSupp__4BE6669554D4C2D6").IsUnique();
 
             entity.Property(e => e.UserId)
                 .ValueGeneratedNever()
@@ -251,16 +251,16 @@ public partial class AssignmentPrnContext : DbContext
 
             entity.HasOne(d => d.Supplier).WithOne(p => p.UserSupplier)
                 .HasForeignKey<UserSupplier>(d => d.SupplierId)
-                .HasConstraintName("FK__UserSuppl__Suppl__59FA5E80");
+                .HasConstraintName("FK__UserSuppl__Suppl__59063A47");
 
             entity.HasOne(d => d.User).WithOne(p => p.UserSupplier)
                 .HasForeignKey<UserSupplier>(d => d.UserId)
-                .HasConstraintName("FK__UserSuppl__UserI__59063A47");
+                .HasConstraintName("FK__UserSuppl__UserI__5812160E");
         });
 
         modelBuilder.Entity<Warehouse>(entity =>
         {
-            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__2608AFD9AD1F1CE5");
+            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__2608AFD9625F4F96");
 
             entity.Property(e => e.WarehouseId).HasColumnName("WarehouseID");
             entity.Property(e => e.Location).HasMaxLength(255);

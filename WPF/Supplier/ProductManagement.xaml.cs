@@ -21,8 +21,14 @@ namespace WPF.Supplier
         private CategoryService categoryService;
         private SupplierService supplierService;
         private ProductService productService;
+        private DataAccess.Models.Supplier supplier;
+        private UserSupplierService UserSupplierService;
+        private User user;
         public ProductManagement()
         {
+            user = Application.Current.Properties["UserAccount"] as User;
+
+            UserSupplierService = new UserSupplierService();
             categoryService = new();
             supplierService = new();
             productService = new();
@@ -32,6 +38,7 @@ namespace WPF.Supplier
 
         private void LoadData()
         {
+            supplier = UserSupplierService.GetSupplierByUserId(user.UserId);
             // Load danh mục sản phẩm
             cbCategory.ItemsSource = categoryService.getAll();
             cbCategory.DisplayMemberPath = "CategoryName";
@@ -60,7 +67,7 @@ namespace WPF.Supplier
                 Price = decimal.Parse(txtPrice.Text),
                 QuantityInStock = int.TryParse(txtStock.Text, out int stock) ? stock : 0,
                 CategoryId = (int)cbCategory.SelectedValue,
-                SupplierId = u.SupplierId.Value,
+                SupplierId =supplier.SupplierId,
                 Description = txtDescription.Text,
                 Avatar = destinationPath
 

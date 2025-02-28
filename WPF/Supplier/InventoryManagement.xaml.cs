@@ -30,11 +30,15 @@ namespace WPF.Supplier
         private TransactionLogService transactionLogService;
         private Warehouse warehouse;
         private Product product;
+        private UserSupplierService userSupplierService;
+        private DataAccess.Models.Supplier supplier;
+
         public InventoryManagement()
         {
             inventoryService = new InventoryService();
             warehousesService = new WarehousesService();
             productService = new ProductService();
+            userSupplierService = new UserSupplierService();
             transactionLogService = new TransactionLogService();
             InitializeComponent();
             user = Application.Current.Properties["UserAccount"] as User;
@@ -46,8 +50,8 @@ namespace WPF.Supplier
         private void LoadData()
         {
 
-
-            WarehouseComboBox.ItemsSource = warehousesService.GetAllWarehousesByIdSupplier(user.SupplierId.Value);
+            supplier = userSupplierService.GetSupplierByUserId(user.UserId);
+            WarehouseComboBox.ItemsSource = warehousesService.GetAllWarehousesByIdSupplier(supplier.SupplierId);
             WarehouseComboBox.DisplayMemberPath = "WarehouseName";
             WarehouseComboBox.SelectedValuePath = "WarehouseId";
 
@@ -57,7 +61,7 @@ namespace WPF.Supplier
         private void loadInvetory(int warehouseId)
         {
             var lst = inventoryService.GetInventoryListByWarehouseId(warehouseId);
-            var lstProduct = productService.GetAllProductsBySupplierId(user.SupplierId.Value);
+            var lstProduct = productService.GetAllProductsBySupplierId(supplier.SupplierId);
 
             foreach (var item in lst)
             {
@@ -82,7 +86,7 @@ namespace WPF.Supplier
             {
                 var selectedWarehouse = (int)WarehouseComboBox.SelectedValue;
                 loadInvetory(selectedWarehouse);
-                txtProductName.ItemsSource = productService.GetAllProductsBySupplierId(user.SupplierId.Value);
+                txtProductName.ItemsSource = productService.GetAllProductsBySupplierId(supplier.SupplierId);
                 txtProductName.DisplayMemberPath = "ProductName";
                 txtProductName.SelectedValuePath = "ProductId";
             }

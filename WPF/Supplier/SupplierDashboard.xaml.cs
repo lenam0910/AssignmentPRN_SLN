@@ -22,27 +22,29 @@ namespace WPF.Supplier
     /// </summary>
     public partial class SupplierDashboard : Window
     {
-        private SupplierService supplierService; 
+        private SupplierService supplierService;
+        private UserSupplierService userSupplierService;
         public SupplierDashboard()
         {
+            userSupplierService = new();
             supplierService = new SupplierService();
             InitializeComponent();
         }
 
-        
+
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             User user = Application.Current.Properties["UserAccount"] as User;
-            var supplier = supplierService.GetSupplierById(user.SupplierId.Value);
+            var supplier = userSupplierService.GetSupplierByUserId(user.UserId);
             if (user is User && !string.IsNullOrEmpty(user.Avatar))
             {
                 avaSupplier.Source = new BitmapImage(new Uri(user.Avatar));
             }
-           
-            
-                txtBlockHead.Text = " " + user.Username;
-                txtNameSupplier.Text = "Dashboard " + supplier.SupplierName;
+
+
+            txtBlockHead.Text = " " + user.Username;
+            txtNameSupplier.Text = "Dashboard " + supplier.SupplierName;
             MainFrame.Navigate(new StatisticsPage());
 
 

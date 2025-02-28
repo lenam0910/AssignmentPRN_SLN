@@ -38,7 +38,7 @@ namespace WPF.Supplier
         private void Load()
         {
 
-            supplier = _supplierService.GetSupplierById();
+            supplier = _supplierService.GetSuppliersByUserId(user.UserId);
             txtFullName.Text = user.Username;
             txtUserEmail.Text = user.Email;
             txtPassword.Password = user.Password;
@@ -52,7 +52,9 @@ namespace WPF.Supplier
                 imgUserAvatar = null;
             }
 
-            txtSupplierName.Text = 
+            txtSupplierName.Text = supplier.SupplierName;
+            txtSupplierEmail.Text = supplier.Email;
+            txtSupplierPhone.Text = supplier.Phone;
         }
 
         private void ChangeSupplierAvatar_Click(object sender, RoutedEventArgs e)

@@ -24,9 +24,11 @@ namespace WPF
     /// </summary>
     public partial class Login : Window
     {
-        UserService userService;
+        private UserService userService;
+        private UserSupplierService userSupplierService;    
         public Login()
         {
+            userSupplierService = new UserSupplierService();    
             InitializeComponent();
             userService = new();
 
@@ -58,7 +60,7 @@ namespace WPF
             string unHashPass = password.Password;
             //string hashedPass = HashPassword(unHashPass);
             var account = userService.Login(uName, unHashPass);
-
+            var supplier = userSupplierService.GetSupplierByUserId(account.UserId);
 
             if (account != null )
             {
@@ -101,7 +103,7 @@ namespace WPF
 
                 else
                 {
-                    if(account.SupplierId == null)
+                    if(supplier == null)
                     {
                         RegisterSupplier registerSupplier = new();
                         registerSupplier.Show();
@@ -109,8 +111,8 @@ namespace WPF
                     }
                     else
                     {
-                        SupplierDashboard supplier = new();
-                        supplier.Show();
+                        SupplierDashboard supplierDashboard = new();
+                        supplierDashboard.Show();
                         this.Hide();
                     }
                         

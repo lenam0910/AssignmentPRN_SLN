@@ -13,9 +13,11 @@ namespace WPF.Supplier
         private readonly ProductService productService;
         private readonly InventoryService inventoryService;
         private readonly User user;
-
+        private UserSupplierService userSupplierService;
+        private DataAccess.Models.Supplier supplier;
         public WarehouseManagement()
         {
+            userSupplierService = new UserSupplierService();
             InitializeComponent();
             warehouseService = new WarehousesService();
             productService = new ProductService();
@@ -25,9 +27,10 @@ namespace WPF.Supplier
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            if (user?.SupplierId != null)
+            supplier = userSupplierService.GetSupplierByUserId(user.UserId);
+            if (supplier.SupplierId != null)
             {
-                LoadWarehouses(user.SupplierId.Value);
+                LoadWarehouses(supplier.SupplierId);
             }
             else
             {
@@ -57,7 +60,7 @@ namespace WPF.Supplier
             {
                 foreach (var item in lstProduct)
                 {
-                    if(product.ProductId == item.ProductId)
+                    if (product.ProductId == item.ProductId)
                     {
                         products.Add(item);
                     }
@@ -104,7 +107,7 @@ namespace WPF.Supplier
                     if (warehouseService.DeleteWarehouses(selectedWarehouse))
                     {
                         MessageBox.Show("Xoá kho hàng thành công!");
-                        LoadWarehouses(user.SupplierId.Value);
+                        LoadWarehouses(supplier.SupplierId);
                     }
                     else
                     {
@@ -131,14 +134,14 @@ namespace WPF.Supplier
                 WarehouseName = txtWarehouseName.Text,
                 Location = txtLocation.Text,
                 Capacity = capacity,
-                SupplierId = user.SupplierId.Value
+                SupplierId = supplier.SupplierId
             };
 
             if (warehouseService.AddWarehouses(newWarehouse))
             {
                 MessageBox.Show("Thêm kho hàng thành công!");
                 PopupOverlay.Visibility = Visibility.Collapsed;
-                LoadWarehouses(user.SupplierId.Value);
+                LoadWarehouses(supplier.SupplierId);
                 clear();
             }
             else
@@ -171,7 +174,7 @@ namespace WPF.Supplier
                 {
                     MessageBox.Show("Sửa kho hàng thành công!");
                     EditWarehousePopup.Visibility = Visibility.Collapsed;
-                    LoadWarehouses(user.SupplierId.Value);
+                    LoadWarehouses(supplier.SupplierId);  
                 }
                 else
                 {

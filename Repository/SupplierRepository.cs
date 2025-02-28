@@ -21,6 +21,10 @@ namespace Repository
         {
             return _context.Suppliers.FirstOrDefault(s => s.SupplierId == id);
         }
+        public Supplier GetSupplierBySupplierName(string name)
+        {
+            return _context.Suppliers.FirstOrDefault(s => s.SupplierName == name);
+        }
 
         public List<Supplier> GetAllSuppliers()
         {
