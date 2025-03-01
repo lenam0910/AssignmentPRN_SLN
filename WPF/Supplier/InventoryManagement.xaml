@@ -70,7 +70,7 @@
             <TextBox x:Name="txtNote" Margin="0,5"/>
             <!-- Buttons to Add/Update -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,20">
-                <Button x:Name="ExportBtn" Visibility="Collapsed"  Content="Xuất" Width="120" Height="40" Background="#4CAF50" Foreground="White"  Margin="10" />
+                <Button x:Name="ExportBtn" Visibility="Collapsed"  Content="Xuất" Width="120" Height="40" Background="#4CAF50" Foreground="White"  Margin="10" Click="ExportBtn_Click" />
                 <Button x:Name="EditBtn" Visibility="Collapsed"  Content="Sửa" Width="120" Height="40" Background="#4CAF50" Foreground="White"  Margin="10" Click="EditBtn_Click"/>
                 <Button x:Name="SaveBtn" Content="Lưu" Width="120" Height="40" Background="#4CAF50" Foreground="White" Click="SaveInventory_Click" Margin="10"/>
                 <Button Content="Hủy" Width="120" Height="40" Background="#F44336" Foreground="White" Click="CancelEdit_Click" Margin="10"/>
