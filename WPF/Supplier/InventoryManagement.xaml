@@ -52,16 +52,27 @@
             <TextBox x:Name="txtQuantity" Margin="0,5"/>
 
             <TextBlock Text="Trạng thái" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
-            <ComboBox x:Name="txtStockStatus" Margin="0,5">
+            <ComboBox x:Name="txtStockStatus" Margin="0,5" SelectionChanged="txtStockStatus_SelectionChanged">
                 <ComboBoxItem Content="Nhập"/>
                 <ComboBoxItem Content="Xuất"/>
             </ComboBox>
+
+
+            <StackPanel x:Name="OtherWareHouse" Visibility="Collapsed">
+                <TextBlock Text="Chọn kho hàng xuất" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
+                <ComboBox x:Name="txtOtherWarehouse" Margin="0,5" SelectionChanged="txtStockStatus_SelectionChanged">
+                </ComboBox>
+            </StackPanel>
+
+
 
             <TextBlock Text="Lưu ý" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
             <TextBox x:Name="txtNote" Margin="0,5"/>
             <!-- Buttons to Add/Update -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,20">
-                <Button Content="Lưu" Width="120" Height="40" Background="#4CAF50" Foreground="White" Click="SaveInventory_Click" Margin="10"/>
+                <Button x:Name="ExportBtn" Visibility="Collapsed"  Content="Xuất" Width="120" Height="40" Background="#4CAF50" Foreground="White"  Margin="10" />
+                <Button x:Name="EditBtn" Visibility="Collapsed"  Content="Sửa" Width="120" Height="40" Background="#4CAF50" Foreground="White"  Margin="10" Click="EditBtn_Click"/>
+                <Button x:Name="SaveBtn" Content="Lưu" Width="120" Height="40" Background="#4CAF50" Foreground="White" Click="SaveInventory_Click" Margin="10"/>
                 <Button Content="Hủy" Width="120" Height="40" Background="#F44336" Foreground="White" Click="CancelEdit_Click" Margin="10"/>
             </StackPanel>
         </StackPanel>

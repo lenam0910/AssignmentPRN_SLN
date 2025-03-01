@@ -194,24 +194,17 @@ namespace WPF.Supplier
             var selectedInventory = (Inventory)InventoryDataGrid.SelectedItem;
             if (selectedInventory != null)
             {
+                EditBtn.Visibility = Visibility.Visible;
+                SaveBtn.Visibility = Visibility.Collapsed;
                 txtProductName.Text = selectedInventory.Product.ProductName;
 
-                txtQuantity.Text = selectedInventory.Quantity.ToString();
+                txtRemain.Text = "(Còn lại: " + (selectedInventory.Quantity + selectedInventory.Product.QuantityInStock) + ")";
+                int oldQuantity = selectedInventory.Quantity;
+                txtProductName.SelectedValue = selectedInventory.Product.ProductId;
                 txtStockStatus.Text = selectedInventory.StockStatus;
-                //var transactionLog = new TransactionLog
-                //{
-                //    ProductId = selectedInventory.Product.ProductId,
-                //    WarehouseId = selectedInventory.WarehouseId,
-                //    SupplierId = selectedInventory.SupplierId,
-                //    ChangeType = "Edit",  // Loại thay đổi
-                //    QuantityChanged = int.Parse(txtQuantity.Text) - selectedInventory.Quantity,  // Số lượng thay đổi
-                //    ChangeDate = DateTime.Now,
-                //    UserId = user.UserId,
-                //    Remarks = "Sửa kho hàng"
-                //};
-                //if(transactionLogService.AddTransactionLog(transactionLog)){
-                //    MessageBox.Show("Đã sửa kho hàng.");
-                //}
+                txtQuantity.Text = selectedInventory.Quantity.ToString();
+
+
                 loadInvetory(selectedInventory.WarehouseId);
 
 
@@ -227,26 +220,33 @@ namespace WPF.Supplier
 
                 if (inventoryService.DeleteInventory(selectedInventory))
                 {
-                    var transactionLog = new TransactionLog
+                    int oldQuantity = selectedInventory.Quantity;
+                    Product p = productService.GetProductById(selectedInventory.Product.ProductId);
+                    p.QuantityInStock += oldQuantity;
+                    if (productService.UpdaterProduct(p))
                     {
-                        ProductId = selectedInventory.Product.ProductId,
-                        WarehouseId = selectedInventory.WarehouseId,
-                        SupplierId = selectedInventory.SupplierId,
-                        ChangeType = "Xóa",
-                        QuantityChanged = -selectedInventory.Quantity,
-                        ChangeDate = DateTime.Now,
-                        UserId = user.UserId,
-                        Remarks = "Xóa kho hàng"
-                    };
-                    if (transactionLogService.AddTransactionLog(transactionLog))
-                    {
-                        var selectedWarehouse = (int)WarehouseComboBox.SelectedValue;
-                        if (selectedWarehouse != null)
+                        var transactionLog = new TransactionLog
                         {
-                            loadInvetory(selectedWarehouse);
+                            ProductId = selectedInventory.Product.ProductId,
+                            WarehouseId = selectedInventory.WarehouseId,
+                            SupplierId = selectedInventory.SupplierId,
+                            ChangeType = "Xóa",
+                            QuantityChanged = -selectedInventory.Quantity,
+                            ChangeDate = DateTime.Now,
+                            UserId = user.UserId,
+                            Remarks = "Xóa kho hàng"
+                        };
+                        if (transactionLogService.AddTransactionLog(transactionLog))
+                        {
+                            var selectedWarehouse = (int)WarehouseComboBox.SelectedValue;
+                            if (selectedWarehouse != null)
+                            {
+                                loadInvetory(selectedWarehouse);
+                            }
+                            MessageBox.Show("Đã xóa kho hàng.");
                         }
-                        MessageBox.Show("Đã xóa kho hàng.");
                     }
+
                 }
             }
         }
@@ -259,6 +259,89 @@ namespace WPF.Supplier
                 txtRemain.Text = "(Còn lại: " + selectedProduct.QuantityInStock + ")";
             }
         }
-    }
 
+        private void EditBtn_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedInventory = (Inventory)InventoryDataGrid.SelectedItem;
+            if (selectedInventory != null)
+            {
+                EditBtn.Visibility = Visibility.Visible;
+                SaveBtn.Visibility = Visibility.Collapsed;
+
+                selectedInventory.Product.ProductName = txtProductName.Text;
+                int oldQuantity = selectedInventory.Quantity;
+                selectedInventory.Product.ProductId = (int)txtProductName.SelectedValue;
+                selectedInventory.StockStatus = txtStockStatus.Text;
+                int newQuantity = int.Parse(txtQuantity.Text);
+                txtRemain.Text = "(Còn lại: " + (selectedInventory.Quantity + selectedInventory.Product.QuantityInStock) + ")";
+
+                if (newQuantity <= oldQuantity)
+                {
+                    Product p = productService.GetProductById(selectedInventory.Product.ProductId);
+                    p.QuantityInStock = oldQuantity - newQuantity;
+                    if (productService.UpdaterProduct(p))
+                    {
+                        selectedInventory.Quantity = newQuantity;
+                        if (inventoryService.UpdateInventory(selectedInventory))
+                        {
+                            var transactionLog = new TransactionLog
+                            {
+                                ProductId = selectedInventory.Product.ProductId,
+                                WarehouseId = selectedInventory.WarehouseId,
+                                SupplierId = selectedInventory.SupplierId,
+                                ChangeType = "Edit",  // Loại thay đổi
+                                QuantityChanged = int.Parse(txtQuantity.Text) - selectedInventory.Quantity,  // Số lượng thay đổi
+                                ChangeDate = DateTime.Now,
+                                UserId = user.UserId,
+                                Remarks = txtNote.Text
+                            };
+                            if (transactionLogService.AddTransactionLog(transactionLog))
+                            {
+                                MessageBox.Show("Đã sửa kho hàng.");
+                                loadInvetory(selectedInventory.WarehouseId);
+                                EditBtn.Visibility = Visibility.Collapsed;
+                                SaveBtn.Visibility = Visibility.Visible;
+                                clear();
+                                InventoryDataGrid.SelectedItem = null;
+                            }
+
+
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("err");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Số lượng sửa không đủ để sửa !");
+                }
+            }
+
+        }
+
+        private void txtStockStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (txtStockStatus.SelectedItem is ComboBoxItem selectedItem)
+            {
+                if (selectedItem.Content.ToString() == "Xuất")
+                {
+                    ExportBtn.Visibility = Visibility.Visible;
+                    OtherWareHouse.Visibility = Visibility.Visible;
+                    var lstWare = warehousesService.getAll();
+                }
+                else
+                {
+                    OtherWareHouse.Visibility = Visibility.Collapsed;
+                }
+            }
+
+        }
+
+        private void ExportBtn_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+    }
 }

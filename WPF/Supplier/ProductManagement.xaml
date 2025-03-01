@@ -15,8 +15,8 @@
 
         <!-- Form Thêm Sản Phẩm -->
         <StackPanel Grid.Column="0" Background="White"  Margin="10,5,5,5" >
-          
-                <TextBlock x:Name="Title" Text="Thêm Sản Phẩm" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+
+            <TextBlock x:Name="Title" Text="Thêm Sản Phẩm" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
             <TextBox x:Name="txtId" Margin="0,5" Visibility="Collapsed"/>
 
 
@@ -44,45 +44,48 @@
 
             <Button x:Name="addProduct" Content="Thêm Sản Phẩm" Background="#4CAF50" Foreground="White" Click="AddProduct_Click" Margin="10,5,0,0"/>
 
-            <StackPanel Visibility="Collapsed" x:Name="stpBtn"  Orientation="Horizontal" Margin="10,5,0,0">
+            <StackPanel Visibility="Collapsed" x:Name="stpBtn" Orientation="Horizontal" Margin="10,5,0,0">
                 <!-- Nút Sửa Sản Phẩm -->
-                <Button x:Name="editProduct" Content="Sửa Sản Phẩm" Background="#4CAF50" Foreground="White"  Margin="10,5,0,0" Click="editProduct_Click_1"/>
+                <Button x:Name="editProduct" Content="Sửa Sản Phẩm" Background="#4CAF50" Foreground="White" 
+            Height="40" Width="120" Margin="10,5,0,0" Click="editProduct_Click_1"/>
 
                 <!-- Nút Hủy -->
-                <Button x:Name="cancelBtn" Content="Hủy" Background="#F44336" Foreground="White" Click="CancelProduct_Click" Margin="10,5,0,0"/>
+                <Button x:Name="cancelBtn" Content="Hủy" Background="#F44336" Foreground="White" 
+            Height="40" Width="120" Click="CancelProduct_Click" Margin="10,5,0,0"/>
             </StackPanel>
+
 
         </StackPanel>
 
         <ListBox SelectionMode="Single"  x:Name="lstProducts" Grid.Column="2" Background="White" BorderThickness="0" Margin="5" ScrollViewer.VerticalScrollBarVisibility="Auto">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                        <Grid HorizontalAlignment="Stretch">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <!-- Cột hình ảnh -->
-                                <ColumnDefinition Width="160"/>
-                                <!-- Cột thông tin -->
-                                <ColumnDefinition Width="Auto"/>
-                                <!-- Cột cho các nút sửa xóa -->
-                            </Grid.ColumnDefinitions>
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <!-- Cột hình ảnh -->
+                            <ColumnDefinition Width="160"/>
+                            <!-- Cột thông tin -->
+                            <ColumnDefinition Width="Auto"/>
+                            <!-- Cột cho các nút sửa xóa -->
+                        </Grid.ColumnDefinitions>
 
-                            <!-- Hình ảnh sản phẩm -->
-                            <Image Source="{Binding Avatar}" Width="100" Height="100" Stretch="UniformToFill" Margin="5" Grid.Column="0"/>
+                        <!-- Hình ảnh sản phẩm -->
+                        <Image Source="{Binding Avatar}" Width="100" Height="100" Stretch="UniformToFill" Margin="5" Grid.Column="0"/>
 
-                            <!-- Thông tin sản phẩm -->
-                            <StackPanel Orientation="Vertical" Grid.Column="1" Margin="10,0">
-                                <TextBlock Text="{Binding ProductName}" FontSize="16" FontWeight="Bold"/>
-                                <TextBlock Text="{Binding Price, StringFormat=C}" Foreground="Green"/>
-                                <TextBlock Text="{Binding QuantityInStock, StringFormat='Số lượng: {0}'}"/>
-                            </StackPanel>
+                        <!-- Thông tin sản phẩm -->
+                        <StackPanel Orientation="Vertical" Grid.Column="1" Margin="10,0">
+                            <TextBlock Text="{Binding ProductName}" FontSize="16" FontWeight="Bold"/>
+                            <TextBlock Text="{Binding Price, StringFormat=C}" Foreground="Green"/>
+                            <TextBlock Text="{Binding QuantityInStock, StringFormat='Số lượng: {0}'}"/>
+                        </StackPanel>
 
-                            <!-- Nút Sửa và Xóa -->
-                            <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0">
-                                <Button Content="Sửa" Padding="5" Margin="2" Background="#2196F3" Foreground="White" Click="EditProduct_Click"/>
-                                <Button Content="Xóa" Padding="5" Margin="2" Background="#D32F2F" Foreground="White" Click="DeleteProduct_Click"/>
-                            </StackPanel>
-                        </Grid>
+                        <!-- Nút Sửa và Xóa -->
+                        <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0">
+                            <Button Content="Sửa" Padding="5" Margin="2" Background="#2196F3" Foreground="White" Click="EditProduct_Click"/>
+                            <Button Content="Xóa" Padding="5" Margin="2" Background="#D32F2F" Foreground="White" Click="DeleteProduct_Click"/>
+                        </StackPanel>
+                    </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>
             <!-- Đảm bảo tất cả các item có cùng chiều cao -->

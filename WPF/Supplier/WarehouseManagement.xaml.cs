@@ -17,12 +17,12 @@ namespace WPF.Supplier
         private DataAccess.Models.Supplier supplier;
         public WarehouseManagement()
         {
+            user = Application.Current.Properties["UserAccount"] as User;
             userSupplierService = new UserSupplierService();
             InitializeComponent();
             warehouseService = new WarehousesService();
             productService = new ProductService();
             inventoryService = new InventoryService();
-            user = Application.Current.Properties["UserAccount"] as User;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
