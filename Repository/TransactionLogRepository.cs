@@ -27,7 +27,7 @@ namespace Repository
         }
         public void Add(TransactionLog transactionLog)
         {
-            _prnContext.Add(transactionLog);
+            _prnContext.TransactionLogs.Add(transactionLog);
             _prnContext.SaveChanges();
         }
 
@@ -35,7 +35,7 @@ namespace Repository
 
         public void Update(TransactionLog transactionLog)
         {
-            _prnContext.Update(transactionLog);
+            _prnContext.TransactionLogs.Update(transactionLog);
             _prnContext.SaveChanges();
         }
 

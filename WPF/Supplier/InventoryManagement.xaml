@@ -51,16 +51,19 @@
             <TextBlock Text="Số lượng" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
             <TextBox x:Name="txtQuantity" Margin="0,5"/>
 
-            <TextBlock Text="Trạng thái" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
-            <ComboBox x:Name="txtStockStatus" Margin="0,5" SelectionChanged="txtStockStatus_SelectionChanged">
-                <ComboBoxItem Content="Nhập"/>
-                <ComboBoxItem Content="Xuất"/>
-            </ComboBox>
+            <StackPanel x:Name="status" Visibility="Collapsed">
+                <TextBlock Text="Trạng thái" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
+                <ComboBox x:Name="txtStockStatus" Margin="0,5" SelectionChanged="txtStockStatus_SelectionChanged">
+                    <ComboBoxItem Content="Nhập"/>
+                    <ComboBoxItem Content="Xuất"/>
+                </ComboBox>
+            </StackPanel>
+            
 
 
             <StackPanel x:Name="OtherWareHouse" Visibility="Collapsed">
                 <TextBlock Text="Chọn kho hàng xuất" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
-                <ComboBox x:Name="txtOtherWarehouse" Margin="0,5" SelectionChanged="txtStockStatus_SelectionChanged">
+                <ComboBox x:Name="txtOtherWarehouse" Margin="0,5" >
                 </ComboBox>
             </StackPanel>
 

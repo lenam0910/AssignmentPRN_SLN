@@ -27,7 +27,6 @@
 		</None>
 	</ItemGroup>
 	<ItemGroup>
-	  <Folder Include="Images\Avar\" />
 	  <Folder Include="Images\Supplier\" />
 	  <Folder Include="Images\Product\" />
 	</ItemGroup>

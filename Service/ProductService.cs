@@ -37,6 +37,8 @@ namespace Service
 
             return lstDis;
         }
+
+        
         public List<Product> GetAllProductsBySupplierId(int id)
         {
             var lst = repository.GetAll();
@@ -77,7 +79,6 @@ namespace Service
             }
             return isCheked;
         }
-
         public bool UpdaterProduct(Product product)
         {
             bool isChecked = false;

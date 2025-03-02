@@ -142,9 +142,9 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,20,10,0">
                         <Button Content="Lưu" Width="120" Height="35" Background="#0078D4" Foreground="White"
-                        Click="SaveWarehouse_Click" Margin="5"/>
+                        Click="SaveEditWarehouse_Click" Margin="5"/>
                         <Button Content="Hủy" Width="120" Height="35" Background="Gray" Foreground="White"
-                        Click="CancelWarehouse_Click" Margin="5"/>
+                         Margin="5" Click="Button_Click"/>
                     </StackPanel>
                 </StackPanel>
             </Border>

@@ -123,7 +123,7 @@ namespace WPF.Supplier
 
         private void SaveWarehouse_Click(object sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(txtCapacity.Text, out int capacity) || capacity <= 0)
+            if (!int.TryParse(txtCapacity.Text.Trim(), out int capacity) || capacity <= 0)
             {
                 MessageBox.Show("Hãy nhập số lượng >0!");
                 return;
@@ -158,7 +158,7 @@ namespace WPF.Supplier
 
         private void SaveEditWarehouse_Click(object sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(txtEditCapacity.Text, out int capacity) || capacity <= 0)
+            if (!int.TryParse(txtEditCapacity.Text.Trim(), out int capacity) || capacity <= 0)
             {
                 MessageBox.Show("Hãy nhập số lượng >0!");
                 return;
@@ -198,6 +198,13 @@ namespace WPF.Supplier
             txtWarehouseName.Clear();
             txtLocation.Clear();
             txtCapacity.Clear();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            EditWarehousePopup.Visibility = Visibility.Collapsed;
+            WarehouseDataGrid.SelectedItem = null;
+            clear();
         }
     }
 }

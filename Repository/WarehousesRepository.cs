@@ -16,7 +16,7 @@ namespace Repository
         }
         public void Add(Warehouse warehouse)
         {
-            _context.Add(warehouse);
+            _context.Warehouses.Add(warehouse);
             _context.SaveChanges();
         }
 
@@ -28,7 +28,7 @@ namespace Repository
 
         public void Update(Warehouse warehouse)
         {
-            _context.Update(warehouse);
+            _context.Warehouses.Update(warehouse);
             _context.SaveChanges();
         }
 

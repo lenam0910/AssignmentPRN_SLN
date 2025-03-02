@@ -53,7 +53,8 @@
             <TextBlock x:Name="txtNameSupplier" FontSize="20" FontWeight="Bold" Foreground="#FFFFFF" HorizontalAlignment="Center" />
             <Button Content="Quản Lý Sản Phẩm" Style="{StaticResource HoverButtonStyle}" Click="Nav_Products" Margin="10"/>
             <Button Content="Quản Lý Kho Hàng" Style="{StaticResource HoverButtonStyle}" Click="Nav_Warehouse" Margin="10"/>
-            <Button Content="Quản Lý Đơn Hàng" Style="{StaticResource HoverButtonStyle}" Click="Nav_Orders" Margin="10"/>
+            <Button Content="Phân Phối Đơn Hàng" Style="{StaticResource HoverButtonStyle}" Click="Nav_Orders" Margin="10"/>
+            <Button Content="Lịch Sử Đơn Hàng" Style="{StaticResource HoverButtonStyle}"  Margin="10"/>
             <Button Content="Cập Nhật Thông Tin" Style="{StaticResource HoverButtonStyle}" Click="Nav_Account" Margin="10"/>
             <Button Content="Đăng Xuất" Background="#F44336" Foreground="White" FontSize="14" BorderBrush="Transparent" BorderThickness="1" Margin="10" Style="{StaticResource HoverButtonStyle}" Click="Logout_Click"/>
         </StackPanel>

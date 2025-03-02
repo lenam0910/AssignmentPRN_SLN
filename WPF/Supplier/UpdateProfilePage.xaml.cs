@@ -137,7 +137,7 @@ namespace WPF.Supplier
             if (_supplierService.UpdateSupplier(supplier))
             {
                 saveAvatarSupplier();
-                MessageBox.Show("supplier Done");
+                MessageBox.Show("Sửa thông tin Công ty cung cấp thành công!");
             }
             
         }
@@ -157,7 +157,7 @@ namespace WPF.Supplier
             if (_userService.UpdateUser(user))
             {
                 saveAvatar();
-                MessageBox.Show("user Done");
+                MessageBox.Show("Sửa thông tin người dùng thành công!");
 
             }
         }

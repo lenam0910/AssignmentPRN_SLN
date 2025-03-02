@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DataAccess.Models;
+using Microsoft.Win32;
 using Service;
 
 namespace WPF.Admin
@@ -100,8 +102,11 @@ namespace WPF.Admin
         {
             if (UserGrid.SelectedItem is User selectedUser)
             {
-                UserService.UpdateUser(selectedUser);
-                MessageBox.Show("Xóa thành công!");
+                if (UserService.DeleteUser(selectedUser))
+                {
+                    MessageBox.Show("Xóa thành công!");
+                    load();
+                }
 
             }
             else
@@ -117,15 +122,16 @@ namespace WPF.Admin
             user.Email = email.Text;
             user.Username = username.Text;
             user.Password = password.Password;
-            user.RoleId =(int) roleComboBox.SelectedValue;
+            user.RoleId = (int)roleComboBox.SelectedValue;
             if (UserService.CreateUser(user))
             {
                 MessageBox.Show("Thêm người dùng thành công!");
-                load(); 
+                load();
                 clear();
                 AddUserPanel.Visibility = Visibility.Collapsed;
             }
-            else {
+            else
+            {
                 MessageBox.Show("Thêm người dùng thất bại!");
             }
         }
@@ -162,6 +168,71 @@ namespace WPF.Admin
             UserGrid.SelectedItem = null;
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new();
+            saveFileDialog.DefaultExt = ".txt";
+            saveFileDialog.Filter = "Text Files (*.txt)| *.txt|All Files (*.*)|*.*";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var lstUser = UserService.getAll();
+                List<string> lines = new List<string>();
+                foreach (var user in lstUser)
+                {
+                    string ln = $"{user.UserId}-{user.Username}-{user.FullName}-{user.Email}-{user.Phone}-{user.DateOfBirth}-{user.Gender}-{user.Role.RoleName}-{user.Address}\n";
+                    lines.Add(ln);
+                }
+                File.WriteAllLines(saveFileDialog.FileName, lines);
+                MessageBox.Show("Lưu file txt thành công !" + saveFileDialog.FileName);
+            }
+        }
 
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new();
+            saveFileDialog.DefaultExt = ".txt";
+            saveFileDialog.Filter = "Text Files (*.txt)| *.txt|All Files (*.*)|*.*";
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                string[] lines = File.ReadAllLines(saveFileDialog.FileName);
+                List<User> users = new List<User>();
+                foreach (var user in lines)
+                {
+                    if (string.IsNullOrWhiteSpace(user)) continue;
+                    string[] parts = user.Split('-');
+                    if (parts.Length < 9) continue;
+
+                    User uFile = new User
+                    {
+                        UserId = int.Parse(parts[0]),
+                        Username = parts[1],
+                        FullName = parts[2],
+                        Email = parts[3],
+                        Phone = parts[4],
+                        DateOfBirth = DateOnly.TryParse(parts[5], out DateOnly dob) ? dob : null,
+                        Gender = parts[6],
+                        Role = new Role { RoleName = parts[7] },
+                        Address = parts[8],
+                    };
+                    users.Add(uFile);
+                }
+                UserGrid.ItemsSource = users;
+                Add.Visibility = Visibility.Collapsed;
+                edit.Visibility = Visibility.Collapsed;
+                dele.Visibility = Visibility.Collapsed;
+                export.Visibility = Visibility.Collapsed;
+                Reload.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void Reload_Click(object sender, RoutedEventArgs e)
+        {
+            load();
+            Add.Visibility = Visibility.Visible;
+            edit.Visibility = Visibility.Visible;
+            dele.Visibility = Visibility.Visible;
+            export.Visibility = Visibility.Visible;
+            Reload.Visibility = Visibility.Collapsed;
+        }
     }
 }

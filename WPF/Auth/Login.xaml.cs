@@ -60,10 +60,10 @@ namespace WPF
             string unHashPass = password.Password;
             //string hashedPass = HashPassword(unHashPass);
             var account = userService.Login(uName, unHashPass);
-            var supplier = userSupplierService.GetSupplierByUserId(account.UserId);
 
             if (account != null )
             {
+                DataAccess.Models.Supplier supplier = userSupplierService.GetSupplierByUserId(account.UserId);
                 if (rememberMeCheckBox.IsChecked == true)
                 {
                     if (Application.Current.Properties.Contains("userNameRemem"))

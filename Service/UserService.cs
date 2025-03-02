@@ -32,6 +32,7 @@ namespace Service
             }
             return display;
         }
+        
 
         public int getId()
         {
@@ -79,13 +80,13 @@ namespace Service
                 return null;
             }
             var u = UserRepository.GetUserByNameAndPassword(username, password);
-            if (u.IsDeleted == false)
+            if (u != null && u.IsDeleted != true)
             {
                 return u;
-
             }
             return null;
         }
+
 
         public bool checkDuplicateUserName(string username)
         {
@@ -121,12 +122,13 @@ namespace Service
             bool isDeleted = true;
             if (u == null)
             {
-                isDeleted = false;
+              
                 return isDeleted;
             }
             else
             {
                 u.IsDeleted = true;
+                UpdateUser(u);
                 return isDeleted;
             }
         }

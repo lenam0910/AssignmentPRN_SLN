@@ -81,5 +81,10 @@ namespace WPF.Supplier
             MainFrame.Navigate(new ProductManagement());
 
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MainFrame.Navigate(new TransactionLogPage());
+        }
     }
 }

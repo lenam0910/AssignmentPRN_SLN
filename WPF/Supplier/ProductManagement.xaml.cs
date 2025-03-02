@@ -46,7 +46,7 @@ namespace WPF.Supplier
 
 
             // Load danh sách sản phẩm
-            lstProducts.ItemsSource = productService.GetAllProducts();
+            lstProducts.ItemsSource = productService.GetAllProductsBySupplierId(supplier.SupplierId);
 
         }
 

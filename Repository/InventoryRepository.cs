@@ -18,7 +18,7 @@ namespace Repository
 
         public void AddInventory(Inventory inventory)
         {
-            prnContext.Add(inventory);
+            prnContext.Inventories.Add(inventory);
             prnContext.SaveChanges();
         }
 
@@ -29,7 +29,7 @@ namespace Repository
 
         public void UpdateInventory(Inventory inventory)
         {
-            prnContext.Update(inventory);
+            prnContext.Inventories.Update(inventory);
             prnContext.SaveChanges();
         }
        

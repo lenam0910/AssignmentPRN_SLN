@@ -91,7 +91,7 @@ namespace Service
             }
             return lstDis;
         }
-
+        
         public Warehouse GetWarehouseById(int id) { 
             return repository.Get(id);
         }
