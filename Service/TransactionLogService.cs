@@ -26,7 +26,19 @@ namespace Service
         {
             return repository.GetAll();
         }
-
+        public List<TransactionLog> GetAllBySupplierID(int id)
+        {
+            var lst = repository.GetAll();
+            foreach (var transactionLog in lst)
+            {
+                if (transactionLog.SupplierId != id)
+                {
+                    lst.Remove(transactionLog);
+                }
+                
+            }
+            return lst;
+        }
         public bool AddTransactionLog(TransactionLog transactionLog)
         {
             bool isChecked = false;
