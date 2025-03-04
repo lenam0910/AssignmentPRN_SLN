@@ -57,7 +57,7 @@ namespace Service
             var list = repository.GetAll();
             List<Warehouse> listWarehouses = new List<Warehouse>();
             foreach (var item in list) { 
-                if(item.SupplierId == id && item.IsDeleted == false)
+                if(item.SupplierId == id && item.IsDeleted == false && item.IsApproved == true )
                 {
                     listWarehouses.Add(item);
                 }
@@ -84,7 +84,7 @@ namespace Service
             var lstDis = new List<Warehouse>();
             foreach (Warehouse items in lst)
             {
-                if (items.IsDeleted == false && items.SupplierId == id)
+                if (items.IsDeleted == false && items.SupplierId == id && items.IsApproved == true)
                 {
                     lstDis.Add(items);
                 }
@@ -94,6 +94,34 @@ namespace Service
         
         public Warehouse GetWarehouseById(int id) { 
             return repository.Get(id);
+        }
+
+       
+        public List<Warehouse> getAllApporveWarehouse(int id)
+        {
+            var list = repository.GetAll();
+            List<Warehouse> listWarehouses = new List<Warehouse>();
+            foreach (var item in list)
+            {
+                if (item.SupplierId == id && item.IsDeleted == false && item.IsApproved == true)
+                {
+                    listWarehouses.Add(item);
+                }
+            }
+            return listWarehouses;
+        }
+        public List<Warehouse> getAllNotApporveWarehouse()
+        {
+            var list = repository.GetAll();
+            List<Warehouse> listWarehouses = new List<Warehouse>();
+            foreach (var item in list)
+            {
+                if (item.IsDeleted == false && item.IsApproved == false)
+                {
+                    listWarehouses.Add(item);
+                }
+            }
+            return listWarehouses;
         }
     }
 }

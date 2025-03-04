@@ -40,7 +40,7 @@ namespace WPF.Admin
 
         private void btnProducts_Click(object sender, RoutedEventArgs e)
         {
-
+            MainFrame.Navigate (new ManageProducts());
         }
 
         private void btnWarehouses_Click(object sender, RoutedEventArgs e)
@@ -64,6 +64,11 @@ namespace WPF.Admin
             avaAdmin.Source = new BitmapImage(new Uri(user.Avatar));
             }
             txtAdminName.Text = user.Username;
+        }
+
+        private void btnSuppliers_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

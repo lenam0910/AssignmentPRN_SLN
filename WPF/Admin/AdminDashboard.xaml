@@ -49,7 +49,8 @@
             <Separator Background="#BDC3C7" Height="1" Margin="10"/>
 
             <StackPanel>
-                <Button Content="📂 Quản lý thư mục" Name="btnCategories" Click="btnCategories_Click" Style="{StaticResource SidebarButton}" Background="#1ABC9C"/>
+                <Button Content="📂 Quản lý thể loại" Name="btnCategories" Click="btnCategories_Click" Style="{StaticResource SidebarButton}" Background="#1ABC9C"/>
+                <Button Content="🏭 Quản lý Nhà Cung Cấp" Name="btnSuppliers" Click="btnSuppliers_Click" Style="{StaticResource SidebarButton}" Background="#9B59B6"/>
                 <Button Content="👥 Quản lý người dùng" Name="btnUsers" Click="btnUsers_Click" Style="{StaticResource SidebarButton}" Background="#3498DB"/>
                 <Button Content="🛒 Quản lý sản phẩm" Name="btnProducts" Click="btnProducts_Click" Style="{StaticResource SidebarButton}" Background="#E67E22"/>
                 <Button Content="📦 Quản lý Kho" Name="btnWarehouses" Click="btnWarehouses_Click" Style="{StaticResource SidebarButton}" Background="#E74C3C"/>

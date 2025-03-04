@@ -29,6 +29,34 @@ namespace Service
             var lstDis = new List<Product>();
             foreach (Product items in lst)
             {
+                if (items.IsDeleted == false && items.IsApproved == true)
+                {
+                    lstDis.Add(items);
+                }
+            }
+
+            return lstDis;
+        }
+        public List<Product> GetAllProductsNotApprove()
+        {
+            var lst = repository.GetAll();
+            var lstDis = new List<Product>();
+            foreach (Product items in lst)
+            {
+                if (items.IsDeleted == false && items.IsApproved == false)
+                {
+                    lstDis.Add(items);
+                }
+            }
+
+            return lstDis;
+        }
+        public List<Product> GetAllProductsForAdmin()
+        {
+            var lst = repository.GetAll();
+            var lstDis = new List<Product>();
+            foreach (Product items in lst)
+            {
                 if (items.IsDeleted == false)
                 {
                     lstDis.Add(items);
@@ -38,14 +66,13 @@ namespace Service
             return lstDis;
         }
 
-        
         public List<Product> GetAllProductsBySupplierId(int id)
         {
             var lst = repository.GetAll();
             var lstDis = new List<Product>();
             foreach (Product items in lst)
             {
-                if (items.IsDeleted == false && items.SupplierId == id)
+                if (items.IsDeleted == false && items.SupplierId == id && items.IsApproved == true)
                 {
                     lstDis.Add(items);
                 }

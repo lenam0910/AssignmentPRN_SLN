@@ -37,7 +37,20 @@ namespace Service
             var lstDis = new List<Supplier>();
             foreach (Supplier items in lst)
             {
-                if (items.IsDeleted == false)
+                if (items.IsDeleted == false && items.IsApproved == true)
+                {
+                    lstDis.Add(items);
+                }
+            }
+            return lstDis;
+        }
+        public List<Supplier> GetAllSuppliersNotApprove()
+        {
+            var lst = supplierRepository.GetAllSuppliers();
+            var lstDis = new List<Supplier>();
+            foreach (Supplier items in lst)
+            {
+                if (items.IsDeleted == false && items.IsApproved == false)
                 {
                     lstDis.Add(items);
                 }
@@ -45,7 +58,6 @@ namespace Service
             return lstDis;
         }
 
-      
         public bool SaveSupplier(Supplier supplier)
         {
             bool isChecked = true;

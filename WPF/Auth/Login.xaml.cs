@@ -26,10 +26,10 @@ namespace WPF
     public partial class Login : Window
     {
         private UserService userService;
-        private UserSupplierService userSupplierService;    
+        private UserSupplierService userSupplierService;
         public Login()
         {
-            userSupplierService = new UserSupplierService();    
+            userSupplierService = new UserSupplierService();
             InitializeComponent();
             userService = new();
 
@@ -62,7 +62,7 @@ namespace WPF
             //string hashedPass = HashPassword(unHashPass);
             var account = userService.Login(uName, unHashPass);
 
-            if (account != null )
+            if (account != null)
             {
                 DataAccess.Models.Supplier supplier = userSupplierService.GetSupplierByUserId(account.UserId);
                 if (rememberMeCheckBox.IsChecked == true)
@@ -93,20 +93,20 @@ namespace WPF
                 Application.Current.Properties["UserAccount"] = account;
                 if (account.RoleId == 1)
                 {
-                    AdminDashboard adminDashboard = new AdminDashboard();   
+                    AdminDashboard adminDashboard = new AdminDashboard();
                     this.Hide();
                     adminDashboard.Show();
                 }
                 else if (account.RoleId == 2)
                 {
-                   UserDashboard userDashboard = new UserDashboard();
+                    UserDashboard userDashboard = new UserDashboard();
                     this.Hide();
                     userDashboard.Show();
                 }
 
                 else
                 {
-                    if(supplier == null)
+                    if (supplier == null)
                     {
                         RegisterSupplier registerSupplier = new();
                         registerSupplier.Show();
@@ -114,14 +114,24 @@ namespace WPF
                     }
                     else
                     {
-                        SupplierDashboard supplierDashboard = new();
-                        supplierDashboard.Show();
-                        this.Hide();
+                        if (supplier.IsApproved == true)
+                        {
+                            SupplierDashboard supplierDashboard = new();
+                            supplierDashboard.Show();
+                            this.Hide();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Tài khoản nhà cung cấp của bạn chưa được kiểm duyệt");
+
+                        }
+
+
                     }
-                        
+
                 }
-                
-               
+
+
             }
             else
             {

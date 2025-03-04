@@ -134,7 +134,8 @@ namespace WPF.Supplier
                 WarehouseName = txtWarehouseName.Text,
                 Location = txtLocation.Text,
                 Capacity = capacity,
-                SupplierId = supplier.SupplierId
+                SupplierId = supplier.SupplierId,
+                
             };
 
             if (warehouseService.AddWarehouses(newWarehouse))
@@ -169,6 +170,7 @@ namespace WPF.Supplier
                 selectedWarehouse.WarehouseName = txtEditWarehouseName.Text;
                 selectedWarehouse.Location = txtEditLocation.Text;
                 selectedWarehouse.Capacity = capacity;
+                selectedWarehouse.IsApproved = false;
 
                 if (warehouseService.UpdateWarehouses(selectedWarehouse))
                 {

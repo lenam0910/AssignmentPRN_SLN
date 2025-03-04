@@ -17,6 +17,8 @@ public partial class Supplier
 
     public string? Phone { get; set; }
 
+    public bool IsApproved { get; set; }
+
     public bool IsDeleted { get; set; }
 
     public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();

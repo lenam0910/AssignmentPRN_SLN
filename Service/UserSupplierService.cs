@@ -43,12 +43,15 @@ namespace Service
             {
                 if (item.SupplierId == suppplierId)
                 {
-                    return item;
+                    if(item.IsApproved == true)
+                    {
+                        return item;
+                    }
                 }
             }
             return null;
         }
-
+        
         public void Add(UserSupplier userSupplier)
         {
             repository.Add(userSupplier);

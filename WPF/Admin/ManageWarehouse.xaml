@@ -26,37 +26,9 @@
                 <DataGridTextColumn Header="Tên Kho" Binding="{Binding WarehouseName}" Width="*"/>
                 <DataGridTextColumn Header="Vị trí" Binding="{Binding Location}" Width="2*"/>
                 <DataGridTextColumn Header="Sức chứa" Binding="{Binding Capacity}" Width="100"/>
+                <DataGridTextColumn Header="Trạng thái" Binding="{Binding IsApproved}" Width="100"/>
             </DataGrid.Columns>
         </DataGrid>
-
-        <!-- Nút Thêm, Sửa, Xóa -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20" VerticalAlignment="Bottom">
-            <Button Content="➕ Thêm" Width="100" Height="35" Background="#28a745" Foreground="White" Margin="5" Click="OpenAddWarehousePopup"/>
-            <Button Content="✏ Sửa" Width="100" Height="35" Background="#ffc107" Foreground="Black" Margin="5" Click="OpenEditWarehousePopup"/>
-            <Button Content="❌ Xóa" Width="100" Height="35" Background="#dc3545" Foreground="White" Margin="5" Click="DeleteWarehouse_Click"/>
-        </StackPanel>
-
-        <!-- Popup Thêm kho hàng -->
-        <Border x:Name="AddWarehousePanel" Visibility="Collapsed" HorizontalAlignment="Center" 
-                VerticalAlignment="Center" Background="White" BorderBrush="#ced4da" 
-                BorderThickness="1" Padding="20" Width="400" CornerRadius="10">
-            <StackPanel Margin="10">
-                <TextBlock Text="Thêm Kho Hàng" FontSize="20" FontWeight="Bold" 
-                           HorizontalAlignment="Center" Margin="0,10"/>
-                <TextBlock Text="Tên Kho"/>
-                <TextBox x:Name="txtWarehouseName" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
-                <TextBlock Text="Vị trí"/>
-                <TextBox x:Name="txtLocation" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
-                <TextBlock Text="Sức chứa"/>
-                <TextBox x:Name="txtCapacity" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,20,10,0">
-                    <Button Content="Lưu" Width="120" Height="35" Background="#0078D4" Foreground="White" Click="SaveWarehouse_Click"/>
-                    <Button Content="Hủy" Width="120" Height="35" Background="#dc3545" Foreground="White" Click="CloseAddWarehousePopup"/>
-                </StackPanel>
-            </StackPanel>
-        </Border>
-
-        <!-- Popup Sửa kho hàng -->
         <Border x:Name="EditWarehousePanel" Visibility="Collapsed" HorizontalAlignment="Center" 
                 VerticalAlignment="Center" Background="White" BorderBrush="#ced4da" 
                 BorderThickness="1" Padding="20" Width="400" CornerRadius="10">
@@ -75,7 +47,65 @@
                 </StackPanel>
             </StackPanel>
         </Border>
+        <!-- Nút Thêm, Sửa, Xóa -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20" VerticalAlignment="Bottom">
+            <Button Content="➕ Thêm" Width="100" Height="35" Background="#28a745" Foreground="White" Margin="5" Click="OpenAddWarehousePopup"/>
+            <Button Content="✏ Sửa" Width="100" Height="35" Background="#ffc107" Foreground="Black" Margin="5" Click="OpenEditWarehousePopup"/>
+            <Button Content="❌ Xóa" Width="100" Height="35" Background="#dc3545" Foreground="White" Margin="5" Click="DeleteWarehouse_Click"/>
+            <Button Content="📜 Duyệt kho hàng" Width="150" Height="35" Background="#17a2b8" Foreground="White" Margin="5" Click="OpenPendingWarehousesPopup"/>
+        </StackPanel>
 
-        
+        <!-- Popup Thêm kho hàng -->
+        <Border x:Name="AddWarehousePanel" Visibility="Collapsed" HorizontalAlignment="Center" 
+                VerticalAlignment="Center" Background="White" BorderBrush="#ced4da" 
+                BorderThickness="1" Padding="20" Width="400" CornerRadius="10">
+            <StackPanel Margin="10">
+                <TextBlock Text="Thêm Kho Hàng" FontSize="20" FontWeight="Bold" 
+                           HorizontalAlignment="Center" Margin="0,10"/>
+                <TextBlock Text="Tên Kho"/>
+                <TextBox x:Name="txtWarehouseName" Width="250" Height="30"/>
+                <TextBlock Text="Vị trí"/>
+                <TextBox x:Name="txtLocation" Width="250" Height="30"/>
+                <TextBlock Text="Sức chứa"/>
+                <TextBox x:Name="txtCapacity" Width="250" Height="30"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,20,10,0">
+                    <Button Content="Lưu" Width="120" Height="35" Background="#0078D4" Foreground="White" Click="SaveWarehouse_Click"/>
+                    <Button Content="Hủy" Width="120" Height="35" Background="#dc3545" Foreground="White" Click="CloseAddWarehousePopup"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
+        <!-- Popup danh sách kho hàng chưa duyệt -->
+        <Border x:Name="PendingWarehousesPopup" Visibility="Collapsed" HorizontalAlignment="Center" 
+        VerticalAlignment="Center" Background="White" BorderBrush="#ced4da" 
+        BorderThickness="1" Padding="20" Width="500" CornerRadius="10">
+            <StackPanel Margin="10">
+                <TextBlock Text="Kho Hàng Chưa Được Duyệt" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10"/>
+
+                <!-- ListBox for Pending Warehouses -->
+                <ListBox Name="PendingWarehouseGrid" Width="460" Height="200" Margin="0,10">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="5">
+                                <!-- Warehouse ID -->
+                                <TextBlock Text="{Binding WarehouseID}" Width="50" VerticalAlignment="Center"/>
+                                <!-- Warehouse Name -->
+                                <TextBlock Text="{Binding WarehouseName}" Width="120"/>
+                                <!-- Location -->
+                                <TextBlock Text="{Binding Location}" Width="120"/>
+                                <!-- Capacity -->
+                                <TextBlock Text="{Binding Capacity}" Width="50" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,20,10,0">
+                    <Button Content="✔ Duyệt" Width="120" Height="35" Background="#28a745" Foreground="White" Click="ApproveWarehouse_Click"/>
+                    <Button Content="❌ Đóng" Width="120" Height="35" Background="#dc3545" Foreground="White" Click="ClosePendingWarehousesPopup"/>
+                </StackPanel>
+            </StackPanel>
+        </Border>
+
     </Grid>
 </Page>

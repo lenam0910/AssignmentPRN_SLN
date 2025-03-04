@@ -15,6 +15,8 @@ public partial class Warehouse
 
     public int SupplierId { get; set; }
 
+    public bool IsApproved { get; set; }
+
     public bool IsDeleted { get; set; }
 
     public virtual ICollection<Inventory> Inventories { get; set; } = new List<Inventory>();

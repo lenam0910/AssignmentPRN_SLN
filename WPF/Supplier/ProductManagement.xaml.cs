@@ -197,6 +197,7 @@ namespace WPF.Supplier
             product.QuantityInStock = int.Parse(txtStock.Text);
             product.CategoryId = (int)cbCategory.SelectedValue;
             product.Description = txtDescription.Text;
+            product.IsApproved = false;
             if(destinationPath != null)
             {
                 product.Avatar = destinationPath;

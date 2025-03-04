@@ -30,6 +30,7 @@ namespace Service
             }
             return display;
         }
+      
         public bool deleteCategorias(Category category)
         {
             bool isDeleted = true;

@@ -37,12 +37,12 @@ namespace WPF.Admin
             SupplierComboBox.ItemsSource = listSup;
             SupplierComboBox.DisplayMemberPath = "SupplierName";
             SupplierComboBox.SelectedValuePath = "SupplierId";
-
+            PendingWarehouseGrid.ItemsSource = warehousesService.getAllNotApporveWarehouse();
 
         }
         public void load2(DataAccess.Models.Supplier supplier)
         {
-            var listWare = warehousesService.GetAllWarehousesByIdSupplier(supplier.SupplierId);
+            var listWare = warehousesService.getAllApporveWarehouse(supplier.SupplierId);
             WarehouseGrid.ItemsSource = listWare;
 
         }
@@ -52,6 +52,7 @@ namespace WPF.Admin
             txtWarehouseName.Clear();
             txtLocation.Clear();
             txtCapacity.Clear();
+            SupplierComboBox.SelectedValue = null;
         }
         private void OpenAddWarehousePopup(object sender, RoutedEventArgs e)
         {
@@ -125,8 +126,15 @@ namespace WPF.Admin
         private void SupplierComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             DataAccess.Models.Supplier supplier = (DataAccess.Models.Supplier)SupplierComboBox.SelectedItem;
-            var listWare = warehousesService.GetAllWarehousesByIdSupplier(supplier.SupplierId);
-            WarehouseGrid.ItemsSource = listWare;
+            if (supplier != null) {
+                var listWare = warehousesService.GetAllWarehousesByIdSupplier(supplier.SupplierId);
+                WarehouseGrid.ItemsSource = listWare;
+            }
+            else
+            {
+                load();
+            }
+         
         }
 
         private void SaveWarehouse_Click(object sender, RoutedEventArgs e)
@@ -139,6 +147,7 @@ namespace WPF.Admin
                 ware.WarehouseName = txtWarehouseName.Text;
                 ware.Location = txtLocation.Text;
                 ware.SupplierId = supplier.SupplierId;
+                ware.IsApproved = true;
                 if (int.TryParse(txtCapacity.Text, out int capacity))
                 {
                     ware.Capacity = capacity;
@@ -221,6 +230,36 @@ namespace WPF.Admin
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             load();
+        }
+
+        private void ApproveWarehouse_Click(object sender, RoutedEventArgs e)
+        {
+            Warehouse ware = (Warehouse)(PendingWarehouseGrid.SelectedItem);
+            if (ware != null) { 
+                ware.IsApproved = true;
+                warehousesService.UpdateWarehouses(ware);
+                MessageBox.Show("Duyệt kho hàng thành công !");
+                PendingWarehouseGrid.ItemsSource = null;
+                PendingWarehouseGrid.ItemsSource = warehousesService.getAllNotApporveWarehouse();
+                WarehouseGrid.ItemsSource = null;
+
+                load();
+                clear();
+            }
+            else
+            {
+                MessageBox.Show("Duyệt kho hàng thất bại!");
+            }
+        }
+
+        private void ClosePendingWarehousesPopup(object sender, RoutedEventArgs e)
+        {
+            PendingWarehousesPopup.Visibility = Visibility.Collapsed;
+        }
+
+        private void OpenPendingWarehousesPopup(object sender, RoutedEventArgs e)
+        {
+            PendingWarehousesPopup.Visibility = Visibility.Visible;
         }
     }
 }

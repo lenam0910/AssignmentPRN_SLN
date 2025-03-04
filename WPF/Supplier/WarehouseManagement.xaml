@@ -34,7 +34,7 @@
             <!-- DataGrid hiển thị kho hàng -->
             <DataGrid x:Name="WarehouseDataGrid" Grid.Column="0" AutoGenerateColumns="False"
                       SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Auto"
-                      SelectionChanged="WarehouseDataGrid_SelectionChanged">
+                      SelectionChanged="WarehouseDataGrid_SelectionChanged" CanUserAddRows="False">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Tên Kho" Binding="{Binding WarehouseName}" Width="*"/>
                     <DataGridTextColumn Header="Vị Trí" Binding="{Binding Location}" Width="*"/>

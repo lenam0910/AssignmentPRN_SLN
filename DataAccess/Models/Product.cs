@@ -21,6 +21,8 @@ public partial class Product
 
     public bool IsDeleted { get; set; }
 
+    public bool IsApproved { get; set; }
+
     public string? Description { get; set; }
 
     public virtual Category Category { get; set; } = null!;

@@ -115,7 +115,7 @@ namespace Service
             var display = new List<Inventory>();
             foreach (var item in lst)
             {
-                if (item.IsDeleted == false && item.WarehouseId == id)
+                if (item.IsDeleted == false && item.WarehouseId == id )
                 {
                     display.Add(item);
                 }

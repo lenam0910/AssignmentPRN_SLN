@@ -59,9 +59,9 @@ namespace WPF.Supplier
                 userSupplierService.Add(userSupplier);
                 saveAvatarSupplier();
 
-                SupplierDashboard supplierDashboard = new SupplierDashboard();
-                MessageBox.Show("Đăng ký thông tin nhà cung cấp thành công!");
-                supplierDashboard.Show();
+                Login login = new Login();
+                MessageBox.Show("Đăng ký thông tin nhà cung cấp thành công! Hãy chờ Admin duyệt!");
+                login.Show();
                 this.Hide();
             }
 
