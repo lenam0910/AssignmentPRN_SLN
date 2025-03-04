@@ -26,7 +26,7 @@ namespace WPF.Supplier
         private InventoryService inventoryService;
         private WarehousesService warehousesService;
         private ProductService productService;
-        private User user;
+        private DataAccess.Models.User user;
         private TransactionLogService transactionLogService;
         private Warehouse warehouse;
         private Product product;
@@ -45,7 +45,7 @@ namespace WPF.Supplier
             transactionLogService = new TransactionLogService();
             userService = new();
             InitializeComponent();
-            user = Application.Current.Properties["UserAccount"] as User;
+            user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             LoadData();
 
         }

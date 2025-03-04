@@ -59,7 +59,7 @@ namespace WPF.Admin
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            User user = Application.Current.Properties["UserAccount"] as User;
+            DataAccess.Models.User user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             if (user.Avatar != null) { 
             avaAdmin.Source = new BitmapImage(new Uri(user.Avatar));
             }

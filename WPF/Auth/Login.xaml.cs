@@ -16,6 +16,7 @@ using Service;
 using WPF;
 using WPF.Admin;
 using WPF.Supplier;
+using WPF.User;
 
 namespace WPF
 {
@@ -98,7 +99,9 @@ namespace WPF
                 }
                 else if (account.RoleId == 2)
                 {
-                   
+                   UserDashboard userDashboard = new UserDashboard();
+                    this.Hide();
+                    userDashboard.Show();
                 }
 
                 else

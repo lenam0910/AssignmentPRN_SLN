@@ -35,16 +35,15 @@ namespace WPF.Supplier
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            User user = Application.Current.Properties["UserAccount"] as User;
+            DataAccess.Models.User user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             var supplier = userSupplierService.GetSupplierByUserId(user.UserId);
-            if (user is User && !string.IsNullOrEmpty(user.Avatar))
+            if (user is DataAccess.Models.User && !string.IsNullOrEmpty(user.Avatar))
             {
                 avaSupplier.Source = new BitmapImage(new Uri(user.Avatar));
             }
 
 
             txtBlockHead.Text = " " + user.Username;
-            txtNameSupplier.Text = "Dashboard " + supplier.SupplierName;
             MainFrame.Navigate(new StatisticsPage());
 
 

@@ -28,17 +28,18 @@ namespace WPF.Supplier
     {
         private TransactionLogService service;
         private SupplierService supplierService;
-        private User user;
+        private DataAccess.Models.User user;
         private DataAccess.Models.Supplier supplier;
         private ProductService productService;
         private WarehousesService warehousesService;
         private UserService userService;
+        private List<TransactionLog> transactionLogsLst;
         public TransactionLogPage()
         {
             warehousesService = new WarehousesService();
             productService = new();
             userService = new();
-            user = Application.Current.Properties["UserAccount"] as User;
+            user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             supplierService = new SupplierService();
             service = new TransactionLogService();
             InitializeComponent();
@@ -47,8 +48,8 @@ namespace WPF.Supplier
 
         private void LoadData()
         {
-            var lst = lstTran();
-            dgTransactionLogs.ItemsSource = lst;
+            transactionLogsLst = lstTran();
+            dgTransactionLogs.ItemsSource = transactionLogsLst;
         }
 
         private List<TransactionLog> lstTran()
@@ -104,12 +105,12 @@ namespace WPF.Supplier
 
         private void FilterLogs(object sender, RoutedEventArgs e)
         {
-            var lst = lstTran();
+
             DateTime from = (DateTime)dpFromDate.SelectedDate;
             DateTime to = (DateTime)dpToDate.SelectedDate;
             if (txtSearch != null)
             {
-                foreach (var item in lst)
+                foreach (var item in transactionLogsLst)
                 {
                     if (item.Product.ProductName.Contains(txtSearch.Text) && item.ChangeDate.Value >= from.Date && item.ChangeDate.Value <= to.Date)
                     {
@@ -117,11 +118,11 @@ namespace WPF.Supplier
                     }
                     else
                     {
-                        lst.Remove(item);
+                        transactionLogsLst.Remove(item);
                     }
                 }
             }
-            dgTransactionLogs.ItemsSource = lst;
+            dgTransactionLogs.ItemsSource = transactionLogsLst;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -131,11 +132,19 @@ namespace WPF.Supplier
 
         private void txtSearch_TextChanged(object sender, TextChangedEventArgs e)
         {
-            var lst = lstTran();
-            var filteredList = lst.Where(item => item.Product.ProductName.Equals(txtSearch.Text)).ToList();
-            if (dgTransactionLogs != null)
+            if(transactionLogsLst != null)
             {
-                dgTransactionLogs.ItemsSource = filteredList;
+                var filteredList = transactionLogsLst.Where(item => item.Product.ProductName.Equals(txtSearch.Text)).ToList();
+                if (filteredList != null)
+                {
+                    dgTransactionLogs.ItemsSource = null;
+                    dgTransactionLogs.ItemsSource = filteredList;
+                }
+                
+            }
+            else
+            {
+                return;
             }
         }
 
@@ -145,7 +154,7 @@ namespace WPF.Supplier
 
             jsonSaveFile.DefaultExt = "json";
             jsonSaveFile.Filter = "JSON Files (*.json)|*.json|All Files (*.*)|*.*";
-            if(jsonSaveFile.ShowDialog() == true)
+            if (jsonSaveFile.ShowDialog() == true)
             {
                 var jsonOption = new JsonSerializerOptions { WriteIndented = true };
 
@@ -156,7 +165,24 @@ namespace WPF.Supplier
                 File.WriteAllText(jsonSaveFile.FileName, jsonContent);
                 MessageBox.Show("Lưu File thành công! " + jsonSaveFile.FileName);
             }
-            
+
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog jsonFile = new OpenFileDialog();
+            jsonFile.DefaultExt = "json";
+            jsonFile.Filter = "JSON Files (*.json)|*.json|All Files (*.*)|*.*";
+
+            if (jsonFile.ShowDialog() == true)
+            {
+                string jsonText = File.ReadAllText(jsonFile.FileName);
+                List<TransactionLog> lst = JsonSerializer.Deserialize<List<TransactionLog>>(jsonText);
+                transactionLogsLst = lst;
+                dgTransactionLogs.ItemsSource = transactionLogsLst;
+
+
+            }
         }
     }
 }

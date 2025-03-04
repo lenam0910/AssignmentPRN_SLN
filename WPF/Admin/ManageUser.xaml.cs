@@ -81,7 +81,7 @@ namespace WPF.Admin
         {
 
             AddUserPanel.Visibility = Visibility.Collapsed;
-            User user = UserGrid.SelectedItem as User;
+            DataAccess.Models.User user = UserGrid.SelectedItem as DataAccess.Models.User;
             if (user != null)
             {
                 EditUserPanel.Visibility = Visibility.Visible;
@@ -100,7 +100,7 @@ namespace WPF.Admin
 
         private void DeleteUser_Click(object sender, RoutedEventArgs e)
         {
-            if (UserGrid.SelectedItem is User selectedUser)
+            if (UserGrid.SelectedItem is DataAccess.Models.User selectedUser)
             {
                 if (UserService.DeleteUser(selectedUser))
                 {
@@ -117,7 +117,7 @@ namespace WPF.Admin
 
         private void SaveUser_Click(object sender, RoutedEventArgs e)
         {
-            User user = new User();
+            DataAccess.Models.User user = new DataAccess.Models.User();
             user.FullName = fullname.Text;
             user.Email = email.Text;
             user.Username = username.Text;
@@ -144,7 +144,7 @@ namespace WPF.Admin
 
         private void SaveEditUser_Click(object sender, RoutedEventArgs e)
         {
-            User user = UserGrid.SelectedItem as User;
+            DataAccess.Models.User user = UserGrid.SelectedItem as DataAccess.Models.User;
             user.FullName = txtFullname.Text;
             user.Email = txtEmail.Text;
             user.Username = txtUsername.Text;
@@ -195,14 +195,14 @@ namespace WPF.Admin
             if (saveFileDialog.ShowDialog() == true)
             {
                 string[] lines = File.ReadAllLines(saveFileDialog.FileName);
-                List<User> users = new List<User>();
+                List<DataAccess.Models.User> users = new List<DataAccess.Models.User>();
                 foreach (var user in lines)
                 {
                     if (string.IsNullOrWhiteSpace(user)) continue;
                     string[] parts = user.Split('-');
                     if (parts.Length < 9) continue;
 
-                    User uFile = new User
+                    DataAccess.Models.User uFile = new DataAccess.Models.User
                     {
                         UserId = int.Parse(parts[0]),
                         Username = parts[1],

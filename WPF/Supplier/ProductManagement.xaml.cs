@@ -23,10 +23,10 @@ namespace WPF.Supplier
         private ProductService productService;
         private DataAccess.Models.Supplier supplier;
         private UserSupplierService UserSupplierService;
-        private User user;
+        private DataAccess.Models.User user;
         public ProductManagement()
         {
-            user = Application.Current.Properties["UserAccount"] as User;
+            user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
 
             UserSupplierService = new UserSupplierService();
             categoryService = new();
@@ -60,7 +60,7 @@ namespace WPF.Supplier
                 MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
-            User u = Application.Current.Properties["UserAccount"] as User;
+            DataAccess.Models.User u = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             Product newProduct = new Product
             {
                 ProductName = txtProductName.Text,

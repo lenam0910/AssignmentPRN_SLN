@@ -1,0 +1,21 @@
+﻿<Page x:Class="WPF.User.TransactionsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Transactions">
+
+    <Grid Background="#ECF0F1">
+        <TextBlock Text="💰 Lịch sử giao dịch" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20"/>
+
+        <ListView Margin="20,60,20,20">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Mã giao dịch" Width="150" DisplayMemberBinding="{Binding TransactionId}"/>
+                    <GridViewColumn Header="Ngày giao dịch" Width="150" DisplayMemberBinding="{Binding TransactionDate}"/>
+                    <GridViewColumn Header="Số tiền" Width="150" DisplayMemberBinding="{Binding Amount}"/>
+                    <GridViewColumn Header="Phương thức" Width="120" DisplayMemberBinding="{Binding PaymentMethod}"/>
+                    <GridViewColumn Header="Trạng thái" Width="120" DisplayMemberBinding="{Binding Status}"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+    </Grid>
+</Page>

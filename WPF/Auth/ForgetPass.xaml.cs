@@ -14,7 +14,7 @@ namespace WPF
     public partial class ForgetPass : Window
     {
         private string generatedOTP = ""; // Lưu OTP tạm thời
-        private User User;
+        private DataAccess.Models.User User;
         private UserService service;
         private EmailSenderService emailSenderService;
         public ForgetPass()

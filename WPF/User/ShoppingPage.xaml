@@ -1,0 +1,37 @@
+﻿<Page x:Class="WPF.User.ShoppingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Shopping">
+    <Grid Background="#ECF0F1">
+        <StackPanel Margin="20">
+            <TextBlock Text="🛒 Cửa hàng" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" Margin="10"/>
+
+            <!-- Thanh tìm kiếm -->
+            <TextBox x:Name="SearchBox" Height="35" Margin="0,10,0,10" />
+
+            <!-- Danh mục sản phẩm -->
+            <ComboBox x:Name="CategoryFilter" Height="35" Margin="0,10,0,10">
+                <ComboBoxItem Content="Tất cả"/>
+                <ComboBoxItem Content="Điện tử"/>
+                <ComboBoxItem Content="Thời trang"/>
+                <ComboBoxItem Content="Gia dụng"/>
+            </ComboBox>
+
+            <!-- Danh sách sản phẩm -->
+            <ListView Margin="0,10,0,10">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5" Background="White"   >
+                            <Image Source="{Binding ImageUrl}" Width="80" Height="80" Margin="5"/>
+                            <StackPanel Orientation="Vertical" Margin="10,0,0,0">
+                                <TextBlock Text="{Binding ProductName}" FontSize="16" FontWeight="Bold"/>
+                                <TextBlock Text="Giá: {Binding Price}" FontSize="14" Foreground="#E74C3C"/>
+                                <Button Content="🛒 Mua ngay" Background="#3498DB" Foreground="White" FontSize="14" Width="120" Height="30" Margin="5" Command="{Binding BuyNowCommand}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </StackPanel>
+    </Grid>
+</Page>

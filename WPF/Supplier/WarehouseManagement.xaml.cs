@@ -12,12 +12,12 @@ namespace WPF.Supplier
         private readonly WarehousesService warehouseService;
         private readonly ProductService productService;
         private readonly InventoryService inventoryService;
-        private readonly User user;
+        private readonly DataAccess.Models.User user;
         private UserSupplierService userSupplierService;
         private DataAccess.Models.Supplier supplier;
         public WarehouseManagement()
         {
-            user = Application.Current.Properties["UserAccount"] as User;
+            user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             userSupplierService = new UserSupplierService();
             InitializeComponent();
             warehouseService = new WarehousesService();

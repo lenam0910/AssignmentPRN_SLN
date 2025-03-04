@@ -16,7 +16,8 @@
             <DatePicker x:Name="dpFromDate" Width="150" Margin="10,0,0,0"  VerticalAlignment="Center"/>
             <DatePicker x:Name="dpToDate" Width="150" Margin="10,0,0,0"  VerticalAlignment="Center"/>
             <Button Content="Lọc" Width="80" Height="30" Margin="10,0,0,0"  VerticalAlignment="Center" Click="FilterLogs" Background="#546E7A" Foreground="White"/>
-            <Button Content="Lưu File" Width="80" Height="30" Margin="10,0,0,0"  VerticalAlignment="Center"  Background="#546E7A" Foreground="White" Click="Button_Click"/>
+            <Button Content="Lưu File" Width="80" Height="30" Margin="10,0,0,0"  VerticalAlignment="Center"  Background="Red" Foreground="White" Click="Button_Click"/>
+            <Button Content="Đọc File" Width="80" Height="30" Margin="10,0,0,0"  VerticalAlignment="Center"  Background="Green" Foreground="White" Click="Button_Click_1" />
 
         </StackPanel>
 

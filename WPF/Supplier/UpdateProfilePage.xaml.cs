@@ -34,13 +34,13 @@ namespace WPF.Supplier
 
         private UserService _userService;
         private SupplierService _supplierService;
-        private User user;
+        private DataAccess.Models.User user;
         private DataAccess.Models.Supplier supplier;
         private UserSupplierService userSupplierService;
         public UpdateProfilePage()
         {
             userSupplierService = new();
-            user = Application.Current.Properties["UserAccount"] as User;
+            user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             _userService = new UserService();
             _supplierService = new SupplierService();
             InitializeComponent();

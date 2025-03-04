@@ -86,11 +86,11 @@ bool ValidateInputs()
             }
         }
 
-        private User setUser()
+        private DataAccess.Models.User setUser()
         {
             if (!ValidateInputs()) return null;
             DateOnly.TryParse(dobPicker.Text, out DateOnly dob);
-            User u = new()
+            DataAccess.Models.User u = new()
             {
                 Username = uname.Text.Trim(),
                 Password = HashPassword(pwd.Password.Trim()), // Mã hóa mật khẩu
@@ -117,7 +117,7 @@ bool ValidateInputs()
         {
             try
             {
-                User user = setUser();
+                DataAccess.Models.User user = setUser();
                 if (user == null) return; 
 
                 if (service.CreateUser(user))

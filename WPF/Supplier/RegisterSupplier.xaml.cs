@@ -40,7 +40,7 @@ namespace WPF.Supplier
 
         private void Register_Click(object sender, RoutedEventArgs e)
         {
-            User user = Application.Current.Properties["UserAccount"] as User;
+            DataAccess.Models.User user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
 
             DataAccess.Models.Supplier supplier = new()
             {
