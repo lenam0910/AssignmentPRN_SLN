@@ -40,18 +40,21 @@
             <TextBlock Text="Chọn Kho" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
             <ComboBox x:Name="WarehouseComboBox" Margin="0,5" SelectionChanged="WarehouseComboBox_SelectionChanged"/>
 
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="Sản phẩm" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
-                <TextBlock x:Name="txtRemain" FontSize="10" FontWeight="Heavy" Foreground="Green" Margin="10,0,0,0"/>
+            <StackPanel x:Name="ProductStack" Visibility="Collapsed">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Sản phẩm" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
+                    <TextBlock x:Name="txtRemain" FontSize="10" FontWeight="Heavy" Foreground="Green" Margin="10,0,0,0"/>
 
+                </StackPanel>
+                <ComboBox x:Name="txtProductName" Margin="0,5" SelectionChanged="txtProductName_SelectionChanged"/>
+
+
+                <TextBlock Text="Số lượng" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
+                <TextBox x:Name="txtQuantity" Margin="0,5"/>
             </StackPanel>
-            <ComboBox x:Name="txtProductName" Margin="0,5" SelectionChanged="txtProductName_SelectionChanged"/>
+            
 
-
-            <TextBlock Text="Số lượng" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
-            <TextBox x:Name="txtQuantity" Margin="0,5"/>
-
-            <StackPanel x:Name="status" Visibility="Collapsed">
+            <StackPanel x:Name="status" Visibility="Visible">
                 <TextBlock Text="Trạng thái" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
                 <ComboBox x:Name="txtStockStatus" Margin="0,5" SelectionChanged="txtStockStatus_SelectionChanged">
                     <ComboBoxItem Content="Nhập"/>

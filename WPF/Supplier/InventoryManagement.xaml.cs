@@ -93,7 +93,7 @@ namespace WPF.Supplier
                 txtProductName.ItemsSource = productService.GetAllProductsBySupplierId(supplier.SupplierId);
                 txtProductName.DisplayMemberPath = "ProductName";
                 txtProductName.SelectedValuePath = "ProductId";
-                status.Visibility = Visibility.Visible;
+          
             }
             else
             {
@@ -205,6 +205,8 @@ namespace WPF.Supplier
             SaveBtn.Visibility = Visibility.Visible;
             status.Visibility = Visibility.Collapsed;
             OtherWareHouse.Visibility = Visibility.Collapsed;
+            ProductStack.Visibility = Visibility.Collapsed;
+
         }
         private void clear()
         {
@@ -375,6 +377,7 @@ namespace WPF.Supplier
             // Lấy giá trị từ ComboBoxItem
             if (txtStockStatus.SelectedItem is ComboBoxItem selectedItem && selectedItem.Content != null)
             {
+                ProductStack.Visibility = Visibility.Visible;
                 string selectedText = selectedItem.Content.ToString().Trim();
 
                 if (string.Equals(selectedText.Normalize(NormalizationForm.FormD),
