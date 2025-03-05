@@ -1,7 +1,8 @@
-﻿<Page x:Class="WPF.User.ShoppingPage"
+﻿<Page
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Title="Shopping">
+      xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="WPF.User.ShoppingPage"
+      Title="Shopping" Loaded="Page_Loaded_1">
     <Grid Background="#F8F9FA">
 
         <!-- Thanh điều hướng (Navbar) -->
@@ -31,7 +32,7 @@
         <!-- Nội dung chính -->
         <StackPanel Margin="20,80,20,20">
             <!-- Danh sách sản phẩm -->
-            <ListView Margin="0,10,0,0" x:Name="lstProduct" Background="Transparent">
+            <ListView Margin="0,10,0,0" x:Name="lstProduct" Background="Transparent" av:ItemsSource="{av:SampleData ItemCount=5}" SelectionChanged="lstProduct_SelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Border Background="White" Padding="10" Margin="5" CornerRadius="10">
@@ -42,7 +43,7 @@
                                     <ColumnDefinition Width="120"/>
                                 </Grid.ColumnDefinitions>
 
-                                <Image Source="{Binding ImageUrl}" Width="90" Height="90" Grid.Column="0" Stretch="UniformToFill" Margin="5"/>
+                                <Image Source="{Binding Avatar}" Width="90" Height="90" Grid.Column="0" Stretch="UniformToFill" Margin="5"/>
 
                                 <StackPanel Grid.Column="1" Margin="10,0,0,0">
                                     <TextBlock Text="{Binding ProductName}" FontSize="16" FontWeight="Bold"/>

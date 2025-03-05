@@ -18,6 +18,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Service;
 using static MaterialDesignThemes.Wpf.Theme;
 using Newtonsoft.Json.Linq;
+using DataAccess.Models;
 
 namespace WPF.User
 {
@@ -26,11 +27,16 @@ namespace WPF.User
     /// </summary>
     public partial class ShoppingPage : Page
     {
-        private string apiKey = "AIzaSyAJbeqohHAZ9U7eOcf00T6k4GmDEr7j5wU";
+        private ChatBotAI chatBotAI;
         private ProductService productService;
         private StringBuilder chatHistory;
+        private SupplierService supplierService;
+        private InventoryService inventoryService;
         public ShoppingPage()
         {
+            chatBotAI = new();
+            supplierService = new SupplierService();
+            inventoryService = new InventoryService();
             chatHistory = new StringBuilder();
             productService = new ProductService();
             InitializeComponent();
@@ -46,53 +52,8 @@ namespace WPF.User
 
         }
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
-        {
-            lstProduct.ItemsSource = productService.GetAllProducts();
-        }
 
-
-        private async Task<string> SendRequestAndGetResponse(string userInput)
-        {
-            string jsonBody = $@"{{
-                ""contents"": [
-                    {{
-                        ""role"": ""user"",
-                        ""parts"": [
-                            {{
-                                ""text"": ""{userInput}""
-                            }}
-                        ]
-                    }}
-                ]
-            }}";
-
-            using var client = new HttpClient();
-            var request = new HttpRequestMessage(HttpMethod.Post, $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey}");
-            request.Content = new StringContent(jsonBody, Encoding.UTF8);
-            request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
-
-            var response = await client.SendAsync(request).ConfigureAwait(false);
-            string responseBody = await response.Content.ReadAsStringAsync();
-
-            if (response.IsSuccessStatusCode)
-            {
-                try
-                {
-                    var json = JObject.Parse(responseBody);
-                    var outputText = json["candidates"]?[0]?["content"]?["parts"]?[0]?["text"]?.ToString();
-                    return outputText ?? "Không nhận được phản hồi từ AI.";
-                }
-                catch (Exception ex)
-                {
-                    return $"Lỗi xử lý JSON: {ex.Message}";
-                }
-            }
-            else
-            {
-                return $"Lỗi API: {response.StatusCode} - {response.ReasonPhrase}\nChi tiết: {responseBody}";
-            }
-        }
+       
 
         private async void button1_Click(object sender, RoutedEventArgs e)
         {
@@ -102,14 +63,14 @@ namespace WPF.User
             ChatInput.Clear(); // Xóa input sau khi gửi
             chatHistory.AppendLine($"👤 Bạn: {userInput}"); // Thêm tin nhắn của người dùng vào lịch sử
 
-            string output = await SendRequestAndGetResponse(userInput);
+            string output = await chatBotAI.SendRequestAndGetResponse(userInput);
 
             // Xử lý xuống dòng
             output = output.Replace("\\n", Environment.NewLine)
                            .Replace("\n", Environment.NewLine)
                            .Replace("**", "");
 
-            chatHistory.AppendLine($"🤖 GPT: {output}"); // Thêm phản hồi AI vào lịch sử
+            chatHistory.AppendLine($"\n🤖 GPT: {output}"); // Thêm phản hồi AI vào lịch sử
             ChatContent.Text = chatHistory.ToString(); // Cập nhật hiển thị chat
         }
 
@@ -125,6 +86,40 @@ namespace WPF.User
             OpenChatButton.Visibility = Visibility.Visible;
 
         }
+
+        private void Page_Loaded_1(object sender, RoutedEventArgs e)
+        {
+            var inventory = inventoryService.GetInventoryList();
+            var products = productService.GetAllProducts();
+            var lstDisplay = new List<Product>();
+            if (products == null || !products.Any())
+            {
+                MessageBox.Show("Danh sách sản phẩm trống!");
+            }
+            foreach (Product product in products)
+            {
+                foreach (Inventory item in inventory)
+                {
+
+                    if (item.ProductId == product.ProductId)
+                    {
+                        lstDisplay.Add(product);
+                    }
+                }
+            }
+            lstProduct.ItemsSource = lstDisplay;
+        }
+
+        private async void lstProduct_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Product product = lstProduct.SelectedItem as Product;
+            if (product != null)
+            {
+                await Task.Delay(5000); // Trì hoãn 1 giây (1000 ms)
+                ChatGptPopup.Visibility = Visibility.Visible;
+            }
+        }
+
     }
 }
 
