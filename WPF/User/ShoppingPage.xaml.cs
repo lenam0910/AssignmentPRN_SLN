@@ -52,15 +52,27 @@ namespace WPF.User
 
         }
 
-
-       
-
-        private async void button1_Click(object sender, RoutedEventArgs e)
+        private async Task helpBot(string userInput)
         {
-            string userInput = ChatInput.Text;
-            if (string.IsNullOrWhiteSpace(userInput)) return;
+            // Kiểm tra xem chatHistory có dòng nào chưa
+            if (chatHistory.Length > 0)
+            {
+                chatHistory.AppendLine($"👤 Bạn: {userInput}"); // Chỉ thêm nếu không phải tin nhắn đầu tiên
+            }
 
-            ChatInput.Clear(); // Xóa input sau khi gửi
+            string output = await chatBotAI.SendRequestAndGetResponse(userInput);
+
+            // Xử lý xuống dòng
+            output = output.Replace("\\n", Environment.NewLine)
+                           .Replace("\n", Environment.NewLine)
+                           .Replace("**", "");
+
+            chatHistory.AppendLine($"\n🤖 Tư vấn viên: {output}"); // Thêm phản hồi AI vào lịch sử
+        }
+
+
+        private async Task sendBot(string userInput)
+        {
             chatHistory.AppendLine($"👤 Bạn: {userInput}"); // Thêm tin nhắn của người dùng vào lịch sử
 
             string output = await chatBotAI.SendRequestAndGetResponse(userInput);
@@ -70,7 +82,15 @@ namespace WPF.User
                            .Replace("\n", Environment.NewLine)
                            .Replace("**", "");
 
-            chatHistory.AppendLine($"\n🤖 GPT: {output}"); // Thêm phản hồi AI vào lịch sử
+            chatHistory.AppendLine($"\n🤖 Tư vấn viên: {output}"); // Thêm phản hồi AI vào lịch sử
+        }
+        private async void button1_Click(object sender, RoutedEventArgs e)
+        {
+            string userInput = ChatInput.Text;
+            if (string.IsNullOrWhiteSpace(userInput)) return;
+
+            ChatInput.Clear(); // Xóa input sau khi gửi
+            await sendBot(userInput);
             ChatContent.Text = chatHistory.ToString(); // Cập nhật hiển thị chat
         }
 
@@ -115,11 +135,20 @@ namespace WPF.User
             Product product = lstProduct.SelectedItem as Product;
             if (product != null)
             {
-                await Task.Delay(5000); // Trì hoãn 1 giây (1000 ms)
+                string input = $"GIới thiệu ngắn gọn về ưu điểm và nhược điểm của sản phẩm" + product.ProductName + " này cho tôi, bạn với tư cách một người tư vấn sản phẩm";
+                await helpBot(input);
+                await Task.Delay(3000); 
                 ChatGptPopup.Visibility = Visibility.Visible;
+                OpenChatButton.Visibility = Visibility.Collapsed;
+                ChatContent.Text = chatHistory.ToString(); // Cập nhật hiển thị chat
+
+
+
             }
+
+        }
         }
 
     }
-}
+
 

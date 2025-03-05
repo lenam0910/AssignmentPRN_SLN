@@ -59,7 +59,7 @@
         </StackPanel>
 
         <!-- Modal Chat GPT (mặc định ẩn) -->
-        <Border x:Name="ChatGptPopup" Background="White" Width="250" Height="350" CornerRadius="10" BorderBrush="#BDC3C7" BorderThickness="1"
+        <Border x:Name="ChatGptPopup" Background="White" Width="250" Height="360" CornerRadius="10" BorderBrush="#BDC3C7" BorderThickness="1"
         Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="20">
             <StackPanel>
                 <!-- Thanh tiêu đề chứa văn bản + nút đóng -->
