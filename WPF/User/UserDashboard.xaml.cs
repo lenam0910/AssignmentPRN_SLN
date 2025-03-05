@@ -45,6 +45,8 @@ namespace WPF.User
 
 
             this.DataContext = user;
+            MainFrame.Navigate(new ShoppingPage());
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
