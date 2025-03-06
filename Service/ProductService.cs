@@ -11,7 +11,7 @@ namespace Service
     public class ProductService
     {
         private ProductRepository repository;
-        
+
         public ProductService()
         {
             repository = new ProductRepository();
@@ -25,7 +25,7 @@ namespace Service
 
         public List<Product> GetAllProducts()
         {
-            var lst =repository.GetAll();
+            var lst = repository.GetAll();
             var lstDis = new List<Product>();
             foreach (Product items in lst)
             {
@@ -80,7 +80,9 @@ namespace Service
 
             return lstDis;
         }
-        
+      
+
+
 
         public bool AddProduct(Product product)
         {
@@ -97,8 +99,9 @@ namespace Service
         public bool DeleteProduct(Product product)
         {
             bool isCheked = false;
-            if (product != null) { 
-                isCheked= true;
+            if (product != null)
+            {
+                isCheked = true;
                 product.IsDeleted = true;
                 repository.Update(product);
                 return isCheked;

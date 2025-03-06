@@ -19,6 +19,7 @@ using Service;
 using static MaterialDesignThemes.Wpf.Theme;
 using Newtonsoft.Json.Linq;
 using DataAccess.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace WPF.User
 {
@@ -32,29 +33,30 @@ namespace WPF.User
         private StringBuilder chatHistory;
         private SupplierService supplierService;
         private InventoryService inventoryService;
+        private CategoryService categoryService;
+        private DataAccess.Models.User user;
+        private OrderService orderService;
+        private OrderDetailService orderDetailService;
+        private List<Product> products;
         public ShoppingPage()
         {
+            orderDetailService = new();
+            orderService = new();
+            user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
+            categoryService = new CategoryService();
             chatBotAI = new();
             supplierService = new SupplierService();
             inventoryService = new InventoryService();
             chatHistory = new StringBuilder();
             productService = new ProductService();
+            products = productService.GetAllProducts();
             InitializeComponent();
         }
 
-        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
 
-        }
-
-        private void CategoryFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-        }
 
         private async Task helpBot(string userInput)
         {
-            // Kiểm tra xem chatHistory có dòng nào chưa
             if (chatHistory.Length > 0)
             {
                 chatHistory.AppendLine($"👤 Bạn: {userInput}"); // Chỉ thêm nếu không phải tin nhắn đầu tiên
@@ -67,7 +69,7 @@ namespace WPF.User
                            .Replace("\n", Environment.NewLine)
                            .Replace("**", "");
 
-            chatHistory.AppendLine($"\n🤖 Tư vấn viên: {output}"); // Thêm phản hồi AI vào lịch sử
+            chatHistory.AppendLine($"\n🤖 Tư vấn viên: {output}");
         }
 
 
@@ -83,13 +85,14 @@ namespace WPF.User
                            .Replace("**", "");
 
             chatHistory.AppendLine($"\n🤖 Tư vấn viên: {output}"); // Thêm phản hồi AI vào lịch sử
+
         }
         private async void button1_Click(object sender, RoutedEventArgs e)
         {
             string userInput = ChatInput.Text;
             if (string.IsNullOrWhiteSpace(userInput)) return;
 
-            ChatInput.Clear(); // Xóa input sau khi gửi
+            ChatInput.Clear();
             await sendBot(userInput);
             ChatContent.Text = chatHistory.ToString(); // Cập nhật hiển thị chat
         }
@@ -106,8 +109,7 @@ namespace WPF.User
             OpenChatButton.Visibility = Visibility.Visible;
 
         }
-
-        private void Page_Loaded_1(object sender, RoutedEventArgs e)
+        private void load()
         {
             var inventory = inventoryService.GetInventoryList();
             var products = productService.GetAllProducts();
@@ -127,7 +129,16 @@ namespace WPF.User
                     }
                 }
             }
+            CategoryFilter.ItemsSource = categoryService.getAll();
+            CategoryFilter.DisplayMemberPath = "CategoryName"; 
+            CategoryFilter.SelectedValuePath = "CategoryId";
             lstProduct.ItemsSource = lstDisplay;
+            CategoryFilter.SelectedItem = null;
+        }
+       
+        private void Page_Loaded_1(object sender, RoutedEventArgs e)
+        {
+            load();
         }
 
         private async void lstProduct_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -137,18 +148,123 @@ namespace WPF.User
             {
                 string input = $"GIới thiệu ngắn gọn về ưu điểm và nhược điểm của sản phẩm" + product.ProductName + " này cho tôi, bạn với tư cách một người tư vấn sản phẩm";
                 await helpBot(input);
-                await Task.Delay(3000); 
                 ChatGptPopup.Visibility = Visibility.Visible;
                 OpenChatButton.Visibility = Visibility.Collapsed;
-                ChatContent.Text = chatHistory.ToString(); // Cập nhật hiển thị chat
-
-
+                ChatContent.Text = chatHistory.ToString();
 
             }
 
-        }
+            //NavigationService?.Navigate(new OrdersPage());
+
         }
 
+       
+
+        
+
+        private void BuyNowButton_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+
+            if (sender is System.Windows.Controls.Button button && button.DataContext is Product selectedProduct)
+            {
+                int quantity = 1; 
+
+                
+
+              
+
+                Order order = orderService.GetOrderByUserId(user.UserId);
+                if (order == null)
+                {
+                    order = new Order { UserId = user.UserId ,Status = "Chờ xử lý" };
+                    if (orderService.addOrder(order))
+                    {
+                        MessageBox.Show("Tạo giỏ hàng mới thành công!");
+                    }
+                }
+                OrderDetail orderDetail = orderDetailService.GetOrdersDetailByProductId(selectedProduct.ProductId);
+                if (orderDetail != null) {
+                    orderDetail = new OrderDetail
+                    {
+                        OrderId = order.OrderId,
+                        ProductId = selectedProduct.ProductId,
+                        WarehouseId = selectedProduct.CategoryId,
+                        Quantity = quantity,
+                        PriceAtOrder = quantity * selectedProduct.Price
+                    };
+
+                    if (orderDetailService.AddOrderDetail(orderDetail))
+                    {
+                        MessageBox.Show("Sản phẩm đã được thêm vào giỏ hàng!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                }
+                else
+                { 
+                    orderDetail.Quantity = quantity + orderDetail.Quantity;
+                    orderDetailService.UpdateOrderDetail(orderDetail);
+                }
+            }
+        }
+
+        private void SearchByName(string name)
+        {
+            var lstTemp = productService.GetAllProducts();
+            var lst = inventoryService.GetInventoryList();
+            foreach (var product in lstTemp)
+            {
+                foreach (var item in lst)
+                {
+                    if (product.ProductId != item.ProductId && !product.ProductName.Contains(name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        products.Remove(product); 
+                    }
+                }
+            }
+           
+            
+            }
+        private void SearchByCategoryName(int categoryId)
+        {
+            var lstTemp = productService.GetAllProducts();
+            var lst = inventoryService.GetInventoryList();
+            foreach (var product in lstTemp)
+            {
+                foreach (var item in lst)
+                {
+                    if (product.ProductId != item.ProductId && product.CategoryId == categoryId)
+                    {
+                        products.Remove(product); ;
+                    }
+                }
+            }
+
+
+        }
+        private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(SearchBox.Text))
+            {
+                load();
+                return;
+            }
+            SearchByName(SearchBox.Text);
+            lstProduct.ItemsSource = products; 
+        }
+
+        private void CategoryFilter_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        {
+            if (CategoryFilter.SelectedItem == null)
+            {
+                load();
+                return;
+            }
+
+            
+            SearchByCategoryName((int)CategoryFilter.SelectedValue);
+            lstProduct.ItemsSource =products;
+        }
     }
+}
 
 

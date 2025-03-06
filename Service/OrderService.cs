@@ -21,7 +21,19 @@ namespace Service
         {
             return repository.GetOrder(id);
         }
-
+        public Order GetOrderByUserId(int id)
+        {
+            var lst = repository.GetAllOrders();
+            var display = new Order();
+            foreach (var item in lst)
+            {
+                if (item.IsDeleted == false && item.UserId == id && item.Status.Equals("Chờ xử lý",StringComparison.OrdinalIgnoreCase))
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
         public List<Order> GetAllOrders()
         {
             var lst = repository.GetAllOrders();

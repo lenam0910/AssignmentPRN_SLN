@@ -93,7 +93,7 @@ namespace WPF.Admin
 
         private void OpenPendingProductsPopup(object sender, RoutedEventArgs e)
         {
-            PendingSuppliersList.Visibility = Visibility.Visible;
+            PendingSuppliersPopup.Visibility = Visibility.Visible;
             SupplierGrid.SelectedItem = null;
         }
 
@@ -115,13 +115,7 @@ namespace WPF.Admin
         }
         
 
-        private void DeleteOldSupplierAvatar(DataAccess.Models.Supplier supplier)
-        {
-            if (!string.IsNullOrEmpty(supplier.Avatar) && File.Exists(supplier.Avatar))
-            {
-                File.Delete(supplier.Avatar);
-            }
-        }
+      
         private void SaveSupplier_Click(object sender, RoutedEventArgs e)
         {
             DataAccess.Models.Supplier supp =  null;
@@ -171,6 +165,7 @@ namespace WPF.Admin
             {
                 supp.IsApproved = true;
                 SupplierService.UpdateSupplier(supp);
+                load();
             }
             else
             {

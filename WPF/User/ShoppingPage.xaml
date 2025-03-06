@@ -16,23 +16,25 @@
 
                 <TextBlock Text="🛒 Cửa hàng" FontSize="24" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" Margin="10"/>
 
-                <Border Background="White" Padding="5" CornerRadius="20" Height="40" Grid.Column="1" VerticalAlignment="Center" Margin="10" BorderBrush="#BDC3C7" BorderThickness="1">
-                    <TextBox x:Name="SearchBox"  FontSize="14" BorderThickness="0" VerticalAlignment="Center" HorizontalAlignment="Stretch"/>
+                <Border Background="White" Padding="5" CornerRadius="20" Height="40"
+        Grid.Column="1" VerticalAlignment="Center" Margin="10"
+        BorderBrush="#BDC3C7" BorderThickness="1" Width="200">
+                    <TextBox x:Name="SearchBox" FontSize="14" BorderThickness="0"
+             VerticalAlignment="Center" HorizontalAlignment="Stretch" TextChanged="SearchBox_TextChanged"
+           />
                 </Border>
 
-                <ComboBox x:Name="CategoryFilter" Height="35" Grid.Column="2" VerticalAlignment="Center" Margin="10" Background="White">
-                    <ComboBoxItem Content="Tất cả" IsSelected="True"/>
-                    <ComboBoxItem Content="Điện tử"/>
-                    <ComboBoxItem Content="Thời trang"/>
-                    <ComboBoxItem Content="Gia dụng"/>
+
+                <ComboBox x:Name="CategoryFilter" Height="35" Grid.Column="2" VerticalAlignment="Center" Margin="10" Background="White" SelectionChanged="CategoryFilter_SelectionChanged_1">
+
                 </ComboBox>
             </Grid>
         </Border>
 
-        <!-- Nội dung chính -->
         <StackPanel Margin="20,80,20,20">
-            <!-- Danh sách sản phẩm -->
-            <ListView Margin="0,10,0,0" x:Name="lstProduct" Background="Transparent" av:ItemsSource="{av:SampleData ItemCount=5}" SelectionChanged="lstProduct_SelectionChanged">
+            <ListView Margin="0,10,0,0" x:Name="lstProduct" Background="Transparent" 
+               av:ItemsSource="{av:SampleData ItemCount=5}" 
+               SelectionChanged="lstProduct_SelectionChanged">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Border Background="White" Padding="10" Margin="5" CornerRadius="10">
@@ -40,17 +42,27 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="120"/>
+                                    <ColumnDefinition Width="250"/>
                                 </Grid.ColumnDefinitions>
 
+                                <!-- Ảnh sản phẩm -->
                                 <Image Source="{Binding Avatar}" Width="90" Height="90" Grid.Column="0" Stretch="UniformToFill" Margin="5"/>
 
+                                <!-- Thông tin sản phẩm -->
                                 <StackPanel Grid.Column="1" Margin="10,0,0,0">
                                     <TextBlock Text="{Binding ProductName}" FontSize="16" FontWeight="Bold"/>
-                                    <TextBlock Text="Giá: {Binding Price}" FontSize="14" Foreground="#E74C3C" Margin="0,5,0,0"/>
+                                    <TextBlock Text="{Binding Price, StringFormat='Giá: {0:C}'}" FontSize="14" Foreground="#E74C3C" Margin="0,5,0,0"/>
                                 </StackPanel>
 
-                                <Button Content="🛒 Mua ngay" Background="#3498DB" Foreground="White" FontSize="14" Width="110" Height="35" Grid.Column="2" VerticalAlignment="Center"  Command="{Binding BuyNowCommand}"/>
+                                <!-- Khu vực chọn số lượng và thêm vào giỏ -->
+                                <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+                                   
+
+                                    <Button Content="🛒 Thêm hàng" Background="#3498DB" Foreground="White" 
+                                     FontSize="14" Width="110" Height="35" 
+                                     VerticalAlignment="Center" Margin="10,0,0,0"
+                                     Click="BuyNowButton_Click"/>
+                                </StackPanel>
                             </Grid>
                         </Border>
                     </DataTemplate>

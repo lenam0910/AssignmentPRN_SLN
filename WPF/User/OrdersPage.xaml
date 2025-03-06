@@ -1,20 +1,48 @@
 ﻿<Page x:Class="WPF.User.OrdersPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Title="Orders">
+      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      Title="Orders" Loaded="Page_Loaded">
 
     <Grid Background="#ECF0F1">
-        <TextBlock Text="📦 Danh sách đơn hàng" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20"/>
+        <TextBlock Text="🛒 Giỏ hàng của bạn" FontSize="24" FontWeight="Bold" 
+                   HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20"/>
 
-        <ListView Margin="20,60,20,20">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Mã đơn hàng" Width="150" DisplayMemberBinding="{Binding OrderId}"/>
-                    <GridViewColumn Header="Ngày đặt" Width="150" DisplayMemberBinding="{Binding OrderDate}"/>
-                    <GridViewColumn Header="Tổng tiền" Width="150" DisplayMemberBinding="{Binding TotalAmount}"/>
-                    <GridViewColumn Header="Trạng thái" Width="120" DisplayMemberBinding="{Binding Status}"/>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <ScrollViewer Margin="20,60,20,100" VerticalScrollBarVisibility="Auto">
+            <ListView Name="OrdersListView" Background="White" BorderBrush="#D1D1D1" BorderThickness="1" Padding="10"
+                      MaxHeight="300">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Border BorderThickness="1" BorderBrush="#D1D1D1" CornerRadius="10" Padding="10" Margin="5" Background="White">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <!-- Hình ảnh sản phẩm -->
+                                <Image Source="{Binding ProductImage}" Width="80" Height="80" Stretch="UniformToFill" Margin="10"/>
+
+                                <!-- Thông tin đơn hàng -->
+                                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding ProductName}" FontSize="16" FontWeight="Bold"/>
+                                    <TextBlock Text="Mã đơn: {Binding OrderId}" FontSize="14" Foreground="#7D7D7D"/>
+                                    <TextBlock Text="Ngày đặt: {Binding OrderDate}" FontSize="14" Foreground="#7D7D7D"/>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5,0,0">
+                                        <TextBlock Text="Số lượng:" FontSize="14" Foreground="#333" Margin="0,0,5,0"/>
+                                        <materialDesign:NumericUpDown Value="{Binding Quantity, Mode=TwoWay}" Minimum="1" Maximum="99" Width="60" Height="30"
+                                                                     ValueChanged="NumericUpDown_ValueChanged"/>
+                                    </StackPanel>
+                                    <TextBlock Text="{Binding TotalAmount}" FontSize="16" Foreground="#E74C3C" FontWeight="Bold"/>
+                                </StackPanel>
+
+                                <!-- Hành động -->
+                                <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Margin="Auto,0,0,0">
+                                    <Button Content="🗑️ Xóa" Background="#E74C3C" Foreground="White" Padding="5,2" 
+                                            BorderThickness="0" Cursor="Hand" Margin="5"/>
+                                    <Button Content="🔄 Mua lại" Background="#2ECC71" Foreground="White" Padding="5,2" 
+                                            BorderThickness="0" Cursor="Hand" Margin="5"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </ScrollViewer>
     </Grid>
 </Page>

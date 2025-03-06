@@ -3,9 +3,12 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="Quản lý Nhà Cung Cấp" Background="#f8f9fa" Loaded="Page_Loaded">
     <Grid Margin="20">
-        <TextBlock Text="Danh sách Nhà Cung Cấp" FontSize="22" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10,0,20"/>
-        <DataGrid Name="SupplierGrid" AutoGenerateColumns="False" IsReadOnly="True"
-                  AlternatingRowBackground="#e9ecef" BorderThickness="1" BorderBrush="#ced4da">
+        <TextBlock Text="Danh sách Nhà Cung Cấp" FontSize="22" FontWeight="Bold" Foreground="#333" 
+              HorizontalAlignment="Center" Margin="0,10,0,20"/>
+        <DataGrid Name="SupplierGrid"  AutoGenerateColumns="False" IsReadOnly="True" 
+                  SelectionMode="Single" AlternatingRowBackground="#e9ecef" 
+                  GridLinesVisibility="None" BorderThickness="1" BorderBrush="#ced4da" 
+                  RowHeight="35" FontSize="14" Margin="0,80,0,70" CanUserAddRows="False">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding SupplierId}" Width="50"/>
                 <DataGridTextColumn Header="Tên" Binding="{Binding SupplierName}" Width="*"/>
@@ -16,7 +19,7 @@
         </DataGrid>
 
         <!-- Nút chức năng -->
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Bottom">
             <Button Content="➕ Thêm" Width="100" Height="35" Background="#28a745" Foreground="White" Margin="5" Click="OpenAddSupplierPopup"/>
             <Button Content="✏ Sửa" Width="100" Height="35" Background="#ffc107" Foreground="Black" Margin="5" Click="OpenEditSupplierPopup"/>
             <Button Content="❌ Xóa" Width="100" Height="35" Background="#dc3545" Foreground="White" Margin="5" Click="DeleteSupplier_Click"/>
@@ -39,23 +42,26 @@
             </StackPanel>
         </Border>
 
-        <Border x:Name="PendingSuppliersPopup" Visibility="Collapsed" Width="600" Background="White" Padding="20">
+        <Border x:Name="PendingSuppliersPopup"  Visibility="Collapsed" HorizontalAlignment="Center" 
+                VerticalAlignment="Center" Background="White" BorderBrush="#ced4da" 
+                BorderThickness="1" Padding="20" Width="600" CornerRadius="10">
             <StackPanel>
-                <TextBlock Text="Nhà cung cấp chưa được duyệt" FontSize="18" FontWeight="Bold"/>
+                <TextBlock Text="Nhà cung cấp chưa được duyệt" FontSize="20" FontWeight="Bold" 
+                           HorizontalAlignment="Center" Margin="0,10"/>
 
                 <!-- ListBox for Pending Suppliers -->
-                <ListBox Name="PendingSuppliersList" Width="460" Height="200" Margin="0,10">
+                <ListBox Name="PendingSuppliersList" >
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal" Margin="5">
                                 <!-- Supplier Name -->
-                                <TextBlock Text="{Binding SupplierName}" Width="*"/>
+                                <TextBlock Text="{Binding SupplierName}" Width="100"/>
 
                                 <!-- Supplier Email -->
-                                <TextBlock Text="{Binding Email}" Width="*"/>
+                                <TextBlock Text="{Binding Email}" Width="100"/>
 
                                 <!-- Supplier Phone -->
-                                <TextBlock Text="{Binding Phone}" Width="*"/>
+                                <TextBlock Text="{Binding Phone}" Width="50"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

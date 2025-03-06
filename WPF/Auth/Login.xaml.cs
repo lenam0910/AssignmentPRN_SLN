@@ -64,7 +64,7 @@ namespace WPF
 
             if (account != null)
             {
-                DataAccess.Models.Supplier supplier = userSupplierService.GetSupplierByUserId(account.UserId);
+                DataAccess.Models.Supplier supplier = userSupplierService.GetSupplierByUserIdForLogin(account.UserId);
                 if (rememberMeCheckBox.IsChecked == true)
                 {
                     if (Application.Current.Properties.Contains("userNameRemem"))

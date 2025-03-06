@@ -1,0 +1,56 @@
+﻿<Page x:Class="WPF.User.DetailProductPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:local="clr-namespace:WPF.User"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="DetailProductPage">
+
+    <Grid Background="White" >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Hình ảnh sản phẩm -->
+        <Border Grid.Column="0" Background="White" Padding="8" CornerRadius="8">
+            <Image Source="{Binding Avatar}" Width="200" Height="200" Stretch="UniformToFill"/>
+        </Border>
+
+        <!-- Thông tin sản phẩm -->
+        <StackPanel Grid.Column="1" Background="White" Margin="10,0,0,0">
+            <TextBlock Text="{Binding ProductName}" FontSize="20" FontWeight="Bold" Foreground="#2C3E50"/>
+            <TextBlock>
+                <Run Text="Giá: " FontSize="18" FontWeight="Bold" Foreground="#2C3E50"/>
+                <Run Text="{Binding Price, StringFormat=C0}" FontSize="18" FontWeight="Bold" Foreground="#E74C3C"/>
+            </TextBlock>
+            <TextBlock>
+                <Run Text="Kho: " FontSize="14" FontWeight="Bold" Foreground="#2C3E50"/>
+                <Run Text="{Binding QuantityInStock}" FontSize="14" Foreground="#7D7D7D"/>
+            </TextBlock>
+            <TextBlock>
+                <Run Text="Nhà cung cấp: " FontSize="14" FontWeight="Bold" Foreground="#2C3E50"/>
+                <Run Text="{Binding Supplier.Name}" FontSize="14" Foreground="#7D7D7D"/>
+            </TextBlock>
+            <TextBlock Text="Mô tả sản phẩm:" FontSize="14" FontWeight="Bold" Margin="0,8,0,4"/>
+            <TextBlock Text="{Binding Description}" FontSize="12" TextWrapping="Wrap" Foreground="#2C3E50" MaxWidth="400"/>
+
+            <!-- Ô chỉnh sửa số lượng -->
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,12,0,12">
+                <TextBlock Text="Số lượng:" FontSize="14" Foreground="#333" Margin="0,0,5,0"/>
+                <materialDesign:NumericUpDown Value="{Binding SelectedQuantity, Mode=TwoWay}" Minimum="1" Maximum="{Binding QuantityInStock}" Width="70" Height="30"/>
+            </StackPanel>
+
+            <!-- Nút hành động -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
+                <Button Content="🛒 Thêm vào giỏ hàng" Background="#3498DB" Foreground="White" FontSize="14" Padding="8,4" 
+                        Width="160" Height="40" Cursor="Hand" Click="AddToCart_Click"/>
+                <Button Content="🛍️ Mua ngay" Background="#E74C3C" Foreground="White" FontSize="14" Padding="8,4" 
+                        Width="120" Height="40" Cursor="Hand" Click="BuyNow_Click" Margin="5,0,0,0"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

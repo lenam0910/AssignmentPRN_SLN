@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DataAccess.Models;
+using Service;
 
 namespace WPF.User
 {
@@ -20,9 +22,30 @@ namespace WPF.User
     /// </summary>
     public partial class OrdersPage : Page
     {
+        private OrderService orderService;
+        private OrderDetailService orderDetailService;
+        private DataAccess.Models.User user;
+        private Order order;
         public OrdersPage()
         {
+            user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             InitializeComponent();
+        }
+
+        private void load()
+        {
+            order = orderService.GetOrderByUserId(user.UserId);
+            var lstOrder = orderDetailService.GetAllOrders();
+            OrdersListView.ItemsSource = lstOrder;
+        }
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            load();
+        }
+
+        private void NumericUpDown_ValueChanged(object sender, RoutedPropertyChangedEventArgs<int> e)
+        {
+
         }
     }
 }

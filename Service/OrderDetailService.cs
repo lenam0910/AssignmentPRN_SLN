@@ -25,7 +25,32 @@ namespace Service
         {
             return repository.getAll();
         }
-
+        public List<OrderDetail> GetAllOrdersByOrderId(int orderId)
+        {
+            var lstDpl = new List<OrderDetail>();
+            var lst = repository.getAll();
+            foreach (var item in lst)
+            {
+                if (item.OrderId == orderId)
+                {
+                    lstDpl.Add(item);
+                }
+            }
+            return lstDpl;
+        }
+        public OrderDetail GetOrdersDetailByProductId(int productId)
+        {
+            var lstDpl = new OrderDetail();
+            var lst = repository.getAll();
+            foreach (var item in lst)
+            {
+                if (item.ProductId == productId)
+                {
+                    return lstDpl;
+                }
+            }
+            return null; 
+        }
         public bool AddOrderDetail(OrderDetail orderDetail)
         {
             bool isCheck = false;

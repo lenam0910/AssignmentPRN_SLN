@@ -11,11 +11,7 @@ public partial class Order
 
     public int? UserId { get; set; }
 
-    public string OrderType { get; set; } = null!;
-
     public string? Status { get; set; }
-
-    public bool SupplierApproved { get; set; }
 
     public bool IsDeleted { get; set; }
 

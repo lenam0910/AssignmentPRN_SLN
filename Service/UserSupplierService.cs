@@ -51,7 +51,38 @@ namespace Service
             }
             return null;
         }
-        
+        public Supplier GetSupplierByUserIdForLogin(int id)
+        {
+            var lst = repository.GetAll();
+            var lstSupplier = _supplierRepository.GetAllSuppliers();
+            foreach (Supplier item in lstSupplier)
+            {
+                if (item.IsDeleted == true)
+                {
+                    lstSupplier.Remove(item);
+                }
+            }
+            var supplier = new Supplier();
+            int suppplierId = 0;
+            foreach (var item in lst)
+            {
+                if (item.UserId == id)
+                {
+                    suppplierId = item.SupplierId;
+                }
+            }
+            foreach (var item in lstSupplier)
+            {
+                if (item.SupplierId == suppplierId)
+                {
+
+                        return item;
+                    
+                }
+            }
+            return null;
+        }
+
         public void Add(UserSupplier userSupplier)
         {
             repository.Add(userSupplier);

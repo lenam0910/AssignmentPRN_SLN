@@ -68,6 +68,7 @@ namespace WPF.Admin
 
         private void btnSuppliers_Click(object sender, RoutedEventArgs e)
         {
+            MainFrame.Navigate(new ManageSuppliers());
 
         }
     }
