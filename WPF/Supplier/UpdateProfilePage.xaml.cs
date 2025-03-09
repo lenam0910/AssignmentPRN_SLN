@@ -26,7 +26,6 @@ namespace WPF.Supplier
         private string saveDirectoryUser = @"C:\Users\ADMIN\Desktop\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\";
         private string saveDirectorySupplier = @"C:\Users\ADMIN\Desktop\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Supplier\";
 
-        private readonly UserService service;
         private string selectedFilePath;
         private string fileName;
         private string destinationPathUser = null;

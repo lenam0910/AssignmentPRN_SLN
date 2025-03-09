@@ -20,13 +20,15 @@ using static MaterialDesignThemes.Wpf.Theme;
 using Newtonsoft.Json.Linq;
 using DataAccess.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Microsoft.Office.Interop.Excel;
+using System.Collections.ObjectModel;
 
 namespace WPF.User
 {
     /// <summary>
     /// Interaction logic for ShoppingPage.xaml
     /// </summary>
-    public partial class ShoppingPage : Page
+    public partial class ShoppingPage : System.Windows.Controls.Page
     {
         private ChatBotAI chatBotAI;
         private ProductService productService;
@@ -37,19 +39,20 @@ namespace WPF.User
         private DataAccess.Models.User user;
         private OrderService orderService;
         private OrderDetailService orderDetailService;
-        private List<Product> products;
+        private List<Product> productLst;
+        private WarehousesService WarehousesService;
         public ShoppingPage()
         {
-            orderDetailService = new();
-            orderService = new();
-            user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
+            WarehousesService = new WarehousesService();
+            orderDetailService = new OrderDetailService();
+            orderService = new OrderService();
+            user = System.Windows.Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             categoryService = new CategoryService();
             chatBotAI = new();
             supplierService = new SupplierService();
             inventoryService = new InventoryService();
             chatHistory = new StringBuilder();
             productService = new ProductService();
-            products = productService.GetAllProducts();
             InitializeComponent();
         }
 
@@ -130,12 +133,13 @@ namespace WPF.User
                 }
             }
             CategoryFilter.ItemsSource = categoryService.getAll();
-            CategoryFilter.DisplayMemberPath = "CategoryName"; 
+            CategoryFilter.DisplayMemberPath = "CategoryName";
             CategoryFilter.SelectedValuePath = "CategoryId";
             lstProduct.ItemsSource = lstDisplay;
+         
             CategoryFilter.SelectedItem = null;
         }
-       
+
         private void Page_Loaded_1(object sender, RoutedEventArgs e)
         {
             load();
@@ -154,13 +158,31 @@ namespace WPF.User
 
             }
 
-            //NavigationService?.Navigate(new OrdersPage());
 
         }
 
-       
 
-        
+
+        public int getWarehouseByProductId(int ProductId)
+        {
+            var inventory = inventoryService.GetInventoryList();
+            var products = productService.GetAllProducts();
+            if (products == null || !products.Any())
+            {
+                MessageBox.Show("Danh sách sản phẩm trống!");
+            }
+            foreach (Product product in products)
+            {
+                foreach (Inventory item in inventory)
+                {
+                    if (item.ProductId == product.ProductId && product.ProductId == ProductId)
+                    {
+                        return item.WarehouseId;
+                    }
+                }
+            }
+            return 0;
+        }
 
         private void BuyNowButton_Click(object sender, RoutedEventArgs e)
         {
@@ -168,79 +190,67 @@ namespace WPF.User
 
             if (sender is System.Windows.Controls.Button button && button.DataContext is Product selectedProduct)
             {
-                int quantity = 1; 
+                int quantity = 1;
+                int getQuantityInven = inventoryService.getTotalQuantityByProductId(selectedProduct.ProductId);
 
-                
 
-              
+               
 
                 Order order = orderService.GetOrderByUserId(user.UserId);
                 if (order == null)
                 {
-                    order = new Order { UserId = user.UserId ,Status = "Chờ xử lý" };
+                    order = new Order { UserId = user.UserId, Status = "Chờ xử lý" };
                     if (orderService.addOrder(order))
                     {
                         MessageBox.Show("Tạo giỏ hàng mới thành công!");
+                        order = orderService.GetOrderByUserId(user.UserId); // Lấy lại Order sau khi thêm
                     }
                 }
-                OrderDetail orderDetail = orderDetailService.GetOrdersDetailByProductId(selectedProduct.ProductId);
-                if (orderDetail != null) {
+
+                OrderDetail orderDetail = orderDetailService.GetOrdersDetailByProductIdAndOrderID(selectedProduct.ProductId, order.OrderId);
+                if (orderDetail == null)
+                {
+                    if (quantity > getQuantityInven)
+                    {
+                        MessageBox.Show("Số lượng sản phẩm trong kho không đủ!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
                     orderDetail = new OrderDetail
                     {
                         OrderId = order.OrderId,
                         ProductId = selectedProduct.ProductId,
-                        WarehouseId = selectedProduct.CategoryId,
+                        WarehouseId = getWarehouseByProductId(selectedProduct.ProductId),
                         Quantity = quantity,
                         PriceAtOrder = quantity * selectedProduct.Price
                     };
 
                     if (orderDetailService.AddOrderDetail(orderDetail))
                     {
+                        load();
                         MessageBox.Show("Sản phẩm đã được thêm vào giỏ hàng!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
                 else
-                { 
+                {
+                    if (quantity + orderDetail.Quantity > getQuantityInven)
+                    {
+                        MessageBox.Show("Số lượng sản phẩm trong kho không đủ!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
                     orderDetail.Quantity = quantity + orderDetail.Quantity;
-                    orderDetailService.UpdateOrderDetail(orderDetail);
+                    orderDetail.PriceAtOrder = orderDetail.Quantity * selectedProduct.Price;
+
+                    if (orderDetailService.UpdateOrderDetail(orderDetail))
+                    {
+                        load();
+                        MessageBox.Show("Sản phẩm đã được thêm vào giỏ hàng!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
                 }
             }
         }
 
-        private void SearchByName(string name)
-        {
-            var lstTemp = productService.GetAllProducts();
-            var lst = inventoryService.GetInventoryList();
-            foreach (var product in lstTemp)
-            {
-                foreach (var item in lst)
-                {
-                    if (product.ProductId != item.ProductId && !product.ProductName.Contains(name, StringComparison.OrdinalIgnoreCase))
-                    {
-                        products.Remove(product); 
-                    }
-                }
-            }
-           
-            
-            }
-        private void SearchByCategoryName(int categoryId)
-        {
-            var lstTemp = productService.GetAllProducts();
-            var lst = inventoryService.GetInventoryList();
-            foreach (var product in lstTemp)
-            {
-                foreach (var item in lst)
-                {
-                    if (product.ProductId != item.ProductId && product.CategoryId == categoryId)
-                    {
-                        products.Remove(product); ;
-                    }
-                }
-            }
 
 
-        }
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (string.IsNullOrEmpty(SearchBox.Text))
@@ -248,21 +258,92 @@ namespace WPF.User
                 load();
                 return;
             }
-            SearchByName(SearchBox.Text);
-            lstProduct.ItemsSource = products; 
+            var lstTemp = productService.GetAllProducts();
+            var lst = inventoryService.GetInventoryList();
+            productLst = new List<Product>();
+            if (CategoryFilter.SelectedValue != null)
+            {
+                foreach (var product in lstTemp)
+                {
+                    foreach (var item in lst)
+                    {
+                        if (product.ProductId == item.ProductId && product.CategoryId == (int)CategoryFilter.SelectedValue && product.ProductName.Contains(SearchBox.Text, StringComparison.OrdinalIgnoreCase))
+                        {
+                            productLst.Add(product);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var product in lstTemp)
+                {
+                    foreach (var item in lst)
+                    {
+                        if (product.ProductId == item.ProductId && product.ProductName.Contains(SearchBox.Text, StringComparison.OrdinalIgnoreCase))
+                        {
+                            productLst.Add(product);
+                        }
+                    }
+                }
+            }
+        
+            lstProduct.ItemsSource = null;
+            lstProduct.ItemsSource = productLst;
+            
         }
 
-        private void CategoryFilter_SelectionChanged_1(object sender, SelectionChangedEventArgs e)
+        private void CategoryFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (CategoryFilter.SelectedItem == null)
             {
                 load();
                 return;
             }
+            productLst = new List<Product>();
+            var lstTemp = productService.GetAllProducts();
+            var lst = inventoryService.GetInventoryList();
+            if (string.IsNullOrEmpty(SearchBox.Text))
+            {
+                foreach (var product in lstTemp)
+                {
+                    foreach (var item in lst)
+                    {
+                        if (product.ProductId == item.ProductId && product.CategoryId == (int)CategoryFilter.SelectedValue)
+                        {
+                            productLst.Add(product);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                foreach (var product in lstTemp)
+                {
+                    foreach (var item in lst)
+                    {
+                        if (product.ProductId == item.ProductId && product.CategoryId == (int)CategoryFilter.SelectedValue && product.ProductName.Contains(SearchBox.Text, StringComparison.OrdinalIgnoreCase))
+                        {
+                            productLst.Add(product);
+                        }
+                    }
+                }
+               
+            }
+         
+            lstProduct.ItemsSource = null;
+            lstProduct.ItemsSource = productLst;
+        }
 
-            
-            SearchByCategoryName((int)CategoryFilter.SelectedValue);
-            lstProduct.ItemsSource =products;
+        private void ToggleOrderDetails_Click(object sender, RoutedEventArgs e)
+        {
+            e.Handled = true;
+
+            if (sender is System.Windows.Controls.Button button && button.DataContext is Product selectedProduct)
+            {
+                NavigationService?.Navigate(new DetailProductPage(selectedProduct));
+
+            }
         }
     }
 }

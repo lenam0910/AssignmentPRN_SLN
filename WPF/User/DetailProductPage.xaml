@@ -7,21 +7,23 @@
       xmlns:local="clr-namespace:WPF.User"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="DetailProductPage">
+      Title="DetailProductPage" Loaded="Page_Loaded">
 
     <Grid Background="White" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
-
+       
         <!-- Hình ảnh sản phẩm -->
         <Border Grid.Column="0" Background="White" Padding="8" CornerRadius="8">
             <Image Source="{Binding Avatar}" Width="200" Height="200" Stretch="UniformToFill"/>
         </Border>
-
+        <Button Content="🔙 Trở về" Background="Transparent" Foreground="#2C3E50" FontSize="14"
+     HorizontalAlignment="Left" VerticalAlignment="Top" Padding="10,5" Margin="10"
+     Click="GoBack_Click"/>
         <!-- Thông tin sản phẩm -->
-        <StackPanel Grid.Column="1" Background="White" Margin="10,0,0,0">
+        <StackPanel Grid.Column="1" Background="White" Margin="10,0,0,0" VerticalAlignment="Center">
             <TextBlock Text="{Binding ProductName}" FontSize="20" FontWeight="Bold" Foreground="#2C3E50"/>
             <TextBlock>
                 <Run Text="Giá: " FontSize="18" FontWeight="Bold" Foreground="#2C3E50"/>
@@ -41,7 +43,12 @@
             <!-- Ô chỉnh sửa số lượng -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,12,0,12">
                 <TextBlock Text="Số lượng:" FontSize="14" Foreground="#333" Margin="0,0,5,0"/>
-                <materialDesign:NumericUpDown Value="{Binding SelectedQuantity, Mode=TwoWay}" Minimum="1" Maximum="{Binding QuantityInStock}" Width="70" Height="30"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Content="-" Width="30" Height="30" Click="DecreaseQuantity"/>
+                    <TextBlock x:Name="selectedQuan" Text="0" Width="40" TextAlignment="Center" VerticalAlignment="Center"/>
+                    <Button Content="+" Width="30" Height="30" Click="IncreaseQuantity"/>
+                </StackPanel>
+
             </StackPanel>
 
             <!-- Nút hành động -->

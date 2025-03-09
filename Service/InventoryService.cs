@@ -45,6 +45,21 @@ namespace Service
             }
             return total;   
         }
+        public int getTotalQuantityByProductId(int id)
+        {
+            var lst = repository.GetAllInventory();
+            var display = new List<Inventory>();
+            int total = 0;
+            foreach (var item in lst)
+            {
+                if (item.IsDeleted == false && item.ProductId == id)
+                {
+                    total += item.Quantity;
+                }
+            }
+           
+            return total;
+        }
         public bool AddInventory(Inventory inventory)
         {
             bool success = false;
@@ -81,7 +96,19 @@ namespace Service
             }
             return success;
         }
-
+        public Inventory GetInventoryByWarehousesID(int id)
+        {
+            var lst = repository.GetAllInventory();
+            var display = new Inventory();
+            foreach (var item in lst)
+            {
+                if (item.IsDeleted == false && item.WarehouseId == id)
+                {
+                    display = item;
+                }
+            }
+            return display;
+        }
         public List<Inventory> GetInventoryList()
         {
             var lst = repository.GetAllInventory();

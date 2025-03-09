@@ -23,34 +23,44 @@ namespace Service
 
         public List<OrderDetail> GetAllOrders()
         {
-            return repository.getAll();
-        }
-        public List<OrderDetail> GetAllOrdersByOrderId(int orderId)
-        {
             var lstDpl = new List<OrderDetail>();
             var lst = repository.getAll();
             foreach (var item in lst)
             {
-                if (item.OrderId == orderId)
+                if (item.IsDeleted == false)
                 {
                     lstDpl.Add(item);
                 }
             }
             return lstDpl;
         }
-        public OrderDetail GetOrdersDetailByProductId(int productId)
+     
+        public List<OrderDetail> GetAllOrdersByOrderId(int orderId)
         {
-            var lstDpl = new OrderDetail();
+            var lstDpl = new List<OrderDetail>();
             var lst = repository.getAll();
             foreach (var item in lst)
             {
-                if (item.ProductId == productId)
+                if (item.OrderId == orderId && item.IsDeleted == false)
                 {
-                    return lstDpl;
+                    lstDpl.Add(item);
                 }
             }
-            return null; 
+            return lstDpl;
         }
+        public OrderDetail GetOrdersDetailByProductIdAndOrderID(int productId, int orderId)
+        {
+            var lst = repository.getAll(); // Lấy toàn bộ danh sách OrderDetail từ database
+            foreach (var item in lst)
+            {
+                if (item.ProductId == productId && item.OrderId == orderId && item.IsDeleted ==false)
+                {
+                    return item; // Trả về đối tượng đúng
+                }
+            }
+            return null;
+        }
+
         public bool AddOrderDetail(OrderDetail orderDetail)
         {
             bool isCheck = false;

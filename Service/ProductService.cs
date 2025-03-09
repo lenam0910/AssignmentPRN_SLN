@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,6 +38,21 @@ namespace Service
 
             return lstDis;
         }
+        public ObservableCollection<Product> GetAllProductsByObser()
+        {
+            var lst = repository.GetAll();
+            var lstDis = new ObservableCollection<Product>();
+            foreach (Product items in lst)
+            {
+                if (items.IsDeleted == false && items.IsApproved == true)
+                {
+                    lstDis.Add(items);
+                }
+            }
+
+            return lstDis;
+        }
+
         public List<Product> GetAllProductsNotApprove()
         {
             var lst = repository.GetAll();

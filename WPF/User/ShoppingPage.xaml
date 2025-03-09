@@ -25,16 +25,16 @@
                 </Border>
 
 
-                <ComboBox x:Name="CategoryFilter" Height="35" Grid.Column="2" VerticalAlignment="Center" Margin="10" Background="White" SelectionChanged="CategoryFilter_SelectionChanged_1">
+                <ComboBox x:Name="CategoryFilter" Height="35" Grid.Column="2" VerticalAlignment="Center" Margin="10" Background="White" SelectionChanged="CategoryFilter_SelectionChanged" >
 
                 </ComboBox>
             </Grid>
         </Border>
 
-        <StackPanel Margin="20,80,20,20">
-            <ListView Margin="0,10,0,0" x:Name="lstProduct" Background="Transparent" 
-               av:ItemsSource="{av:SampleData ItemCount=5}" 
-               SelectionChanged="lstProduct_SelectionChanged">
+        <Grid Margin="20,80,20,20">
+            <ListView x:Name="lstProduct" Background="Transparent"
+              SelectionChanged="lstProduct_SelectionChanged"
+              ScrollViewer.VerticalScrollBarVisibility="Auto" av:ItemsSource="{av:SampleData ItemCount=5}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Border Background="White" Padding="10" Margin="5" CornerRadius="10">
@@ -42,7 +42,7 @@
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="100"/>
                                     <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="250"/>
+                                    <ColumnDefinition Width="260"/>
                                 </Grid.ColumnDefinitions>
 
                                 <!-- Ảnh sản phẩm -->
@@ -56,19 +56,22 @@
 
                                 <!-- Khu vực chọn số lượng và thêm vào giỏ -->
                                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                   
-
                                     <Button Content="🛒 Thêm hàng" Background="#3498DB" Foreground="White" 
-                                     FontSize="14" Width="110" Height="35" 
-                                     VerticalAlignment="Center" Margin="10,0,0,0"
-                                     Click="BuyNowButton_Click"/>
+                                    FontSize="14" Width="110" Height="35" 
+                                    VerticalAlignment="Center" Margin="10,0,0,0"
+                                    Click="BuyNowButton_Click"/>
+                                    <Button Content="📄 Chi tiết đơn hàng" Background="#2ECC71" Foreground="White"
+            FontSize="14" Width="140" Height="35"
+            VerticalAlignment="Center" Margin="10,0,0,0"
+            Click="ToggleOrderDetails_Click"/>   
                                 </StackPanel>
                             </Grid>
                         </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        </StackPanel>
+        </Grid>
+
 
         <!-- Modal Chat GPT (mặc định ẩn) -->
         <Border x:Name="ChatGptPopup" Background="White" Width="250" Height="360" CornerRadius="10" BorderBrush="#BDC3C7" BorderThickness="1"

@@ -1,48 +1,86 @@
-﻿<Page x:Class="WPF.User.OrdersPage"
+﻿<Page
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+      xmlns:av="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="av" x:Class="WPF.User.OrdersPage"
       Title="Orders" Loaded="Page_Loaded">
 
-    <Grid Background="#ECF0F1">
-        <TextBlock Text="🛒 Giỏ hàng của bạn" FontSize="24" FontWeight="Bold" 
-                   HorizontalAlignment="Center" VerticalAlignment="Top" Margin="20"/>
+    <Grid Background="#F8F9FA">
 
-        <ScrollViewer Margin="20,60,20,100" VerticalScrollBarVisibility="Auto">
-            <ListView Name="OrdersListView" Background="White" BorderBrush="#D1D1D1" BorderThickness="1" Padding="10"
-                      MaxHeight="300">
+        <!-- Thanh điều hướng -->
+        <Border Background="#2C3E50" Height="60" VerticalAlignment="Top">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="🛒 Giỏ hàng" FontSize="24" FontWeight="Bold" Foreground="White" 
+                           VerticalAlignment="Center" Margin="10"/>
+            </Grid>
+        </Border>
+
+        <!-- Danh sách đơn hàng -->
+        <StackPanel Margin="20,80,20,80">
+            <ListView x:Name="OrdersListView" Background="White" BorderBrush="#D1D1D1" BorderThickness="1" 
+               Padding="10" MinHeight="100" MaxHeight="500" ScrollViewer.VerticalScrollBarVisibility="Auto" av:ItemsSource="{av:SampleData ItemCount=5}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Border BorderThickness="1" BorderBrush="#D1D1D1" CornerRadius="10" Padding="10" Margin="5" Background="White">
-                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <!-- Hình ảnh sản phẩm -->
-                                <Image Source="{Binding ProductImage}" Width="80" Height="80" Stretch="UniformToFill" Margin="10"/>
+                            <Grid VerticalAlignment="Center">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
 
-                                <!-- Thông tin đơn hàng -->
-                                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
-                                    <TextBlock Text="{Binding ProductName}" FontSize="16" FontWeight="Bold"/>
-                                    <TextBlock Text="Mã đơn: {Binding OrderId}" FontSize="14" Foreground="#7D7D7D"/>
-                                    <TextBlock Text="Ngày đặt: {Binding OrderDate}" FontSize="14" Foreground="#7D7D7D"/>
+                                <!-- Hình ảnh sản phẩm -->
+                                <Image Source="{Binding Product.Avatar, FallbackValue=/Images/default.png}" 
+                                Width="90" Height="90" Stretch="UniformToFill" Margin="10"/>
+
+                                <!-- Thông tin sản phẩm -->
+                                <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock Text="{Binding Product.ProductName}" FontSize="16" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Product.Price, StringFormat=Giá: \{0:C\}}" FontSize="14" Foreground="#E74C3C" Margin="0,5,0,0"/>
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5,0,0">
                                         <TextBlock Text="Số lượng:" FontSize="14" Foreground="#333" Margin="0,0,5,0"/>
-                                        <materialDesign:NumericUpDown Value="{Binding Quantity, Mode=TwoWay}" Minimum="1" Maximum="99" Width="60" Height="30"
-                                                                     ValueChanged="NumericUpDown_ValueChanged"/>
+                                        <Button Content="-" Width="30" Height="30" Background="#BDC3C7" Foreground="Black" Click="DecreaseQuantity_Click"/>
+                                        <TextBlock Text="{Binding Quantity}" FontSize="14" Width="40" TextAlignment="Center" VerticalAlignment="Center"/>
+                                        <Button Content="+" Width="30" Height="30" Background="#27AE60" Foreground="White" Click="IncreaseQuantity_Click"/>
                                     </StackPanel>
-                                    <TextBlock Text="{Binding TotalAmount}" FontSize="16" Foreground="#E74C3C" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding PriceAtOrder, StringFormat=Tổng: \{0:C\}}" FontSize="16" Foreground="#E74C3C" FontWeight="Bold"/>
                                 </StackPanel>
 
                                 <!-- Hành động -->
-                                <StackPanel Orientation="Vertical" HorizontalAlignment="Right" Margin="Auto,0,0,0">
+                                <StackPanel Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Right" Margin="10,0,0,0">
                                     <Button Content="🗑️ Xóa" Background="#E74C3C" Foreground="White" Padding="5,2" 
-                                            BorderThickness="0" Cursor="Hand" Margin="5"/>
-                                    <Button Content="🔄 Mua lại" Background="#2ECC71" Foreground="White" Padding="5,2" 
-                                            BorderThickness="0" Cursor="Hand" Margin="5"/>
+                                     BorderThickness="0" Cursor="Hand" Margin="5" Click="DeleteItem_Click"/>
                                 </StackPanel>
-                            </StackPanel>
+
+                            </Grid>
                         </Border>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
-        </ScrollViewer>
+        </StackPanel>
+
+
+        <!-- Tổng tiền + Mua hàng -->
+        <Border Background="White" BorderBrush="#BDC3C7" BorderThickness="1" Height="60" VerticalAlignment="Bottom">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="200"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="TotalAmountText" Text="Tổng tiền: 0 đ" FontSize="18" FontWeight="Bold" Foreground="#E74C3C"
+                           VerticalAlignment="Center" Margin="20,0,0,0"/>
+
+                <Button Content="🛒 Mua ngay" Background="#2ECC71" Foreground="White" FontSize="16" Height="40" Width="150"
+                        HorizontalAlignment="Right" Margin="10" Grid.Column="1" Click="BuyNow_Click"/>
+            </Grid>
+        </Border>
+
     </Grid>
 </Page>

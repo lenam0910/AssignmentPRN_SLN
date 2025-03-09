@@ -15,6 +15,8 @@ public partial class OrderDetail
 
     public int WarehouseId { get; set; }
 
+    public bool IsDeleted { get; set; }
+
     public decimal PriceAtOrder { get; set; }
 
     public virtual Order Order { get; set; } = null!;

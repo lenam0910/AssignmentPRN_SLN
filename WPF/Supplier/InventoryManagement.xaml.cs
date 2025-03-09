@@ -129,7 +129,34 @@ namespace WPF.Supplier
                             {
                                 product.QuantityInStock = product.QuantityInStock - int.Parse(txtQuantity.Text);
                                 if (productService.UpdaterProduct(product))
-                                {
+                                {   var lstInven = inventoryService.GetInventoryListByWarehouseId(warehouse.WarehouseId);
+                                    foreach (var item in lstInven)
+                                    {
+                                        if (item.ProductId == product.ProductId)
+                                        {
+                                            item.Quantity = item.Quantity + int.Parse(txtQuantity.Text);
+                                           if( inventoryService.UpdateInventory(item)){
+                                                var transactionLog = new TransactionLog
+                                                {
+                                                    ProductId = product.ProductId,
+                                                    WarehouseId = warehouse.WarehouseId,
+                                                    SupplierId = warehouse.SupplierId,
+                                                    ChangeType = "Thêm",
+                                                    QuantityChanged = int.Parse(txtQuantity.Text),
+                                                    ChangeDate = DateTime.Now,
+                                                    UserId = user.UserId,
+                                                    Remarks = txtNote.Text
+                                                };
+                                                if (transactionLogService.AddTransactionLog(transactionLog))
+                                                {
+                                                    MessageBox.Show("Đã thêm sản phẩm tồn tại vào kho hàng!");
+                                                    loadInvetory(warehouse.WarehouseId);
+                                                    clear();
+                                                    return;
+                                                }
+                                            }
+                                        }
+                                    }
                                     var inventory = new Inventory
                                     {
 
@@ -466,6 +493,35 @@ namespace WPF.Supplier
                                             inventoryService.UpdateInventory(selectedInventory);
                                             otherWareHouse.Capacity = otherWareHouse.Capacity - int.Parse(txtQuantity.Text);
                                             warehousesService.UpdateWarehouses(otherWareHouse);
+                                            var lstInven = inventoryService.GetInventoryListByWarehouseId(otherWareHouse.WarehouseId);
+                                            foreach (var item in lstInven)
+                                            {
+                                                if (item.ProductId == product.ProductId)
+                                                {
+                                                    item.Quantity = item.Quantity + int.Parse(txtQuantity.Text);
+                                                    if (inventoryService.UpdateInventory(item))
+                                                    {
+                                                        var transactionLog = new TransactionLog
+                                                        {
+                                                            ProductId = product.ProductId,
+                                                            WarehouseId = warehouse.WarehouseId,
+                                                            SupplierId = warehouse.SupplierId,
+                                                            ChangeType = "Xuất 2",
+                                                            QuantityChanged = int.Parse(txtQuantity.Text),
+                                                            ChangeDate = DateTime.Now,
+                                                            UserId = user.UserId,
+                                                            Remarks = txtNote.Text
+                                                        };
+                                                        if (transactionLogService.AddTransactionLog(transactionLog))
+                                                        {
+                                                            MessageBox.Show("Đã thêm sản phẩm tồn tại vào kho hàng!");
+                                                            loadInvetory(warehouse.WarehouseId);
+                                                            clear();
+                                                            return;
+                                                        }
+                                                    }
+                                                }
+                                            }
                                             var inventory = new Inventory
                                             {
                                                 ProductId = selectedInventory.ProductId,

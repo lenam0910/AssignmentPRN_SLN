@@ -48,6 +48,20 @@ namespace Service
             return display;
         }
 
+        public List<Order> GetAllOrdersByUserId(int id)
+        {
+            var lst = repository.GetAllOrders();
+            var display = new List<Order>();
+            foreach (var item in lst)
+            {
+                if (item.IsDeleted == false && item.UserId == id && !item.Status.Equals("Chờ xử lý", StringComparison.OrdinalIgnoreCase))
+                {
+                    display.Add(item);
+                }
+            }
+            return display;
+        }
+
         public bool addOrder(Order order)
         {
             bool isCheck = false;
