@@ -16,10 +16,9 @@ namespace WPF.User
 
         public ChatBotAI()
         {
-            apiKeyService = new();
+            apiKeyService = new APIkeyService();
             chatHistory = new StringBuilder();
-            
-                apiKey = apiKeyService.GetApiNewest()?.ApiKey1;
+                apiKey = apiKeyService?.GetApiNewest()?.ApiKey1;
             
         }
         public async Task<bool> IsApiKeyValid()
