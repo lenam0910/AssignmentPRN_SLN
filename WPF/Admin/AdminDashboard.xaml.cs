@@ -27,8 +27,10 @@ namespace WPF.Admin
     {
         private APIkeyService apiKeyService;
         private DataAccess.Models.User user;
+        private ChatBotAI chatBot;
         public AdminDashboard()
         {
+            chatBot = new();
             apiKeyService = new APIkeyService();
             user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             InitializeComponent();
@@ -106,34 +108,49 @@ namespace WPF.Admin
 
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
-           
-
-            ApiKey api = new ApiKey() { ApiKey1 = ApiKeyPasswordBox.Text, UserId = user.UserId };
-
-            
-
-            if (apiKeyService.Add(api))
+            try
             {
-                var lstApi = apiKeyService.GetAll();
+                ApiKey api = new ApiKey() { ApiKey1 = ApiKeyPasswordBox.Text, UserId = user.UserId };
+
+                bool isApiKeyValid = await chatBot.IsApiKeyValid(api.ApiKey1);
+
+                if (isApiKeyValid)
                 {
-                    foreach (var item in lstApi)
+                    bool isAdded = apiKeyService.Add(api);
+                    if (isAdded)
                     {
-                        if (item.ApiKeyId != api.ApiKeyId)
+                        var lstApi = apiKeyService.GetAll();
+                        foreach (var item in lstApi)
                         {
-                            apiKeyService.Delete(item);
+                            if (item.ApiKeyId != api.ApiKeyId)
+                            {
+                                apiKeyService.Delete(item);
+                            }
                         }
+
+                        MessageBox.Show("Thêm API KEY mới thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Không thể thêm API KEY vào dịch vụ. Vui lòng thử lại.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-                MessageBox.Show("Thêm API KEY mới thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                else
+                {
+                    MessageBox.Show("API KEY không hợp lệ! Kiểm tra lại API KEY và thử lại.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Không thể thêm API KEY vào dịch vụ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        
+
+
+
+
     }
 }

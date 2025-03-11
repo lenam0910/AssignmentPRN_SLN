@@ -56,7 +56,7 @@ namespace WPF.Supplier
             txtPassword.Password = user.Password;
             txtUserPhone.Text = user.Phone;
             txtUserAddress.Text = user.Address;
-            if (user.Avatar != null)
+            if (!string.IsNullOrEmpty(user.Avatar) )
             {
                 imgUserAvatar.Source = new BitmapImage(new Uri(user.Avatar));
             }
@@ -71,14 +71,15 @@ namespace WPF.Supplier
 
 
             DataAccess.Models.Supplier sup = userSupplierService.GetSupplierByUserId(user.UserId);
-            if (user.Avatar != null)
+            if (!string.IsNullOrEmpty(sup.Avatar))
             {
                 imgSupplierAvatar.Source = new BitmapImage(new Uri(sup.Avatar));
             }
             else
             {
-                imgSupplierAvatar = null;
+                imgSupplierAvatar.Source = null; 
             }
+
         }
 
         private void ChangeSupplierAvatar_Click(object sender, RoutedEventArgs e)
@@ -95,7 +96,7 @@ namespace WPF.Supplier
                 string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                 string fileNameWithTimestamp = System.IO.Path.GetFileNameWithoutExtension(fileName) + "_" + timestamp + System.IO.Path.GetExtension(fileName);
 
-                destinationPathUser = System.IO.Path.Combine(saveDirectorySupplier, fileNameWithTimestamp);
+                destinationPathSupplier = System.IO.Path.Combine(saveDirectorySupplier, fileNameWithTimestamp);
                 // Tạo thư mục nếu chưa có
                 Directory.CreateDirectory(saveDirectorySupplier);
 

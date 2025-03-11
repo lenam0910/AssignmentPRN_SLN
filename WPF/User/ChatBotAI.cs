@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Windows;
 using Newtonsoft.Json.Linq;
@@ -21,27 +22,48 @@ namespace WPF.User
                 apiKey = apiKeyService?.GetApiNewest()?.ApiKey1;
             
         }
-        public async Task<bool> IsApiKeyValid()
+        public async Task<bool> IsApiKeyValid(string apiKey1)
         {
-            string testUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + apiKey;
+            string jsonBody = new JObject
+            {
+                ["contents"] = new JArray
+        {
+            new JObject
+            {
+                ["role"] = "user",
+                ["parts"] = new JArray
+                {
+                    new JObject
+                    {
+                        ["text"] = "hi"
+                    }
+                }
+            }
+        }
+            }.ToString();
+
 
             using var client = new HttpClient();
-            var response = await client.GetAsync(testUrl).ConfigureAwait(false);
+            var request = new HttpRequestMessage(HttpMethod.Post, $"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={apiKey1}");
+            request.Content = new StringContent(jsonBody, Encoding.UTF8);
+            request.Content.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/json");
+
+            var response = await client.SendAsync(request).ConfigureAwait(false);
 
             if (response.IsSuccessStatusCode)
             {
-                // Kiểm tra phản hồi từ API, ví dụ: trả về status code 200
-                return true;
+                return true;  // API key hợp lệ
             }
             else
             {
-                // Nếu không thành công, trả về false và có thể kiểm tra thêm lỗi
-                return false;
+
+                return false;  
             }
         }
+
+
         public async Task<string> SendRequestAndGetResponse(string userInput)
         {
-            // Ghi lại tin nhắn mới vào lịch sử chat
             chatHistory.AppendLine($"👤 Bạn: {userInput}");
 
             string jsonBody = new JObject
