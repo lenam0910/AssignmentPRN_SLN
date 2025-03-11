@@ -96,15 +96,15 @@ namespace Service
             }
             return success;
         }
-        public Inventory GetInventoryByWarehousesID(int id)
+        public List<Inventory> GetInventoryByWarehousesID(int id)
         {
             var lst = repository.GetAllInventory();
-            var display = new Inventory();
+            var display = new List<Inventory>();
             foreach (var item in lst)
             {
                 if (item.IsDeleted == false && item.WarehouseId == id)
                 {
-                    display = item;
+                    display.Add(item);
                 }
             }
             return display;

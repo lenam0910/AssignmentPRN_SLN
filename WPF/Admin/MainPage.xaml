@@ -1,0 +1,58 @@
+﻿<Page x:Class="WPF.Admin.MainPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Trang Chính" Background="#ECF0F1">
+
+    <Grid>
+        <!-- Background Gradient -->
+        <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Rectangle.Fill>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#2980B9" Offset="0.0"/>
+                    <GradientStop Color="#2C3E50" Offset="1.0"/>
+                </LinearGradientBrush>
+            </Rectangle.Fill>
+        </Rectangle>
+
+        <!-- Welcome Text -->
+        <TextBlock Text="Chào mừng đến với Trang Quản Lý Admin"
+                   FontSize="36" FontWeight="Bold" Foreground="White"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                   Margin="0,0,0,200"/>
+
+        <!-- Dashboard Stats -->
+        <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,100">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <Button Grid.Column="0" Background="#16A085"  Padding="20" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Button_Click_2"  >
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Sản phẩm" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Text="1,200" FontSize="32" FontWeight="Bold" Foreground="White"/>
+                </StackPanel>
+            </Button>
+
+            <Button Grid.Column="1" Background="#F39C12"  Padding="20" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Button_Click_1" >
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Nhà cung cấp" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Text="85" FontSize="32" FontWeight="Bold" Foreground="White"/>
+                </StackPanel>
+            </Button>
+
+            <Button Grid.Column="2" Background="#8E44AD"  Padding="20" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" Click="Button_Click" >
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Người dùng" FontSize="24" FontWeight="Bold" Foreground="White"/>
+                    <TextBlock Text="350" FontSize="32" FontWeight="Bold" Foreground="White"/>
+                </StackPanel>
+            </Button>
+
+        </Grid>
+
+        <!-- Footer -->
+        <TextBlock Text="© 2025 Admin Dashboard" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="#BDC3C7" FontSize="14" Margin="0,0,0,20"/>
+
+    </Grid>
+</Page>

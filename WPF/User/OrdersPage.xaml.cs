@@ -41,7 +41,7 @@ namespace WPF.User
         private void load()
         {
             order = orderService.GetOrderByUserId(user.UserId);
-            if(order == null)
+            if (order == null)
             {
                 MessageBox.Show("Bạn chưa thêm đơn hàng nào!");
                 return;
@@ -50,7 +50,7 @@ namespace WPF.User
             decimal total = 0;
             foreach (var item in lstOrder)
             {
-                if (item.OrderId != order.OrderId )
+                if (item.OrderId != order.OrderId)
                 {
                     lstOrder.Remove(item);
                 }
@@ -70,33 +70,30 @@ namespace WPF.User
                     }
                 }
             }
-            
+
             OrdersListView.ItemsSource = lstOrder;
-            
-            TotalAmountText.Text = "Tổng tiền: "+ total + "đ";
+
+            TotalAmountText.Text = "Tổng tiền: " + total + "đ";
         }
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             load();
         }
 
-        public int getQuantityProduct(int ProductId,int warehouseId)
+        public int getQuantityProduct(int ProductId, int warehouseId)
         {
             var inventory = inventoryService.GetInventoryByWarehousesID(warehouseId);
-            var products = productService.GetAllProducts();
             int quantity = 0;
-            if (products == null || !products.Any())
+
+            foreach (var item2 in inventory)
             {
-                MessageBox.Show("Danh sách sản phẩm trống!");
+                if (item2.ProductId == ProductId && item2.WarehouseId == warehouseId)
+                {
+                    quantity += item2.Quantity;
+                }
             }
-            foreach (Product product in products)
-            {
-                    if (inventory.ProductId == product.ProductId && product.ProductId == ProductId)
-                    {
-                        quantity = inventory.Quantity;
-                        return quantity;
-                    }
-            }
+
+
             return quantity;
         }
         private void BuyNow_Click(object sender, RoutedEventArgs e)
@@ -119,7 +116,7 @@ namespace WPF.User
             {
                 foreach (var item2 in lstProduct)
                 {
-                    if (item.ProductId == item2.ProductId )
+                    if (item.ProductId == item2.ProductId)
                     {
                         item2.Quantity -= item.Quantity;
                     }
@@ -164,7 +161,7 @@ namespace WPF.User
             e.Handled = true;
             if (sender is System.Windows.Controls.Button button && button.DataContext is OrderDetail orderDetail)
             {
-                if(orderDetail.Quantity < getQuantityProduct(orderDetail.ProductId,orderDetail.WarehouseId))
+                if (orderDetail.Quantity < getQuantityProduct(orderDetail.ProductId, orderDetail.WarehouseId))
                 {
                     orderDetail.Quantity++;
                     orderDetail.PriceAtOrder = orderDetail.Quantity * orderDetail.Product.Price;
