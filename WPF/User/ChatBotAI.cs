@@ -2,20 +2,44 @@
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Newtonsoft.Json.Linq;
+using Service;
 
 namespace WPF.User
 {
     public class ChatBotAI
     {
         private readonly StringBuilder chatHistory; // Lưu lịch sử hội thoại
-        private readonly string apiKey = "AIzaSyAJbeqohHAZ9U7eOcf00T6k4GmDEr7j5wU";
+        private readonly string apiKey = "";
+        private APIkeyService apiKeyService;
 
         public ChatBotAI()
         {
+            apiKeyService = new();
             chatHistory = new StringBuilder();
+            
+                apiKey = apiKeyService.GetApiNewest()?.ApiKey1;
+            
         }
+        public async Task<bool> IsApiKeyValid()
+        {
+            string testUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + apiKey;
 
+            using var client = new HttpClient();
+            var response = await client.GetAsync(testUrl).ConfigureAwait(false);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Kiểm tra phản hồi từ API, ví dụ: trả về status code 200
+                return true;
+            }
+            else
+            {
+                // Nếu không thành công, trả về false và có thể kiểm tra thêm lỗi
+                return false;
+            }
+        }
         public async Task<string> SendRequestAndGetResponse(string userInput)
         {
             // Ghi lại tin nhắn mới vào lịch sử chat
