@@ -71,38 +71,103 @@ namespace WPF
 
         }
 
+        private int otpAttempts = 0; // Biến đếm số lần nhập OTP sai
+        private const int maxOtpAttempts = 3; // Số lần thử tối đa trước khi chặn
+
         private void VerifyOTP_Click(object sender, RoutedEventArgs e)
         {
-            if (txtOTP.Text.Trim() == generatedOTP)
+            try
             {
-                MessageBox.Show("Xác thực OTP thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                string inputOtp = txtOTP.Text.Trim();
 
-                // Ẩn otpPanel, hiện passwordPanel
-                otpPanel.Visibility = Visibility.Collapsed;
-                passwordPanel.Visibility = Visibility.Visible;
+                // Kiểm tra OTP không được để trống
+                if (string.IsNullOrEmpty(inputOtp))
+                {
+                    MessageBox.Show("Vui lòng nhập mã OTP!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Kiểm tra số lần thử OTP
+                if (otpAttempts >= maxOtpAttempts)
+                {
+                    MessageBox.Show("Bạn đã nhập sai OTP quá nhiều lần. Vui lòng thử lại sau!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Kiểm tra OTP hợp lệ
+                if (inputOtp == generatedOTP)
+                {
+                    MessageBox.Show("Xác thực OTP thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    otpPanel.Visibility = Visibility.Collapsed;
+                    passwordPanel.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    otpAttempts++; // Tăng số lần nhập sai
+                    MessageBox.Show($"Mã OTP không chính xác! Bạn còn {maxOtpAttempts - otpAttempts} lần thử.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Mã OTP không chính xác!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void ResetPassword_Click(object sender, RoutedEventArgs e)
         {
-            if (txtNewPassword.Password.Length < 6)
+            try
             {
-                MessageBox.Show("Mật khẩu phải có ít nhất 6 ký tự!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
-                return;
-            }
-            string newPass = HashPassword(txtNewPassword.Password);
-            User.Password = newPass;
-            service.UpdateUser(User);
-            MessageBox.Show("Mật khẩu đã được đặt lại thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
-            Login login = new();
-            login.Show();
-            this.Close(); // Đóng form sau khi đổi mật khẩu thành công
+                string newPassword = txtNewPassword.Password.Trim();
+                string confirmPassword = txtConfirmPassword.Password.Trim();
 
+                // Kiểm tra mật khẩu không được để trống
+                if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
+                {
+                    MessageBox.Show("Vui lòng nhập đầy đủ mật khẩu mới!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Kiểm tra mật khẩu có ít nhất 6 ký tự
+                if (newPassword.Length < 6)
+                {
+                    MessageBox.Show("Mật khẩu phải có ít nhất 6 ký tự!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Kiểm tra mật khẩu nhập lại có khớp không
+                if (newPassword != confirmPassword)
+                {
+                    MessageBox.Show("Mật khẩu nhập lại không khớp!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Kiểm tra User có tồn tại không trước khi cập nhật mật khẩu
+                if (User == null)
+                {
+                    MessageBox.Show("Không tìm thấy thông tin người dùng!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Mã hóa mật khẩu mới và cập nhật
+                User.Password = HashPassword(newPassword);
+                if (service.UpdateUser(User))
+                {
+                    MessageBox.Show("Mật khẩu đã được đặt lại thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    Login login = new();
+                    login.Show();
+                    this.Close(); // Đóng form sau khi đổi mật khẩu thành công
+                }
+                else
+                {
+                    MessageBox.Show("Có lỗi xảy ra khi cập nhật mật khẩu!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
         private string HashPassword(string password)
         {
             return Convert.ToBase64String(System.Security.Cryptography.SHA256.Create()

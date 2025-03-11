@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -58,16 +59,18 @@ namespace WPF.User
            
         }
 
-        private void saveAvatar()
-        {
-            File.Copy(selectedFilePath, destinationPathUser, true);
-        }
         private void DeleteOldUserAvatar()
         {
             if (!string.IsNullOrEmpty(user.Avatar) && File.Exists(user.Avatar))
             {
                 File.Delete(user.Avatar);
             }
+        }
+        
+
+        private void saveAvatar()
+        {
+            File.Copy(selectedFilePath, destinationPathUser, true);
         }
         private void ChangeUserAvatar_Click(object sender, RoutedEventArgs e)
         {
@@ -77,7 +80,12 @@ namespace WPF.User
             {
                 selectedFilePath = openFileDialog.FileName;
                 fileName = System.IO.Path.GetFileName(selectedFilePath);
-                destinationPathUser = System.IO.Path.Combine(saveDirectoryUser, fileName);
+
+                // Get the timestamp and append it to the filename
+                string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                string fileNameWithTimestamp = System.IO.Path.GetFileNameWithoutExtension(fileName) + "_" + timestamp + System.IO.Path.GetExtension(fileName);
+
+                destinationPathUser = System.IO.Path.Combine(saveDirectoryUser, fileNameWithTimestamp);
 
                 // Tạo thư mục nếu chưa có
                 Directory.CreateDirectory(saveDirectoryUser);
@@ -92,23 +100,84 @@ namespace WPF.User
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            user.FullName = txtFullName.Text;
-            user.Email = txtUserEmail.Text;
-            user.Password = txtPassword.Password;
-            user.Phone = txtUserPhone.Text;
-            user.Address = txtUserAddress.Text;
-            if (imgUserAvatar.Source != null)
+            try
             {
-                DeleteOldUserAvatar();
-                user.Avatar = destinationPathUser;
-            }
-            if (userService.UpdateUser(user))
-            {
-                saveAvatar();
-                MessageBox.Show("Sửa thông tin người dùng thành công!");
+                // Kiểm tra các trường nhập liệu
+                if (string.IsNullOrWhiteSpace(txtFullName.Text) ||
+                    string.IsNullOrWhiteSpace(txtUserEmail.Text) ||
+                    string.IsNullOrWhiteSpace(txtUserPhone.Text) ||
+                    string.IsNullOrWhiteSpace(txtUserAddress.Text))
+                {
+                    MessageBox.Show("Vui lòng nhập đầy đủ thông tin.");
+                    return;
+                }
 
+                // Kiểm tra email hợp lệ
+                if (!IsValidEmail(txtUserEmail.Text))
+                {
+                    MessageBox.Show("Email không hợp lệ!");
+                    return;
+                }
+
+                // Kiểm tra số điện thoại hợp lệ
+                if (!IsValidPhoneNumber(txtUserPhone.Text))
+                {
+                    MessageBox.Show("Số điện thoại không hợp lệ!");
+                    return;
+                }
+
+                // Cập nhật thông tin người dùng
+                user.FullName = txtFullName.Text.Trim();
+                user.Email = txtUserEmail.Text.Trim();
+                user.Phone = txtUserPhone.Text.Trim();
+                user.Address = txtUserAddress.Text.Trim();
+
+                // Chỉ cập nhật mật khẩu nếu người dùng nhập mật khẩu mới
+                if (!string.IsNullOrWhiteSpace(txtPassword.Password))
+                {
+                    user.Password = txtPassword.Password;
+                }
+
+                // Cập nhật ảnh đại diện nếu có thay đổi
+                if (imgUserAvatar.Source != null && !string.IsNullOrEmpty(destinationPathUser))
+                {
+                    DeleteOldUserAvatar();
+                    user.Avatar = destinationPathUser;
+                }
+
+                // Gọi service để cập nhật người dùng
+                bool isUpdated = userService.UpdateUser(user);
+                if (isUpdated)
+                {
+                    if (imgUserAvatar.Source != null)
+                    {
+                        saveAvatar();
+                    }
+                    MessageBox.Show("Sửa thông tin người dùng thành công!");
+                }
+                else
+                {
+                    MessageBox.Show("Có lỗi xảy ra khi cập nhật thông tin người dùng.");
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}");
             }
         }
+
+        // Kiểm tra định dạng email hợp lệ
+        private bool IsValidEmail(string email)
+        {
+            return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+        }
+
+        // Kiểm tra định dạng số điện thoại hợp lệ (Việt Nam: 10 chữ số)
+        private bool IsValidPhoneNumber(string phoneNumber)
+        {
+            return Regex.IsMatch(phoneNumber, @"^0\d{9}$");
+        }
+
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {

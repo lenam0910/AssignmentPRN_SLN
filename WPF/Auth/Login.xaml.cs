@@ -56,88 +56,76 @@ namespace WPF
 
         private void btn_login_Click(object sender, RoutedEventArgs e)
         {
-
-            string uName = name.Text;
-            string unHashPass = password.Password;
-            //string hashedPass = HashPassword(unHashPass);
-            var account = userService.Login(uName, unHashPass);
-
-            if (account != null)
+            try
             {
-                DataAccess.Models.Supplier supplier = userSupplierService.GetSupplierByUserIdForLogin(account.UserId);
+                string uName = name.Text?.Trim();
+                string unHashPass = password.Password?.Trim();
+
+                if (string.IsNullOrEmpty(uName) || string.IsNullOrEmpty(unHashPass))
+                {
+                    MessageBox.Show("Vui lòng nhập tên đăng nhập và mật khẩu!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                var account = userService.Login(uName, unHashPass);
+
+                if (account == null)
+                {
+                    MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng!", "Lỗi đăng nhập", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var supplier = userSupplierService.GetSupplierByUserIdForLogin(account.UserId);
+
                 if (rememberMeCheckBox.IsChecked == true)
                 {
-                    if (Application.Current.Properties.Contains("userNameRemem"))
-                    {
-                        Application.Current.Properties["userNameRemem"] = uName;
-                    }
-                    else
-                    {
-                        Application.Current.Properties.Add("userNameRemem", uName);
-                    }
-
-                    if (Application.Current.Properties.Contains("pwdRemem"))
-                    {
-                        Application.Current.Properties["pwdRemem"] = unHashPass;
-                    }
-                    else
-                    {
-                        Application.Current.Properties.Add("pwdRemem", unHashPass);
-                    }
+                    Application.Current.Properties["userNameRemem"] = uName;
+                    Application.Current.Properties["pwdRemem"] = unHashPass; 
                 }
                 else
                 {
                     Application.Current.Properties.Remove("userNameRemem");
                     Application.Current.Properties.Remove("pwdRemem");
                 }
-                Application.Current.Properties["UserAccount"] = account;
-                if (account.RoleId == 1)
-                {
-                    AdminDashboard adminDashboard = new AdminDashboard();
-                    this.Hide();
-                    adminDashboard.Show();
-                }
-                else if (account.RoleId == 2)
-                {
-                    UserDashboard userDashboard = new UserDashboard();
-                    this.Hide();
-                    userDashboard.Show();
-                }
 
-                else
+                Application.Current.Properties["UserAccount"] = account;
+
+                switch (account.RoleId)
                 {
-                    if (supplier == null)
-                    {
-                        RegisterSupplier registerSupplier = new();
-                        registerSupplier.Show();
-                        this.Hide();
-                    }
-                    else
-                    {
-                        if (supplier.IsApproved == true)
+                    case 1:
+                        new AdminDashboard().Show();
+                        break;
+
+                    case 2:
+                        new UserDashboard().Show();
+                        break;
+
+                    default:
+                        if (supplier == null)
                         {
-                            SupplierDashboard supplierDashboard = new();
-                            supplierDashboard.Show();
-                            this.Hide();
+                            new RegisterSupplier().Show();
+                        }
+                        else if (supplier.IsApproved == true)
+                        {
+                            new SupplierDashboard().Show();
                         }
                         else
                         {
-                            MessageBox.Show("Tài khoản nhà cung cấp của bạn chưa được kiểm duyệt");
-
+                            MessageBox.Show("Tài khoản nhà cung cấp của bạn chưa được kiểm duyệt!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                            return;
                         }
-
-
-                    }
-
+                        break;
                 }
 
-
+                // Ẩn cửa sổ hiện tại sau khi mở cửa sổ mới
+                this.Hide();
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("LOGIN ERROR !!!");
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi hệ thống", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
         private string HashPassword(string password)
         {
             return Convert.ToBase64String(System.Security.Cryptography.SHA256.Create()

@@ -93,7 +93,7 @@ namespace WPF.Supplier
                 txtProductName.ItemsSource = productService.GetAllProductsBySupplierId(supplier.SupplierId);
                 txtProductName.DisplayMemberPath = "ProductName";
                 txtProductName.SelectedValuePath = "ProductId";
-          
+                WarehouseComboBox.IsEnabled = false;
             }
             else
             {
@@ -103,124 +103,137 @@ namespace WPF.Supplier
         }
 
 
-        // Lưu thông tin kho hàng (thêm hoặc sửa)
         private void SaveInventory_Click(object sender, RoutedEventArgs e)
         {
-            warehouse = (Warehouse)WarehouseComboBox.SelectedItem;
-            if (warehouse == null)
+            try
             {
-                MessageBox.Show("Hãy chọn Kho hàng đầu tiên!");
-            }
-            else
-            {
-                product = (Product)txtProductName.SelectedItem;
-                if (product != null)
+                // Kiểm tra xem kho hàng đã được chọn chưa
+                warehouse = WarehouseComboBox.SelectedItem as Warehouse;
+                if (warehouse == null)
                 {
-                    var selectedItem = (ComboBoxItem)txtStockStatus.SelectedItem;
-                    int quantityWare = warehousesService.GetWarehouseById(warehouse.WarehouseId).Capacity.Value;
-                    int quantityCheck = inventoryService.getTotalQuantityInventoyByID(warehouse.WarehouseId);
+                    MessageBox.Show("Hãy chọn Kho hàng đầu tiên!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
-                    if (quantityCheck <= quantityWare)
+  
+                product = txtProductName.SelectedItem as Product;
+                if (product == null)
+                {
+                    MessageBox.Show("Hãy chọn sản phẩm để thêm!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Kiểm tra số lượng nhập hợp lệ
+                if (!int.TryParse(txtQuantity.Text.Trim(), out int quantityToAdd) || quantityToAdd <= 0)
+                {
+                    MessageBox.Show("Số lượng phải là một số nguyên lớn hơn 0!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Kiểm tra tình trạng kho
+                int warehouseCapacity = warehouse.Capacity ?? 0;
+                int currentInventory = inventoryService.getTotalQuantityInventoyByID(warehouse.WarehouseId);
+
+                if (currentInventory + quantityToAdd > warehouseCapacity)
+                {
+                    MessageBox.Show("Kho hàng không đủ sức chứa số lượng sản phẩm này!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                if (quantityToAdd > product.QuantityInStock)
+                {
+                    MessageBox.Show("Số lượng sản phẩm trong kho không đủ để thêm!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Kiểm tra tình trạng sản phẩm
+                if (txtStockStatus.SelectedItem is not ComboBoxItem selectedItem)
+                {
+                    MessageBox.Show("Hãy chọn tình trạng tồn kho!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Cập nhật kho hàng
+                warehouse.Capacity -= quantityToAdd;
+                if (!warehousesService.UpdateWarehouses(warehouse))
+                {
+                    MessageBox.Show("Lỗi khi cập nhật kho hàng!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Cập nhật số lượng sản phẩm
+                product.QuantityInStock -= quantityToAdd;
+                if (!productService.UpdaterProduct(product))
+                {
+                    MessageBox.Show("Lỗi khi cập nhật sản phẩm!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Kiểm tra xem sản phẩm đã tồn tại trong kho chưa
+                var existingInventory = inventoryService.GetInventoryListByWarehouseId(warehouse.WarehouseId)
+                                                        .FirstOrDefault(item => item.ProductId == product.ProductId);
+
+                if (existingInventory != null)
+                {
+                    // Nếu sản phẩm đã tồn tại, cập nhật số lượng
+                    existingInventory.Quantity += quantityToAdd;
+                    if (!inventoryService.UpdateInventory(existingInventory))
                     {
-                        if (int.Parse(txtQuantity.Text) <= product.QuantityInStock && quantityWare >= int.Parse(txtQuantity.Text))
-                        {
-                            warehouse.Capacity = warehouse.Capacity - int.Parse(txtQuantity.Text);
-                            if (warehousesService.UpdateWarehouses(warehouse))
-                            {
-                                product.QuantityInStock = product.QuantityInStock - int.Parse(txtQuantity.Text);
-                                if (productService.UpdaterProduct(product))
-                                {   var lstInven = inventoryService.GetInventoryListByWarehouseId(warehouse.WarehouseId);
-                                    foreach (var item in lstInven)
-                                    {
-                                        if (item.ProductId == product.ProductId)
-                                        {
-                                            item.Quantity = item.Quantity + int.Parse(txtQuantity.Text);
-                                           if( inventoryService.UpdateInventory(item)){
-                                                var transactionLog = new TransactionLog
-                                                {
-                                                    ProductId = product.ProductId,
-                                                    WarehouseId = warehouse.WarehouseId,
-                                                    SupplierId = warehouse.SupplierId,
-                                                    ChangeType = "Thêm",
-                                                    QuantityChanged = int.Parse(txtQuantity.Text),
-                                                    ChangeDate = DateTime.Now,
-                                                    UserId = user.UserId,
-                                                    Remarks = txtNote.Text
-                                                };
-                                                if (transactionLogService.AddTransactionLog(transactionLog))
-                                                {
-                                                    MessageBox.Show("Đã thêm sản phẩm tồn tại vào kho hàng!");
-                                                    loadInvetory(warehouse.WarehouseId);
-                                                    clear();
-                                                    return;
-                                                }
-                                            }
-                                        }
-                                    }
-                                    var inventory = new Inventory
-                                    {
-
-                                        ProductId = product.ProductId,
-                                        WarehouseId = warehouse.WarehouseId,
-                                        SupplierId = warehouse.SupplierId,
-                                        Quantity = int.Parse(txtQuantity.Text),
-                                        StockStatus = selectedItem.Content.ToString()
-                                    };
-                                    if (inventoryService.AddInventory(inventory))
-                                    {
-                                        var transactionLog = new TransactionLog
-                                        {
-                                            ProductId = product.ProductId,
-                                            WarehouseId = warehouse.WarehouseId,
-                                            SupplierId = warehouse.SupplierId,
-                                            ChangeType = "Thêm",
-                                            QuantityChanged = int.Parse(txtQuantity.Text),
-                                            ChangeDate = DateTime.Now,
-                                            UserId = user.UserId,
-                                            Remarks = txtNote.Text
-                                        };
-                                        if (transactionLogService.AddTransactionLog(transactionLog))
-                                        {
-                                            MessageBox.Show("Đã thêm kho hàng mới.");
-                                            loadInvetory(warehouse.WarehouseId);
-                                            clear();
-                                        }
-
-                                    }
-                                }
-                                else
-                                {
-                                    MessageBox.Show("ERR PRodcut");
-
-                                }
-                            }
-                            else
-                            {
-                                MessageBox.Show("ERR");
-
-                            }
-
-
-                        }
-                        else
-                        {
-                            MessageBox.Show("Số lượng sản phẩm không đủ hoặc kho đã đầy!");
-                        }
-
+                        MessageBox.Show("Lỗi khi cập nhật kho hàng!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
                     }
-                    else
-                    {
-                        MessageBox.Show("Số lượng trong kho không đủ để thêm!");
-                    }
-
                 }
                 else
                 {
-                    MessageBox.Show("Hãy chọn sản phẩm để thêm!");
+                    // Nếu sản phẩm chưa có, thêm mới vào kho
+                    var newInventory = new Inventory
+                    {
+                        ProductId = product.ProductId,
+                        WarehouseId = warehouse.WarehouseId,
+                        SupplierId = warehouse.SupplierId,
+                        Quantity = quantityToAdd,
+                        StockStatus = selectedItem.Content.ToString()
+                    };
+
+                    if (!inventoryService.AddInventory(newInventory))
+                    {
+                        MessageBox.Show("Lỗi khi thêm sản phẩm vào kho!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
                 }
 
+                // Ghi nhật ký giao dịch
+                var transactionLog = new TransactionLog
+                {
+                    ProductId = product.ProductId,
+                    WarehouseId = warehouse.WarehouseId,
+                    SupplierId = warehouse.SupplierId,
+                    ChangeType = "Thêm",
+                    QuantityChanged = quantityToAdd,
+                    ChangeDate = DateTime.Now,
+                    UserId = user?.UserId ?? 0,
+                    Remarks = txtNote.Text?.Trim()
+                };
+
+                if (!transactionLogService.AddTransactionLog(transactionLog))
+                {
+                    MessageBox.Show("Lỗi khi ghi nhật ký giao dịch!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Thông báo thành công
+                MessageBox.Show("Thêm sản phẩm vào kho thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Cập nhật giao diện
+                loadInvetory(warehouse.WarehouseId);
+                clear();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         // Hủy chỉnh sửa
         private void CancelEdit_Click(object sender, RoutedEventArgs e)
@@ -233,7 +246,7 @@ namespace WPF.Supplier
             status.Visibility = Visibility.Collapsed;
             OtherWareHouse.Visibility = Visibility.Collapsed;
             ProductStack.Visibility = Visibility.Collapsed;
-
+            txtStockStatus.Visibility = Visibility.Visible;
         }
         private void clear()
         {
@@ -243,7 +256,14 @@ namespace WPF.Supplier
             txtQuantity.Clear();
             txtStockStatus.SelectedValue = null;
             txtRemain.Text = "";
+            txtProductName.IsEnabled = true;
+            txtStockStatus.IsEnabled = true;
+            WarehouseComboBox.IsEnabled = true; 
 
+            InventoryDataGrid.ItemsSource = null;
+            txtRemain.Text = "";
+            txtOtherWarehouse.IsEnabled = true;
+            txtOtherWarehouse.SelectedValue = null;
 
         }
         // Sửa kho hàng
@@ -321,74 +341,112 @@ namespace WPF.Supplier
             var selectedProduct = txtProductName.SelectedItem as Product;
             if (selectedProduct != null)
             {
+                txtProductName.IsEnabled = false;
                 txtRemain.Text = "(Còn lại: " + selectedProduct.QuantityInStock + ")";
             }
         }
 
         private void EditBtn_Click(object sender, RoutedEventArgs e)
         {
-            var selectedInventory = (Inventory)InventoryDataGrid.SelectedItem;
-            if (selectedInventory != null)
+            try
             {
-                EditBtn.Visibility = Visibility.Visible;
-                SaveBtn.Visibility = Visibility.Collapsed;
+                // Kiểm tra xem mục đã chọn trong DataGrid có tồn tại không
+                if (InventoryDataGrid.SelectedItem is not Inventory selectedInventory)
+                {
+                    MessageBox.Show("Hãy chọn một sản phẩm trong kho để sửa!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
-                selectedInventory.Product.ProductName = txtProductName.Text;
-                int oldQuantity = selectedInventory.Quantity;
-                selectedInventory.Product.ProductId = (int)txtProductName.SelectedValue;
-                selectedInventory.StockStatus = txtStockStatus.Text;
-                int newQuantity = int.Parse(txtQuantity.Text);
+                // Kiểm tra dữ liệu đầu vào
+                if (string.IsNullOrWhiteSpace(txtProductName.Text) ||
+                    string.IsNullOrWhiteSpace(txtStockStatus.Text) ||
+                    !int.TryParse(txtQuantity.Text.Trim(), out int newQuantity) || newQuantity <= 0)
+                {
+                    MessageBox.Show("Vui lòng nhập đầy đủ thông tin và số lượng hợp lệ!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Lấy thông tin sản phẩm từ database
                 Product p = productService.GetProductById(selectedInventory.Product.ProductId);
-
-                int quantityWare = warehousesService.GetWarehouseById(warehouse.WarehouseId).Capacity.Value;
-                if (newQuantity <= (oldQuantity + p.QuantityInStock) && (quantityWare + oldQuantity) >= int.Parse(txtQuantity.Text))
+                if (p == null)
                 {
-                    p.QuantityInStock = (oldQuantity + p.QuantityInStock) - newQuantity;
-                    if (productService.UpdaterProduct(p))
-                    {
-                        selectedInventory.Quantity = newQuantity;
-
-
-                        if (inventoryService.UpdateInventory(selectedInventory))
-                        {
-                            warehouse.Capacity = (warehouse.Capacity + oldQuantity) - int.Parse(txtQuantity.Text);
-                            warehousesService.UpdateWarehouses(warehouse);
-                            var transactionLog = new TransactionLog
-                            {
-                                ProductId = selectedInventory.Product.ProductId,
-                                WarehouseId = selectedInventory.WarehouseId,
-                                SupplierId = selectedInventory.SupplierId,
-                                ChangeType = "Edit",  // Loại thay đổi
-                                QuantityChanged = int.Parse(txtQuantity.Text) - selectedInventory.Quantity,  // Số lượng thay đổi
-                                ChangeDate = DateTime.Now,
-                                UserId = user.UserId,
-                                Remarks = txtNote.Text
-                            };
-                            if (transactionLogService.AddTransactionLog(transactionLog))
-                            {
-                                MessageBox.Show("Đã sửa kho hàng.");
-                                loadInvetory(selectedInventory.WarehouseId);
-                                EditBtn.Visibility = Visibility.Collapsed;
-                                SaveBtn.Visibility = Visibility.Visible;
-                                clear();
-                                InventoryDataGrid.SelectedItem = null;
-                            }
-
-
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("err");
-                    }
+                    MessageBox.Show("Không tìm thấy sản phẩm!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
                 }
-                else
+
+                // Lấy sức chứa kho hàng
+                int warehouseCapacity = warehouse.Capacity ?? 0;
+                int oldQuantity = selectedInventory.Quantity;
+                int totalAvailableStock = oldQuantity + p.QuantityInStock.Value; // Số lượng sản phẩm có thể chỉnh sửa
+
+                if (newQuantity > totalAvailableStock || (warehouseCapacity + oldQuantity) < newQuantity)
                 {
-                    MessageBox.Show("Số lượng sửa không đủ để sửa !");
+                    MessageBox.Show("Số lượng sản phẩm không đủ để sửa hoặc kho đã đầy!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
                 }
+
+                // Cập nhật số lượng sản phẩm trong kho
+                p.QuantityInStock = totalAvailableStock - newQuantity;
+                if (!productService.UpdaterProduct(p))
+                {
+                    MessageBox.Show("Lỗi khi cập nhật số lượng sản phẩm!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Cập nhật thông tin tồn kho
+                selectedInventory.Product.ProductName = txtProductName.Text.Trim();
+                selectedInventory.Quantity = newQuantity;
+                selectedInventory.StockStatus = txtStockStatus.Text.Trim();
+
+                if (!inventoryService.UpdateInventory(selectedInventory))
+                {
+                    MessageBox.Show("Lỗi khi cập nhật kho hàng!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Cập nhật sức chứa của kho
+                warehouse.Capacity = (warehouse.Capacity + oldQuantity) - newQuantity;
+                if (!warehousesService.UpdateWarehouses(warehouse))
+                {
+                    MessageBox.Show("Lỗi khi cập nhật kho hàng!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Ghi nhật ký giao dịch
+                var transactionLog = new TransactionLog
+                {
+                    ProductId = selectedInventory.Product.ProductId,
+                    WarehouseId = selectedInventory.WarehouseId,
+                    SupplierId = selectedInventory.SupplierId,
+                    ChangeType = "Edit",
+                    QuantityChanged = newQuantity - oldQuantity,
+                    ChangeDate = DateTime.Now,
+                    UserId = user?.UserId ?? 0,
+                    Remarks = txtNote.Text?.Trim()
+                };
+
+                if (!transactionLogService.AddTransactionLog(transactionLog))
+                {
+                    MessageBox.Show("Lỗi khi ghi nhật ký giao dịch!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Thông báo thành công
+                MessageBox.Show("Cập nhật kho hàng thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Cập nhật giao diện
+                loadInvetory(selectedInventory.WarehouseId);
+                EditBtn.Visibility = Visibility.Collapsed;
+                SaveBtn.Visibility = Visibility.Visible;
+                clear();
+                InventoryDataGrid.SelectedItem = null;
             }
-
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
 
         private void txtStockStatus_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -404,6 +462,7 @@ namespace WPF.Supplier
             // Lấy giá trị từ ComboBoxItem
             if (txtStockStatus.SelectedItem is ComboBoxItem selectedItem && selectedItem.Content != null)
             {
+                txtStockStatus.IsEnabled = false;
                 ProductStack.Visibility = Visibility.Visible;
                 string selectedText = selectedItem.Content.ToString().Trim();
 
@@ -456,125 +515,145 @@ namespace WPF.Supplier
 
         private void ExportBtn_Click(object sender, RoutedEventArgs e)
         {
-            warehouse = (Warehouse)WarehouseComboBox.SelectedItem;
-            if (warehouse == null)
+            try
             {
-                MessageBox.Show("Hãy chọn Kho hàng đầu tiên!");
-            }
-            else
-            {
-
-                if (txtStockStatus.SelectedItem is ComboBoxItem selectedItem)
+                // Kiểm tra xem kho hàng đã được chọn chưa
+                warehouse = WarehouseComboBox.SelectedItem as Warehouse;
+                if (warehouse == null)
                 {
-                    var selectedInventory = (Inventory)InventoryDataGrid.SelectedItem;
-                    if (selectedInventory != null)
+                    MessageBox.Show("Hãy chọn Kho hàng đầu tiên!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Kiểm tra xem trạng thái sản phẩm đã được chọn chưa
+                if (txtStockStatus.SelectedItem is not ComboBoxItem selectedItem || string.IsNullOrEmpty(selectedItem.Content?.ToString()))
+                {
+                    MessageBox.Show("Hãy chọn trạng thái sản phẩm!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Kiểm tra xem sản phẩm đã được chọn chưa
+                var selectedInventory = InventoryDataGrid.SelectedItem as Inventory;
+                if (selectedInventory == null)
+                {
+                    MessageBox.Show("Hãy chọn sản phẩm để chuyển kho!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Kiểm tra số lượng nhập hợp lệ
+                if (!int.TryParse(txtQuantity.Text.Trim(), out int quantityToMove) || quantityToMove <= 0)
+                {
+                    MessageBox.Show("Số lượng phải là một số nguyên lớn hơn 0!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Kiểm tra kho hàng đích
+                var otherWarehouse = txtOtherWarehouse.SelectedItem as Warehouse;
+                if (otherWarehouse == null)
+                {
+                    MessageBox.Show("Hãy chọn kho hàng đích!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                txtOtherWarehouse.IsEnabled = false;
+
+                // Kiểm tra sức chứa kho đích
+                int otherWarehouseCapacity = otherWarehouse.Capacity ?? 0;
+                int currentInventoryInOtherWarehouse = inventoryService.getTotalQuantityInventoyByID(otherWarehouse.WarehouseId);
+
+                if (currentInventoryInOtherWarehouse + quantityToMove > otherWarehouseCapacity)
+                {
+                    MessageBox.Show("Kho hàng đích không đủ sức chứa số lượng sản phẩm này!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Kiểm tra số lượng tồn kho có đủ để chuyển không
+                if (quantityToMove > selectedInventory.Quantity)
+                {
+                    MessageBox.Show("Số lượng sản phẩm trong kho không đủ để chuyển!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Giảm số lượng sản phẩm trong kho nguồn
+                selectedInventory.Quantity -= quantityToMove;
+                if (!inventoryService.UpdateInventory(selectedInventory))
+                {
+                    MessageBox.Show("Lỗi khi cập nhật kho nguồn!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Giảm sức chứa của kho đích
+                otherWarehouse.Capacity -= quantityToMove;
+                if (!warehousesService.UpdateWarehouses(otherWarehouse))
+                {
+                    MessageBox.Show("Lỗi khi cập nhật kho hàng đích!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Kiểm tra xem sản phẩm đã tồn tại trong kho đích chưa
+                var existingInventory = inventoryService.GetInventoryListByWarehouseId(otherWarehouse.WarehouseId)
+                                                        .FirstOrDefault(item => item.ProductId == selectedInventory.ProductId);
+
+                if (existingInventory != null)
+                {
+                    // Nếu sản phẩm đã tồn tại, cập nhật số lượng
+                    existingInventory.Quantity += quantityToMove;
+                    if (!inventoryService.UpdateInventory(existingInventory))
                     {
-                        if (txtStockStatus.SelectedItem is ComboBoxItem selected && selectedItem.Content != null)
-                        {
-                            string selectedText = selected.Content.ToString().Trim();
-
-                            if (string.Equals(selectedText.Normalize(NormalizationForm.FormD),
-                                                      "Xuất".Normalize(NormalizationForm.FormD),
-                                                      StringComparison.OrdinalIgnoreCase))
-                            {
-
-                                var otherWareHouse = txtOtherWarehouse.SelectedItem as Warehouse;
-                                if (otherWareHouse != null)
-                                {
-
-                                    int quantityWare = warehousesService.GetWarehouseById(otherWareHouse.WarehouseId).Capacity.Value;
-                                    int quantityCheck = inventoryService.getTotalQuantityInventoyByID(otherWareHouse.WarehouseId);
-
-                                    if (quantityCheck <= quantityWare)
-                                    {
-                                        if (int.Parse(txtQuantity.Text) <= selectedInventory.Quantity && quantityWare >= int.Parse(txtQuantity.Text))
-                                        {
-                                            selectedInventory.Quantity = selectedInventory.Quantity - int.Parse(txtQuantity.Text);
-                                            inventoryService.UpdateInventory(selectedInventory);
-                                            otherWareHouse.Capacity = otherWareHouse.Capacity - int.Parse(txtQuantity.Text);
-                                            warehousesService.UpdateWarehouses(otherWareHouse);
-                                            var lstInven = inventoryService.GetInventoryListByWarehouseId(otherWareHouse.WarehouseId);
-                                            foreach (var item in lstInven)
-                                            {
-                                                if (item.ProductId == product.ProductId)
-                                                {
-                                                    item.Quantity = item.Quantity + int.Parse(txtQuantity.Text);
-                                                    if (inventoryService.UpdateInventory(item))
-                                                    {
-                                                        var transactionLog = new TransactionLog
-                                                        {
-                                                            ProductId = product.ProductId,
-                                                            WarehouseId = warehouse.WarehouseId,
-                                                            SupplierId = warehouse.SupplierId,
-                                                            ChangeType = "Xuất 2",
-                                                            QuantityChanged = int.Parse(txtQuantity.Text),
-                                                            ChangeDate = DateTime.Now,
-                                                            UserId = user.UserId,
-                                                            Remarks = txtNote.Text
-                                                        };
-                                                        if (transactionLogService.AddTransactionLog(transactionLog))
-                                                        {
-                                                            MessageBox.Show("Đã thêm sản phẩm tồn tại vào kho hàng!");
-                                                            loadInvetory(warehouse.WarehouseId);
-                                                            clear();
-                                                            return;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                            var inventory = new Inventory
-                                            {
-                                                ProductId = selectedInventory.ProductId,
-                                                WarehouseId = otherWareHouse.WarehouseId,
-                                                SupplierId = otherWareHouse.SupplierId,
-                                                Quantity = int.Parse(txtQuantity.Text),
-                                                StockStatus = selectedItem.Content.ToString()
-                                            };
-                                            if (inventoryService.AddInventory(inventory))
-                                            {
-                                                var transactionLog = new TransactionLog
-                                                {
-                                                    ProductId = selectedInventory.ProductId,
-                                                    WarehouseId = otherWareHouse.WarehouseId,
-                                                    SupplierId = otherWareHouse.SupplierId,
-                                                    ChangeType = "Chuyển kho",
-                                                    QuantityChanged = int.Parse(txtQuantity.Text),
-                                                    ChangeDate = DateTime.Now,
-                                                    UserId = user.UserId,
-                                                    Remarks = txtNote.Text
-                                                };
-                                                if (transactionLogService.AddTransactionLog(transactionLog))
-                                                {
-                                                    MessageBox.Show("Đã chuyển sang kho hàng " + otherWareHouse.WarehouseName + " thành công !");
-                                                    loadInvetory(warehouse.WarehouseId);
-                                                    clear();
-                                                }
-
-                                            }
-                                        }
-                                        else
-                                        {
-                                            MessageBox.Show("Số lượng sản phẩm không đủ!");
-                                        }
-
-                                    }
-                                    else
-                                    {
-                                        MessageBox.Show("Số lượng trong kho không đủ để thêm!");
-                                    }
-
-                                }
-                                else
-                                {
-                                    MessageBox.Show("Hãy chọn sản phẩm để chuyển!");
-                                }
-
-                            }
-                        }
-
+                        MessageBox.Show("Lỗi khi cập nhật kho hàng đích!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
                     }
                 }
+                else
+                {
+                    // Nếu sản phẩm chưa có, thêm mới vào kho đích
+                    var newInventory = new Inventory
+                    {
+                        ProductId = selectedInventory.ProductId,
+                        WarehouseId = otherWarehouse.WarehouseId,
+                        SupplierId = otherWarehouse.SupplierId,
+                        Quantity = quantityToMove,
+                        StockStatus = selectedItem.Content.ToString()
+                    };
+
+                    if (!inventoryService.AddInventory(newInventory))
+                    {
+                        MessageBox.Show("Lỗi khi thêm sản phẩm vào kho đích!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                }
+
+                // Ghi nhật ký giao dịch
+                var transactionLog = new TransactionLog
+                {
+                    ProductId = selectedInventory.ProductId,
+                    WarehouseId = warehouse.WarehouseId,
+                    SupplierId = warehouse.SupplierId,
+                    ChangeType = "Chuyển kho",
+                    QuantityChanged = quantityToMove,
+                    ChangeDate = DateTime.Now,
+                    UserId = user?.UserId ?? 0,
+                    Remarks = txtNote.Text?.Trim()
+                };
+
+                if (!transactionLogService.AddTransactionLog(transactionLog))
+                {
+                    MessageBox.Show("Lỗi khi ghi nhật ký giao dịch!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                // Thông báo thành công
+                MessageBox.Show($"Chuyển sản phẩm sang kho {otherWarehouse.WarehouseName} thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // Cập nhật giao diện
+                loadInvetory(warehouse.WarehouseId);
+                clear();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
     }
 }

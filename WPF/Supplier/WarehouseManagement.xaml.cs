@@ -123,33 +123,57 @@ namespace WPF.Supplier
 
         private void SaveWarehouse_Click(object sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(txtCapacity.Text.Trim(), out int capacity) || capacity <= 0)
+            try
             {
-                MessageBox.Show("Hãy nhập số lượng >0!");
-                return;
-            }
+                // Kiểm tra supplier có tồn tại không
+                if (supplier == null)
+                {
+                    MessageBox.Show("Không tìm thấy thông tin nhà cung cấp!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
-            Warehouse newWarehouse = new Warehouse
-            {
-                WarehouseName = txtWarehouseName.Text,
-                Location = txtLocation.Text,
-                Capacity = capacity,
-                SupplierId = supplier.SupplierId,
-                
-            };
+                // Kiểm tra thông tin đầu vào
+                if (string.IsNullOrWhiteSpace(txtWarehouseName.Text) || string.IsNullOrWhiteSpace(txtLocation.Text))
+                {
+                    MessageBox.Show("Vui lòng nhập đầy đủ thông tin kho hàng!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
-            if (warehouseService.AddWarehouses(newWarehouse))
-            {
-                MessageBox.Show("Thêm kho hàng thành công!");
-                PopupOverlay.Visibility = Visibility.Collapsed;
-                LoadWarehouses(supplier.SupplierId);
-                clear();
+                // Kiểm tra sức chứa hợp lệ
+                if (!int.TryParse(txtCapacity.Text.Trim(), out int capacity) || capacity <= 0)
+                {
+                    MessageBox.Show("Sức chứa phải là một số nguyên lớn hơn 0!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                // Tạo đối tượng Warehouse mới
+                Warehouse newWarehouse = new Warehouse
+                {
+                    WarehouseName = txtWarehouseName.Text.Trim(),
+                    Location = txtLocation.Text.Trim(),
+                    Capacity = capacity,
+                    SupplierId = supplier.SupplierId
+                };
+
+                // Thêm kho hàng vào database
+                if (warehouseService.AddWarehouses(newWarehouse))
+                {
+                    MessageBox.Show("Thêm kho hàng thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    PopupOverlay.Visibility = Visibility.Collapsed;
+                    LoadWarehouses(supplier.SupplierId);
+                    clear();
+                }
+                else
+                {
+                    MessageBox.Show("Thêm kho hàng thất bại. Vui lòng thử lại!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Thêm kho hàng thất bại!");
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         private void CancelWarehouse_Click(object sender, RoutedEventArgs e)
         {
@@ -159,35 +183,54 @@ namespace WPF.Supplier
 
         private void SaveEditWarehouse_Click(object sender, RoutedEventArgs e)
         {
-            if (!int.TryParse(txtEditCapacity.Text.Trim(), out int capacity) || capacity <= 0)
+            try
             {
-                MessageBox.Show("Hãy nhập số lượng >0!");
-                return;
-            }
+                if (string.IsNullOrWhiteSpace(txtEditWarehouseName.Text) || string.IsNullOrWhiteSpace(txtEditLocation.Text))
+                {
+                    MessageBox.Show("Vui lòng nhập đầy đủ thông tin kho hàng!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
 
-            if (WarehouseDataGrid.SelectedItem is Warehouse selectedWarehouse)
-            {
-                selectedWarehouse.WarehouseName = txtEditWarehouseName.Text;
-                selectedWarehouse.Location = txtEditLocation.Text;
+           
+                if (!int.TryParse(txtEditCapacity.Text.Trim(), out int capacity) || capacity <= 0)
+                {
+                    MessageBox.Show("Sức chứa phải là một số nguyên lớn hơn 0!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+        
+                if (WarehouseDataGrid.SelectedItem is not Warehouse selectedWarehouse)
+                {
+                    MessageBox.Show("Hãy chọn kho hàng để sửa!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
+                selectedWarehouse.WarehouseName = txtEditWarehouseName.Text.Trim();
+                selectedWarehouse.Location = txtEditLocation.Text.Trim();
                 selectedWarehouse.Capacity = capacity;
                 selectedWarehouse.IsApproved = false;
 
                 if (warehouseService.UpdateWarehouses(selectedWarehouse))
                 {
-                    MessageBox.Show("Sửa kho hàng thành công!");
+                    MessageBox.Show("Sửa kho hàng thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                     EditWarehousePopup.Visibility = Visibility.Collapsed;
-                    LoadWarehouses(supplier.SupplierId);  
+
+                    if (supplier != null)
+                    {
+                        LoadWarehouses(supplier.SupplierId);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Sửa kho hàng thất bại!");
+                    MessageBox.Show("Sửa kho hàng thất bại. Vui lòng thử lại!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Hãy chọn kho hàng để sửa!");
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
 
         private void CancelEditWarehouse_Click(object sender, RoutedEventArgs e)
         {

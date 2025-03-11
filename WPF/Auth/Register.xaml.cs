@@ -170,17 +170,19 @@ bool ValidateInputs()
             {
                 selectedFilePath = openFileDialog.FileName;
                 fileName = Path.GetFileName(selectedFilePath);
-                destinationPath = Path.Combine(saveDirectory, fileName);
+
+                // Get the timestamp and append it to the filename
+                string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                string fileNameWithTimestamp = Path.GetFileNameWithoutExtension(fileName) + "_" + timestamp + Path.GetExtension(fileName);
+
+                destinationPath = Path.Combine(saveDirectory, fileNameWithTimestamp);
 
                 // Tạo thư mục nếu chưa có
                 Directory.CreateDirectory(saveDirectory);
 
-
-
                 // Hiển thị ảnh lên UI
                 avatarImage.Source = new BitmapImage(new Uri(selectedFilePath));
                 avatarImage.Visibility = Visibility.Visible;
-
             }
         }
 
@@ -188,5 +190,6 @@ bool ValidateInputs()
         {
             File.Copy(selectedFilePath, destinationPath, true);
         }
+
     }
 }

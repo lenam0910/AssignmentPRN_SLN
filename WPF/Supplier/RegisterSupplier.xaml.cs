@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -40,38 +41,96 @@ namespace WPF.Supplier
 
         private void Register_Click(object sender, RoutedEventArgs e)
         {
-            DataAccess.Models.User user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
-
-            DataAccess.Models.Supplier supplier = new()
+            try
             {
-                SupplierName = txtSupplierName.Text,
-                ContactInfo = txtContactInfo.Text,
-                Email = txtEmail.Text,
-                Phone = txtPhone.Text,
-                Avatar = destinationPath
-            };
+                // Kiểm tra xem tài khoản người dùng có tồn tại hay không
+                if (!Application.Current.Properties.Contains("UserAccount") ||
+                    Application.Current.Properties["UserAccount"] is not DataAccess.Models.User user)
+                {
+                    MessageBox.Show("Không tìm thấy tài khoản người dùng. Vui lòng đăng nhập lại.");
+                    return;
+                }
 
-            if (supplierService.SaveSupplier(supplier))
-            {
-                UserSupplier userSupplier = new UserSupplier();
-                userSupplier.SupplierId = supplier.SupplierId;
-                userSupplier.UserId = user.UserId;
-                userSupplierService.Add(userSupplier);
-                saveAvatarSupplier();
+                // Kiểm tra input đầu vào
+                if (string.IsNullOrWhiteSpace(txtSupplierName.Text) ||
+                    string.IsNullOrWhiteSpace(txtContactInfo.Text) ||
+                    string.IsNullOrWhiteSpace(txtEmail.Text) ||
+                    string.IsNullOrWhiteSpace(txtPhone.Text))
+                {
+                    MessageBox.Show("Vui lòng nhập đầy đủ thông tin nhà cung cấp.");
+                    return;
+                }
 
-                Login login = new Login();
-                MessageBox.Show("Đăng ký thông tin nhà cung cấp thành công! Hãy chờ Admin duyệt!");
-                login.Show();
-                this.Hide();
+                // Kiểm tra email hợp lệ
+                if (!IsValidEmail(txtEmail.Text))
+                {
+                    MessageBox.Show("Email không hợp lệ!");
+                    return;
+                }
+
+                // Kiểm tra số điện thoại hợp lệ
+                if (!IsValidPhoneNumber(txtPhone.Text))
+                {
+                    MessageBox.Show("Số điện thoại không hợp lệ!");
+                    return;
+                }
+
+                // Tạo đối tượng Supplier
+                DataAccess.Models.Supplier supplier = new()
+                {
+                    SupplierName = txtSupplierName.Text.Trim(),
+                    ContactInfo = txtContactInfo.Text.Trim(),
+                    Email = txtEmail.Text.Trim(),
+                    Phone = txtPhone.Text.Trim(),
+                    Avatar = !string.IsNullOrEmpty(destinationPath) ? destinationPath : null // Chỉ lưu Avatar nếu có
+                };
+
+                // Lưu thông tin nhà cung cấp
+                if (supplierService.SaveSupplier(supplier))
+                {
+                    // Liên kết User với Supplier
+                    UserSupplier userSupplier = new()
+                    {
+                        SupplierId = supplier.SupplierId,
+                        UserId = user.UserId
+                    };
+                    userSupplierService.Add(userSupplier);
+
+                    // Lưu Avatar nếu có ảnh
+                    if (!string.IsNullOrEmpty(destinationPath))
+                    {
+                        saveAvatarSupplier();
+                    }
+
+                    // Hiển thị thông báo và chuyển sang màn hình Login
+                    MessageBox.Show("Đăng ký thông tin nhà cung cấp thành công! Hãy chờ Admin duyệt!");
+                    Login login = new Login();
+                    login.Show();
+                    this.Hide();
+                }
+                else
+                {
+                    MessageBox.Show("Đăng ký thông tin nhà cung cấp thất bại!");
+                }
             }
-
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Đăng ký thông tin nhà cung cấp thất bại!");
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}");
             }
-
-
         }
+
+        // Kiểm tra email hợp lệ
+        private bool IsValidEmail(string email)
+        {
+            return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+        }
+
+        // Kiểm tra số điện thoại hợp lệ (Việt Nam: 10 chữ số)
+        private bool IsValidPhoneNumber(string phoneNumber)
+        {
+            return Regex.IsMatch(phoneNumber, @"^0\d{9}$");
+        }
+
 
 
         private void Cancel_Click(object sender, RoutedEventArgs e)
@@ -86,6 +145,8 @@ namespace WPF.Supplier
         {
 
         }
+
+
         private void UploadAvatar_Click(object sender, RoutedEventArgs e)
         {
             Microsoft.Win32.OpenFileDialog openFileDialog = new Microsoft.Win32.OpenFileDialog();
@@ -94,7 +155,12 @@ namespace WPF.Supplier
             {
                 selectedFilePath = openFileDialog.FileName;
                 fileName = System.IO.Path.GetFileName(selectedFilePath);
-                destinationPath = System.IO.Path.Combine(saveDirectory, fileName);
+
+                // Get the timestamp and append it to the filename
+                string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
+                string fileNameWithTimestamp = System.IO.Path.GetFileNameWithoutExtension(fileName) + "_" + timestamp + System.IO.Path.GetExtension(fileName);
+
+                destinationPath = System.IO.Path.Combine(saveDirectory, fileNameWithTimestamp);
 
                 // Tạo thư mục nếu chưa có
                 Directory.CreateDirectory(saveDirectory);
@@ -104,7 +170,6 @@ namespace WPF.Supplier
                 // Hiển thị ảnh lên UI
                 avatarImage.Source = new BitmapImage(new Uri(selectedFilePath));
                 avatarImage.Visibility = Visibility.Visible;
-
             }
         }
 

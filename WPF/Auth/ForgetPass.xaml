@@ -67,6 +67,8 @@
                     <TextBlock Text="Nhập mật khẩu mới" FontSize="14" Foreground="Gray"/>
                     <PasswordBox x:Name="txtNewPassword" Width="320" Height="40"
                                  BorderBrush="Gray" BorderThickness="1" Padding="10"/>
+                    <PasswordBox x:Name="txtConfirmPassword" Width="320" Height="40"
+               BorderBrush="Gray" BorderThickness="1" Padding="10"/>
                     <Button x:Name="btnResetPassword" Content="Đặt lại mật khẩu" Width="180" Height="40"
                             Background="#28A745" Foreground="White" FontWeight="Bold"
                             BorderThickness="0" Cursor="Hand" Margin="0,15,0,0"

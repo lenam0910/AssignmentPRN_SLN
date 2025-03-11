@@ -62,7 +62,7 @@
         </StackPanel>
 
         <!-- Main Content -->
-        <Border Grid.Column="1" Background="White" CornerRadius="10" Padding="20" Margin="10">
+        <Border Grid.Column="1" Background="White" >
             <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Background="#FFFFFF"/>
         </Border>
     </Grid>

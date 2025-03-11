@@ -91,7 +91,9 @@ namespace WPF.User
                     }
                 }
             }
-
+            OrderIdText.Text = "Mã đơn hàng: " + order.OrderId;
+            OrderDateText.Text = "Ngày đặt hàng: " + order.OrderDate;
+            OrderStatusText.Text = "Trạng thái: " + order.Status;
             OrderDetailsDataGrid.ItemsSource = lstOrder;
             ProductListView.Visibility = Visibility.Visible;
 
