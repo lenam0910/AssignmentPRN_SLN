@@ -48,17 +48,20 @@ namespace WPF.User
             }
             var lstOrder = orderDetailService.GetAllOrders();
             decimal total = 0;
-            foreach (var item in lstOrder)
+
+            for (int i = lstOrder.Count - 1; i >= 0; i--)
             {
+                var item = lstOrder[i];
                 if (item.OrderId != order.OrderId)
                 {
-                    lstOrder.Remove(item);
+                    lstOrder.RemoveAt(i); 
                 }
                 else
                 {
                     total += item.PriceAtOrder;
                 }
             }
+
             var lstProduct = productService.GetAllProducts();
             foreach (var item in lstOrder)
             {
@@ -72,9 +75,9 @@ namespace WPF.User
             }
 
             OrdersListView.ItemsSource = lstOrder;
-
             TotalAmountText.Text = "Tổng tiền: " + total + "đ";
         }
+
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             load();
@@ -100,11 +103,12 @@ namespace WPF.User
         {
             var lstOrder = orderDetailService.GetAllOrders();
             decimal total = 0;
-            foreach (var item in lstOrder)
+            for (int i = lstOrder.Count - 1; i >= 0; i--)
             {
+                var item = lstOrder[i];
                 if (item.OrderId != order.OrderId)
                 {
-                    lstOrder.Remove(item);
+                    lstOrder.RemoveAt(i);
                 }
                 else
                 {
@@ -119,6 +123,7 @@ namespace WPF.User
                     if (item.ProductId == item2.ProductId)
                     {
                         item2.Quantity -= item.Quantity;
+                        inventoryService.UpdateInventory(item2);
                     }
                 }
             }
@@ -169,6 +174,11 @@ namespace WPF.User
                     load();
                 }
             }
+        }
+
+        private void OrdersListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 }

@@ -28,6 +28,7 @@ namespace WPF.User
         private Product productRoot;
         private SupplierService supplierService;
         private InventoryService inventoryService;
+        private OrderDetail orderDetail;
         private int selectedQuantity = 0;
         private DataAccess.Models.User user;
 
@@ -115,11 +116,11 @@ namespace WPF.User
                 if (orderService.addOrder(order))
                 {
                     MessageBox.Show("Tạo giỏ hàng mới thành công!");
-                    order = orderService.GetOrderByUserId(user.UserId); // Lấy lại Order sau khi thêm
+                    order = orderService.GetOrderByUserId(user.UserId); 
                 }
             }
 
-            OrderDetail orderDetail = orderDetailService.GetOrdersDetailByProductIdAndOrderID(productRoot.ProductId, order.OrderId);
+             orderDetail = orderDetailService.GetOrdersDetailByProductIdAndOrderID(productRoot.ProductId, order.OrderId);
             if (orderDetail == null)
             {
                 orderDetail = new OrderDetail
@@ -139,7 +140,7 @@ namespace WPF.User
             }
             else
             {
-                orderDetail.Quantity = quantity + orderDetail.Quantity;
+                orderDetail.Quantity = quantity ;
                 orderDetail.PriceAtOrder = orderDetail.Quantity * productRoot.Price;
 
                 if (orderDetailService.UpdateOrderDetail(orderDetail))
@@ -173,6 +174,23 @@ namespace WPF.User
                     productRoot.QuantityInStock = item.Quantity;
                 }
             }
+            Order order = orderService.GetOrderByUserId(user.UserId);
+            if (order == null)
+            {
+                order = new Order { UserId = user.UserId, Status = "Chờ xử lý" };
+                if (orderService.addOrder(order))
+                {
+                    MessageBox.Show("Tạo giỏ hàng mới thành công!");
+                    order = orderService.GetOrderByUserId(user.UserId);
+                }
+            }
+
+             orderDetail = orderDetailService.GetOrdersDetailByProductIdAndOrderID(productRoot.ProductId, order.OrderId);
+            if (orderDetail != null)
+            {
+                selectedQuantity = orderDetail.Quantity;
+                selectedQuan.Text = selectedQuantity.ToString();
+            }
             this.DataContext = productRoot;
         }
 
@@ -187,6 +205,7 @@ namespace WPF.User
             {
                 selectedQuantity++;
                 selectedQuan.Text = selectedQuantity.ToString();
+                
             }
         }
 

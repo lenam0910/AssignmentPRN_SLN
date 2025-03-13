@@ -39,29 +39,7 @@ namespace WPF.User
         private void load()
         {
             var lstOrder = orderService.GetAllOrdersByUserId(user.UserId);
-            //decimal total = 0;
-            //foreach (var item in lstOrder)
-            //{
-            //    if (item.OrderId != order.OrderId)
-            //    {
-            //        lstOrder.Remove(item);
-            //    }
-            //    else
-            //    {
-            //        total += item.PriceAtOrder;
-            //    }
-            //}
-            //var lstProduct = productService.GetAllProducts();
-            //foreach (var item in lstOrder)
-            //{
-            //    foreach (var item2 in lstProduct)
-            //    {
-            //        if (item.ProductId == item2.ProductId)
-            //        {
-            //            item.Product = item2;
-            //        }
-            //    }
-            //}
+            
             OrdersListView.ItemsSource = lstOrder;
         }
         private void OrdersListView_SelectionChanged(object sender, SelectionChangedEventArgs e)

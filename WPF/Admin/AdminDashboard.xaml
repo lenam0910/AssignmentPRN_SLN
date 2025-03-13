@@ -113,8 +113,7 @@
                         </ContextMenu.ItemContainerStyle>
 
                         <!-- MenuItems with icons -->
-                        <MenuItem Header="🔑 Cài đặt 1" Click="MenuItem_Click" />
-                        <MenuItem Header="🔧 Cài đặt 2" />
+                        <MenuItem Header="🔑 API KEY" Click="MenuItem_Click" />
                     </ContextMenu>
                 </ToggleButton.ContextMenu>
             </ToggleButton>

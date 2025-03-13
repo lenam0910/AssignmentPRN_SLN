@@ -158,11 +158,7 @@ namespace WPF.Supplier
         private void EditProduct_Click(object sender, RoutedEventArgs e)
         {
             var selectedProduct = (sender as Button).DataContext as Product;
-            string src = "";
-            if (selectedProduct.Avatar != null)
-            {
-                src = selectedProduct.Avatar;
-            }
+           
             if (selectedProduct != null)
             {
                 Title.Text = "Sửa Thông Tin Sản Phẩm";
@@ -173,9 +169,9 @@ namespace WPF.Supplier
                 cbCategory.SelectedValue = selectedProduct.CategoryId;
                 txtDescription.Text = selectedProduct.Description;
 
-                if (!string.IsNullOrEmpty(src))
+                if (!string.IsNullOrEmpty(selectedProduct.Avatar))
                 {
-                    imgProduct.Source = new BitmapImage(new Uri(src));
+                    imgProduct.Source = new BitmapImage(new Uri(selectedProduct.Avatar));
                 }
                 else
                 {
@@ -282,6 +278,7 @@ namespace WPF.Supplier
                 // Cập nhật sản phẩm
                 if (productService.UpdaterProduct(product))
                 {
+                    saveAvatar();
                     Title.Text = "Thêm Sản Phẩm";
                     addProduct.Visibility = Visibility.Visible;
                     stpBtn.Visibility = Visibility.Collapsed;
