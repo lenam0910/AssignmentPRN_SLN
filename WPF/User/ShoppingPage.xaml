@@ -34,7 +34,7 @@
         <Grid Margin="20,80,20,20">
             <ListView x:Name="lstProduct" Background="Transparent"
               SelectionChanged="lstProduct_SelectionChanged"
-              ScrollViewer.VerticalScrollBarVisibility="Auto" av:ItemsSource="{av:SampleData ItemCount=5}">
+              ScrollViewer.VerticalScrollBarVisibility="Auto" >
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Border Background="White" Padding="10" Margin="5" CornerRadius="10">

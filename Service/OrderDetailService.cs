@@ -34,11 +34,13 @@ namespace Service
             }
             return lstDpl;
         }
+
+
      
         public List<OrderDetail> GetAllOrdersByOrderId(int orderId)
         {
             var lstDpl = new List<OrderDetail>();
-            var lst = repository.getAll();
+            var lst = repository.getAllInfor();
             foreach (var item in lst)
             {
                 if (item.OrderId == orderId && item.IsDeleted == false)

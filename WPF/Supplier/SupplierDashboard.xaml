@@ -53,7 +53,10 @@
                 <Button Content="📦 Quản Lý Sản Phẩm" Style="{StaticResource SidebarButton}" Click="Nav_Products" Background="#1E88E5"/>
                 <Button Content="🏬 Quản Lý Kho Hàng" Style="{StaticResource SidebarButton}" Click="Nav_Warehouse" Background="#43A047"/>
                 <Button Content="🚚 Phân Phối Đơn Hàng" Style="{StaticResource SidebarButton}" Click="Nav_Orders" Background="#FDD835"/>
+
+                
                 <Button Content="📜 Lịch Sử Đơn Hàng" Style="{StaticResource SidebarButton}" Click="Button_Click" Background="#FB8C00"/>
+                <Button Content="💰 Tổng thu" Style="{StaticResource SidebarButton}"  Background="DeepSkyBlue" Click="Button_Click_1"/>
                 <Button Content="⚙ Cập Nhật Thông Tin" Style="{StaticResource SidebarButton}" Click="Nav_Account" Background="#8E24AA"/>
             </StackPanel>
 

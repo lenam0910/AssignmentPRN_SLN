@@ -42,7 +42,7 @@
             <!-- Nút chọn ảnh -->
             <Button x:Name="selectImg" Content="Chọn ảnh" Background="#2196F3" Foreground="White" Click="SelectImage_Click" Margin="0,5" Width="70" />
 
-            <Button x:Name="addProduct" Content="Thêm Sản Phẩm" Background="#4CAF50" Foreground="White" Click="AddProduct_Click" Margin="10,5,0,0"/>
+            <Button x:Name="addProduct" Content="Thêm Sản Phẩm" Width="150" Height="30" Background="#4CAF50" Foreground="White" Click="AddProduct_Click" Margin="10,5,0,0"/>
 
             <StackPanel Visibility="Collapsed" x:Name="stpBtn" Orientation="Horizontal" Margin="10,5,0,0">
                 <!-- Nút Sửa Sản Phẩm -->

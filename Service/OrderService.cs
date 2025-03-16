@@ -48,6 +48,20 @@ namespace Service
             return display;
         }
 
+        public List<Order> GetAllOrdersPaid()
+        {
+            var lst = repository.GetAllOrdersInfor();
+            var display = new List<Order>();
+            foreach (var item in lst)
+            {
+                if (item.IsDeleted == false && item.Status.Equals("Đã Thanh Toán", StringComparison.OrdinalIgnoreCase))
+                {
+                    display.Add(item);
+                }
+            }
+            return display;
+        }
+
         public List<Order> GetAllOrdersByUserId(int id)
         {
             var lst = repository.GetAllOrders();
@@ -61,7 +75,7 @@ namespace Service
             }
             return display;
         }
-
+      
         public bool addOrder(Order order)
         {
             bool isCheck = false;

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
@@ -31,6 +32,11 @@ namespace Repository
         public List<Order> GetAllOrders()
         {
             return _prnContext.Orders.ToList();
+        }
+
+        public List<Order> GetAllOrdersInfor()
+        {
+            return _prnContext.Orders.Include(x => x.OrderDetails).ToList();
         }
 
         public void UpdateOrder(Order order) { 

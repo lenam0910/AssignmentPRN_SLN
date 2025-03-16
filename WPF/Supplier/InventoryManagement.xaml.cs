@@ -243,10 +243,10 @@ namespace WPF.Supplier
             clear();
             ExportBtn.Visibility = Visibility.Collapsed;
             SaveBtn.Visibility = Visibility.Visible;
-            status.Visibility = Visibility.Collapsed;
             OtherWareHouse.Visibility = Visibility.Collapsed;
             ProductStack.Visibility = Visibility.Collapsed;
-            txtStockStatus.Visibility = Visibility.Visible;
+            status.Visibility = Visibility.Visible;
+            txtStockStatus.SelectedValue = null;
         }
         private void clear()
         {
@@ -454,6 +454,7 @@ namespace WPF.Supplier
             if (warehouse == null)
             {
                 MessageBox.Show("Hãy chọn Kho hàng đầu tiên!");
+                txtStockStatus.SelectedValue = null;
                 return;
             }
 
@@ -494,6 +495,8 @@ namespace WPF.Supplier
                         {
                             MessageBox.Show("Không có kho nào để chuyển hàng!");
                             OtherWareHouse.Visibility = Visibility.Collapsed;
+                            txtStockStatus.SelectedValue = null;
+                            txtStockStatus.IsEnabled = true;
                             return;
                         }
 

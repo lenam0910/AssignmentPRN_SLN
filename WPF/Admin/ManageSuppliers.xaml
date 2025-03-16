@@ -49,23 +49,21 @@
                 <TextBlock Text="Nhà cung cấp chưa được duyệt" FontSize="20" FontWeight="Bold" 
                            HorizontalAlignment="Center" Margin="0,10"/>
 
-                <!-- ListBox for Pending Suppliers -->
-                <ListBox Name="PendingSuppliersList" >
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="5">
-                                <!-- Supplier Name -->
-                                <TextBlock Text="{Binding SupplierName}" Width="100"/>
+                <ListView Name="PendingSuppliersList"   ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.View>
+                        <GridView>
+                            <!-- Supplier Name -->
+                            <GridViewColumn Header="Supplier Name" DisplayMemberBinding="{Binding SupplierName}" Width="100"/>
 
-                                <!-- Supplier Email -->
-                                <TextBlock Text="{Binding Email}" Width="100"/>
+                            <!-- Supplier Email -->
+                            <GridViewColumn Header="Supplier Email" DisplayMemberBinding="{Binding Email}" Width="100"/>
 
-                                <!-- Supplier Phone -->
-                                <TextBlock Text="{Binding Phone}" Width="50"/>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                            <!-- Supplier Phone -->
+                            <GridViewColumn Header="Supplier Phone" DisplayMemberBinding="{Binding Phone}" Width="50"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,20,10,0">
                     <!-- Approve Button -->

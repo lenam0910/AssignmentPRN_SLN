@@ -51,16 +51,24 @@
                 </StackPanel>
 
 
-                <!-- Nhập OTP -->
                 <StackPanel x:Name="otpPanel" Margin="0,15" Visibility="Collapsed">
                     <TextBlock Text="Nhập mã xác nhận" FontSize="14" Foreground="Gray"/>
                     <TextBox x:Name="txtOTP" Width="320" Height="40"
-                             BorderBrush="Gray" BorderThickness="1" Padding="10"/>
+             BorderBrush="Gray" BorderThickness="1" Padding="10"/>
+
+                    <!-- Nút Gửi lại mã xác nhận -->
+                    <Button x:Name="btnResendOTP" Visibility="Collapsed" Content="Gửi lại mã xác nhận" Width="160" Height="40"
+Background="Transparent" Foreground="Red" FontWeight="Bold"
+BorderThickness="0" Cursor="Hand" Margin="0,15,0,0"
+HorizontalAlignment="Left" Click="ResendOTP_Click"/>
                     <Button x:Name="btnVerifyOTP" Content="Xác nhận mã" Width="160" Height="40"
-                            Background="#0078D4" Foreground="White" FontWeight="Bold"
-                            BorderThickness="0" Cursor="Hand" Margin="0,15,0,0"
-                            HorizontalAlignment="Center" Click="VerifyOTP_Click"/>
+            Background="#0078D4" Foreground="White" FontWeight="Bold"
+            BorderThickness="0" Cursor="Hand" Margin="0,15,0,0"
+            HorizontalAlignment="Center" Click="VerifyOTP_Click"/>
+
+                   
                 </StackPanel>
+
 
                 <!-- Nhập mật khẩu mới -->
                 <StackPanel x:Name="passwordPanel" Margin="0,15" Visibility="Collapsed">

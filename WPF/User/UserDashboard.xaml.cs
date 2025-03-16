@@ -42,9 +42,10 @@ namespace WPF.User
             {
                 avarImg.Source = new BitmapImage(new Uri(user.Avatar));
             }
+          
 
 
-            this.DataContext = user;
+                this.DataContext = user;
             MainFrame.Navigate(new ShoppingPage());
 
         }

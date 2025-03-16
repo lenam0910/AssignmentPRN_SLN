@@ -46,11 +46,11 @@ namespace WPF
         private void SendEmail_Click(object sender, RoutedEventArgs e)
         {
 
-            string otp = emailSenderService.GenerateOTP();
+            generatedOTP = emailSenderService.GenerateOTP().Trim();
             string to = txtEmail.Text.Trim();
             if (service.checkExistedGmail(to))
             {
-                if (emailSenderService.SendEmail(to, otp))
+                if (emailSenderService.SendEmail(to, generatedOTP))
                 {
                     // Ẩn emailPanel, hiện otpPanel
                     MessageBox.Show($"Mã xác nhận đã gửi thành công!", "Email Gửi Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -91,11 +91,12 @@ namespace WPF
                 if (otpAttempts >= maxOtpAttempts)
                 {
                     MessageBox.Show("Bạn đã nhập sai OTP quá nhiều lần. Vui lòng thử lại sau!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                    btnResendOTP.Visibility = Visibility.Visible;
                     return;
                 }
 
                 // Kiểm tra OTP hợp lệ
-                if (inputOtp == generatedOTP)
+                if (inputOtp.Equals(generatedOTP,StringComparison.OrdinalIgnoreCase))
                 {
                     MessageBox.Show("Xác thực OTP thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                     otpPanel.Visibility = Visibility.Collapsed;
@@ -104,7 +105,13 @@ namespace WPF
                 else
                 {
                     otpAttempts++; // Tăng số lần nhập sai
-                    MessageBox.Show($"Mã OTP không chính xác! Bạn còn {maxOtpAttempts - otpAttempts} lần thử.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    if(otpAttempts >= maxOtpAttempts)
+                    {
+                        MessageBox.Show("Bạn đã nhập sai OTP quá nhiều lần. Vui lòng thử gửi lại mã!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        btnResendOTP.Visibility = Visibility.Visible;
+                    }
+                    else
+                        MessageBox.Show($"Mã OTP không chính xác! Bạn còn {maxOtpAttempts - otpAttempts} lần thử.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             }
             catch (Exception ex)
@@ -185,6 +192,32 @@ namespace WPF
             this.Hide();
             Login login = new();
             login.Show();
+        }
+
+        private void ResendOTP_Click(object sender, RoutedEventArgs e)
+        {
+            otpAttempts = 0;
+            generatedOTP = emailSenderService.GenerateOTP().Trim();
+            string to = txtEmail.Text.Trim();
+            if (service.checkExistedGmail(to))
+            {
+                if (emailSenderService.SendEmail(to, generatedOTP))
+                {
+                    // Ẩn emailPanel, hiện otpPanel
+                    MessageBox.Show($"Gửi lại mã xác nhận đã gửi thành công!", "Email Gửi Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    emailPanel.Visibility = Visibility.Collapsed;
+                    otpPanel.Visibility = Visibility.Visible;
+                }
+                else
+                {
+                    MessageBox.Show("Lỗi khi gửi email! ", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show($"Không tồn tại Gmail!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+
         }
     }
 }

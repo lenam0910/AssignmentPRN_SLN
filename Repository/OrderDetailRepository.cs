@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
@@ -14,7 +15,10 @@ namespace Repository
         {
             _prnContext = new AssignmentPrnContext();
         }
-
+        public List<OrderDetail> getAllInfor()
+        {
+            return _prnContext.OrderDetails.Include(o  => o.Product).ToList();
+        }
         public List<OrderDetail> getAll()
         {
             return _prnContext.OrderDetails.ToList();

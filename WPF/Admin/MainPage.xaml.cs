@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Service;
 
 namespace WPF.Admin
 {
@@ -20,8 +21,14 @@ namespace WPF.Admin
     /// </summary>
     public partial class MainPage : Page
     {
+        private ProductService ProductService;
+        private SupplierService SupplierService;
+        private UserService UserService;
         public MainPage()
         {
+            ProductService = new ProductService();
+            SupplierService = new SupplierService();
+            UserService = new UserService();
             InitializeComponent();
         }
 
@@ -38,6 +45,16 @@ namespace WPF.Admin
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(new ManageProducts());
+        }
+
+        private void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            int numberProduct = ProductService.GetAllProducts().Count;
+            int numberSupplier = SupplierService.GetAllSuppliers().Count;
+            int numberUser = UserService.getAll().Count;
+            product.Text = numberProduct.ToString();
+            supplier.Text = numberSupplier.ToString();
+            user.Text = numberUser.ToString();
         }
     }
 }

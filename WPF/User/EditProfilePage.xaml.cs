@@ -149,8 +149,9 @@ namespace WPF.User
                 bool isUpdated = userService.UpdateUser(user);
                 if (isUpdated)
                 {
-                    if (imgUserAvatar.Source != null)
+                    if (imgUserAvatar.Source != null && !string.IsNullOrEmpty(destinationPathUser))
                     {
+                        Console.WriteLine(destinationPathUser);
                         saveAvatar();
                     }
                     MessageBox.Show("Sửa thông tin người dùng thành công!");

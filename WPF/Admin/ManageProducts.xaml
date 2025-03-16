@@ -73,19 +73,27 @@
             <StackPanel Margin="10">
                 <TextBlock Text="Sản phẩm chưa được duyệt" FontSize="20" FontWeight="Bold" 
                            HorizontalAlignment="Center" Margin="0,10"/>
-                <ListBox x:Name="PendingProductsList">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="{Binding Avatar}" Width="50" Height="50"/>
-                                <StackPanel>
-                                    <TextBlock Text="{Binding ProductName}" FontWeight="Bold"/>
-                                    <TextBlock Text="{Binding Price}"/>
-                                </StackPanel>
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                <ListView x:Name="PendingProductsList" ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListView.View>
+                        <GridView>
+                            <!-- Product Avatar -->
+                            <GridViewColumn Header="Avatar" Width="50">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Image Source="{Binding Avatar}" Width="50" Height="50"/>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
+
+                            <!-- Product Name -->
+                            <GridViewColumn Header="Product Name" DisplayMemberBinding="{Binding ProductName}" Width="200"/>
+
+                            <!-- Product Price -->
+                            <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="100"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,20,10,0">
                     <Button Content="✔ Duyệt" Width="120" Height="35" Background="#28a745" Foreground="White" Click="ApproveProduct_Click"/>
                     <Button Content="❌ Đóng" Width="120" Height="35" Background="#dc3545" Foreground="White" Click="ClosePopup"/>
