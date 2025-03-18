@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,17 +38,25 @@ namespace WPF.User
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
-            if (user is DataAccess.Models.User && !string.IsNullOrEmpty(user.Avatar))
+
+            DataAccess.Models.User user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
+
+            if (user != null)
             {
-                avarImg.Source = new BitmapImage(new Uri(user.Avatar));
-            }
-          
+                if (!string.IsNullOrEmpty(user.Avatar))
+                {
+                    string imagePath = user.Avatar;
 
+                    if (File.Exists(imagePath))
+                    {
+                        avarImg.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+                    }
 
+                }
                 this.DataContext = user;
-            MainFrame.Navigate(new ShoppingPage());
+                MainFrame.Navigate(new ShoppingPage());
 
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
