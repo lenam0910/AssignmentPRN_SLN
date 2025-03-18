@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -70,13 +71,25 @@ namespace WPF.Admin
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             DataAccess.Models.User user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
-            if (user.Avatar != null) { 
-            avaAdmin.Source = new BitmapImage(new Uri(user.Avatar));
-            }
-            txtAdminName.Text = user.Username;
-            MainFrame.Navigate(new MainPage());
 
+            if (user != null)
+            {
+                if (!string.IsNullOrEmpty(user.Avatar))
+                {
+                    string imagePath = user.Avatar;
+
+                    if (File.Exists(imagePath)) 
+                    {
+                        avaAdmin.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+                    }
+                   
+                }
+
+                txtAdminName.Text = user.Username;
+                MainFrame.Navigate(new MainPage());
+            }
         }
+
 
         private void btnSuppliers_Click(object sender, RoutedEventArgs e)
         {

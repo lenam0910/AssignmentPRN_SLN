@@ -48,8 +48,12 @@ namespace WPF.User
 
             if (user.Avatar != null)
             {
-                imgUserAvatar.Source = new BitmapImage(new Uri(user.Avatar));
-                imgUserAvatar.Visibility = Visibility.Visible;
+                string imagePath = user.Avatar;
+
+                if (File.Exists(imagePath))
+                {
+                    imgUserAvatar.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+                }
             }
             else
             {

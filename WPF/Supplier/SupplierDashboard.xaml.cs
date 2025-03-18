@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,13 +38,21 @@ namespace WPF.Supplier
         {
             DataAccess.Models.User user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             var supplier = userSupplierService.GetSupplierByUserId(user.UserId);
-            if (user is DataAccess.Models.User && !string.IsNullOrEmpty(user.Avatar))
+            if (user != null)
             {
-                avaSupplier.Source = new BitmapImage(new Uri(user.Avatar));
+                if (!string.IsNullOrEmpty(user.Avatar))
+                {
+                    string imagePath = user.Avatar;
+
+                    if (File.Exists(imagePath))
+                    {
+                        avaSupplier.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+                    }
+
+                }
             }
 
-
-            txtBlockHead.Text = " " + user.Username;
+                txtBlockHead.Text = " " + user.Username;
             MainFrame.Navigate(new StatisticsPage());
 
 

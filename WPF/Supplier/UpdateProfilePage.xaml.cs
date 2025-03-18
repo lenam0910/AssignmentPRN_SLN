@@ -58,7 +58,12 @@ namespace WPF.Supplier
             txtUserAddress.Text = user.Address;
             if (!string.IsNullOrEmpty(user.Avatar) )
             {
-                imgUserAvatar.Source = new BitmapImage(new Uri(user.Avatar));
+                string imagePath = user.Avatar;
+
+                if (File.Exists(imagePath))
+                {
+                    imgUserAvatar.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+                }
             }
             else
             {
@@ -73,7 +78,12 @@ namespace WPF.Supplier
             DataAccess.Models.Supplier sup = userSupplierService.GetSupplierByUserId(user.UserId);
             if (!string.IsNullOrEmpty(sup.Avatar))
             {
-                imgSupplierAvatar.Source = new BitmapImage(new Uri(sup.Avatar));
+                string imagePathSupplier = supplier.Avatar;
+
+                if (File.Exists(imagePathSupplier))
+                {
+                    imgSupplierAvatar.Source = new BitmapImage(new Uri(imagePathSupplier, UriKind.Absolute));
+                }
             }
             else
             {

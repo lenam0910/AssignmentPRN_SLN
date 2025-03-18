@@ -203,7 +203,7 @@ INSERT INTO Roles (RoleName) VALUES ('Admin'), ('User'), ('Supplier');
 -- ✅ Chèn dữ liệu mẫu vào bảng Suppliers
 INSERT INTO Suppliers (SupplierName, ContactInfo, Email, Phone) 
 VALUES 
-('Công ty ABC', N'123 Đường ABC, TP. HCM', 'abccompany@example.com', '0901234567'),
+('Công ty ABC', N'123 Đường ABC, TP. HCM', 'abccompany@example.com', '0901234567')
 
 
 
