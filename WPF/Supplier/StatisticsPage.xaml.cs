@@ -1,8 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿
 using System.Windows.Controls;
-using DataAccess.Models;
-using Microsoft.EntityFrameworkCore;
+
 using Service;
 
 namespace WPF.Supplier

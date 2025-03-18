@@ -1,9 +1,6 @@
-﻿using System;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using System.Windows;
-using WPF;
 using DataAccess.Models;
-using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Service;
 using System.IO;
 using System.Windows.Media.Imaging;
@@ -37,7 +34,6 @@ bool ValidateInputs()
             string Address = txtAddress.Text.Trim();
             string area = txtArea.Text.Trim();
             string role = radioCheck().RoleName;
-            // Kiểm tra không được để trống
             if (string.IsNullOrEmpty(fullName) || string.IsNullOrEmpty(userName) || string.IsNullOrEmpty(role) ||                           
                 string.IsNullOrEmpty(pass) || string.IsNullOrEmpty(emailText) || string.IsNullOrEmpty(phoneText) || string.IsNullOrEmpty(Address)
                 || string.IsNullOrEmpty(area))
@@ -57,14 +53,12 @@ bool ValidateInputs()
                 return false;
             }
 
-            // Kiểm tra Email hợp lệ
             if (!Regex.IsMatch(emailText, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
             {
                 System.Windows.MessageBox.Show("Email không hợp lệ!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
 
-            // Kiểm tra số điện thoại (chỉ chứa số, độ dài từ 9-15 số)
             if (!Regex.IsMatch(phoneText, @"^\d{10}$"))
             {
                 System.Windows.MessageBox.Show("Số điện thoại phải là số và có từ 9 đến 15 chữ số!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -93,7 +87,7 @@ bool ValidateInputs()
             DataAccess.Models.User u = new()
             {
                 Username = uname.Text.Trim(),
-                Password = HashPassword(pwd.Password.Trim()), // Mã hóa mật khẩu
+                Password = HashPassword(pwd.Password.Trim()), 
                 FullName = fullname.Text.Trim(),
                 Email = email.Text.Trim(),
                 Phone = phone.Text.Trim(),
@@ -171,16 +165,13 @@ bool ValidateInputs()
                 selectedFilePath = openFileDialog.FileName;
                 fileName = Path.GetFileName(selectedFilePath);
 
-                // Get the timestamp and append it to the filename
                 string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                 string fileNameWithTimestamp = Path.GetFileNameWithoutExtension(fileName) + "_" + timestamp + Path.GetExtension(fileName);
 
                 destinationPath = Path.Combine(saveDirectory, fileNameWithTimestamp);
 
-                // Tạo thư mục nếu chưa có
                 Directory.CreateDirectory(saveDirectory);
 
-                // Hiển thị ảnh lên UI
                 avatarImage.Source = new BitmapImage(new Uri(selectedFilePath));
                 avatarImage.Visibility = Visibility.Visible;
             }

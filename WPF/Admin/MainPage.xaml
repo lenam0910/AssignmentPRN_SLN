@@ -4,7 +4,6 @@
       Title="Trang Chính" Background="#ECF0F1" Loaded="Page_Loaded">
 
     <Grid>
-        <!-- Background Gradient -->
         <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <Rectangle.Fill>
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -14,13 +13,11 @@
             </Rectangle.Fill>
         </Rectangle>
 
-        <!-- Welcome Text -->
         <TextBlock Text="Chào mừng đến với Trang Quản Lý Admin"
                    FontSize="36" FontWeight="Bold" Foreground="White"
                    HorizontalAlignment="Center" VerticalAlignment="Center"
                    Margin="0,0,0,200"/>
 
-        <!-- Dashboard Stats -->
         <Grid HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,100">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
@@ -51,7 +48,6 @@
 
         </Grid>
 
-        <!-- Footer -->
         <TextBlock Text="© 2025 Admin Dashboard" HorizontalAlignment="Center" VerticalAlignment="Bottom" Foreground="#BDC3C7" FontSize="14" Margin="0,0,0,20"/>
 
     </Grid>

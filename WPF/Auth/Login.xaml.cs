@@ -1,28 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using DataAccess.Models;
+
 using Service;
-using WPF;
 using WPF.Admin;
 using WPF.Supplier;
 using WPF.User;
 
 namespace WPF
 {
-    /// <summary>
-    /// Interaction logic for Login.xaml
-    /// </summary>
+    
     public partial class Login : Window
     {
         private UserService userService;
@@ -117,7 +103,6 @@ namespace WPF
                         break;
                 }
 
-                // Ẩn cửa sổ hiện tại sau khi mở cửa sổ mới
                 this.Hide();
             }
             catch (Exception ex)

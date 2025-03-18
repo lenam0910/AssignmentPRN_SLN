@@ -9,19 +9,17 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Header & Filter Section -->
         <StackPanel Orientation="Horizontal"  Background="#2c387e" Height="50">
             <TextBlock Text="Lịch Sử Thay Đổi" FontSize="20" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" />
             <TextBox Text="Tìm sản phẩm" x:Name="txtSearch" Width="200" Height="25" Margin="20,0,0,0" TextChanged="txtSearch_TextChanged"  />
             <DatePicker x:Name="dpFromDate" Width="150" Margin="10,0,0,0"  VerticalAlignment="Center"/>
             <DatePicker x:Name="dpToDate" Width="150" Margin="10,0,0,0"  VerticalAlignment="Center"/>
-            <Button Content="Lọc" Width="80" Height="30" Margin="10,0,0,0"  VerticalAlignment="Center" Click="FilterLogs" Background="#546E7A" Foreground="White"/>
-            <Button Content="Lưu File" Width="80" Height="30" Margin="10,0,0,0"  VerticalAlignment="Center"  Background="Red" Foreground="White" Click="Button_Click"/>
-            <Button Content="Đọc File" Width="80" Height="30" Margin="10,0,0,0"  VerticalAlignment="Center"  Background="Green" Foreground="White" Click="Button_Click_1" />
+            <Button Content="Lọc" Width="60" Height="30" Margin="10,0,0,0"  VerticalAlignment="Center" Click="FilterLogs" Background="#546E7A" Foreground="White"/>
+            <Button Content="Lưu File" Width="60" Height="30" Margin="10,0,0,0"  VerticalAlignment="Center"  Background="Red" Foreground="White" Click="Button_Click"/>
+            <Button Content="Đọc File" Width="60" Height="30" Margin="10,0,0,0"  VerticalAlignment="Center"  Background="Green" Foreground="White" Click="Button_Click_1" />
 
         </StackPanel>
 
-        <!-- Data Table -->
         <DataGrid x:Name="dgTransactionLogs" Grid.Row="1" AutoGenerateColumns="False" HeadersVisibility="Column" 
                   CanUserAddRows="False" Background="White" Margin="10">
             <DataGrid.Columns>
@@ -30,7 +28,7 @@
                 <DataGridTextColumn Header="Nhà Cung Cấp" Binding="{Binding Supplier.SupplierName}" Width="150"/>
                 <DataGridTextColumn Header="Kho Hàng" Binding="{Binding Warehouse.WarehouseName}" Width="150"/>
                 <DataGridTextColumn Header="Loại Thay Đổi" Binding="{Binding ChangeType}" Width="120"/>
-                <DataGridTextColumn Header="Số Lượng" Binding="{Binding QuantityChanged}" Width="100"/>
+                <DataGridTextColumn Header="Số Lượng" Binding="{Binding QuantityChanged}" Width="80"/>
                 <DataGridTextColumn Header="Ngày Thay Đổi" Binding="{Binding ChangeDate, StringFormat=dd/MM/yyyy}" Width="120"/>
                 <DataGridTextColumn Header="Ghi Chú" Binding="{Binding Remarks}" Width="200"/>
             </DataGrid.Columns>

@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿
 using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using DataAccess.Models;
-using Microsoft.EntityFrameworkCore;
 using Service;
 
 namespace WPF.Supplier

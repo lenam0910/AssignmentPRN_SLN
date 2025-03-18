@@ -4,10 +4,8 @@
       Title="Quản lý người dùng" Background="#f8f9fa" Width="Auto" Height="Auto" Loaded="Page_Loaded">
     <Grid Margin="20">
 
-        <!-- Tiêu đề -->
         <TextBlock Text="Danh sách người dùng" FontSize="22" FontWeight="Bold" Foreground="#333" HorizontalAlignment="Center" Margin="0,10,0,20"/>
 
-        <!-- DataGrid hiển thị người dùng -->
         <DataGrid Name="UserGrid"   AutoGenerateColumns="False" IsReadOnly="True" SelectionMode="Single" AlternatingRowBackground="#e9ecef" GridLinesVisibility="None" BorderThickness="1" BorderBrush="#ced4da" RowHeight="35" FontSize="14" Margin="0,80,0,70">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding UserId}" Width="30"/>
@@ -23,7 +21,6 @@
         </DataGrid>
        
 
-        <!-- Nút Thêm, Sửa, Xóa -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20" VerticalAlignment="Bottom">
             <Button x:Name="Add" Content="➕ Thêm" Width="100" Height="35" Background="#28a745" Foreground="White" Margin="5" Click="AddUser_Click"/>
             <Button  x:Name="edit" Content="✏ Sửa" Width="100" Height="35" Background="#ffc107" Foreground="Black" Margin="5" Click="EditUser_Click"/>
@@ -35,7 +32,6 @@
 
         </StackPanel>
 
-        <!-- Popup thêm người dùng -->
         <Border x:Name="AddUserPanel" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" BorderBrush="#ced4da" BorderThickness="1" Padding="20" Width="400" CornerRadius="10">
             <StackPanel Margin="10">
                 <TextBlock Text="Thêm Người Dùng" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10"/>
@@ -67,7 +63,6 @@
             </StackPanel>
         </Border>
 
-        <!-- Popup sửa người dùng -->
         <Border x:Name="EditUserPanel" Visibility="Collapsed" HorizontalAlignment="Center" VerticalAlignment="Center" Background="White" BorderBrush="#ced4da" BorderThickness="1" Padding="20" Width="400" CornerRadius="10">
             <StackPanel Margin="10">
                 <TextBlock Text="Sửa Người Dùng" FontSize="20" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,10"/>

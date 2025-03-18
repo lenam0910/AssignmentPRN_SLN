@@ -4,11 +4,9 @@
       Title="Quản lý Sản Phẩm" Background="#f8f9fa" Loaded="Page_Loaded">
     <Grid Margin="20">
 
-        <!-- Tiêu đề -->
         <TextBlock Text="Danh sách Sản Phẩm" FontSize="22" FontWeight="Bold" Foreground="#333" 
                    HorizontalAlignment="Center" Margin="0,10,0,20"/>
 
-        <!-- DataGrid hiển thị sản phẩm -->
         <DataGrid x:Name="ProductGrid" AutoGenerateColumns="False" IsReadOnly="True" 
                   SelectionMode="Single" AlternatingRowBackground="#e9ecef" 
                   GridLinesVisibility="None" BorderThickness="1" BorderBrush="#ced4da" 
@@ -20,7 +18,6 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- Nút Thêm, Sửa, Xóa, và Sản Phẩm Chưa Duyệt -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20" VerticalAlignment="Bottom">
             <Button Content="➕ Thêm" Width="100" Height="35" Background="#28a745" Foreground="White" Margin="5" Click="OpenAddProductPopup"/>
             <Button Content="✏ Sửa" Width="100" Height="35" Background="#ffc107" Foreground="Black" Margin="5" Click="OpenEditProductPopup"/>
@@ -28,7 +25,6 @@
             <Button Content="📜 Duyệt sản phẩm" Width="140" Height="35" Background="#17a2b8" Foreground="White" Margin="5" Click="OpenPendingProductsPopup"/>
         </StackPanel>
 
-        <!-- Popup Thêm/Sửa Sản Phẩm -->
         <Border x:Name="ProductPopup" Visibility="Collapsed" HorizontalAlignment="Center" 
                 VerticalAlignment="Center" Background="White" BorderBrush="#ced4da" 
                 BorderThickness="1" Padding="20" Width="400" CornerRadius="10">
@@ -66,7 +62,6 @@
             </StackPanel>
         </Border>
 
-        <!-- Popup danh sách sản phẩm chưa duyệt -->
         <Border x:Name="PendingProductsPopup" Visibility="Collapsed" HorizontalAlignment="Center" 
                 VerticalAlignment="Center" Background="White" BorderBrush="#ced4da" 
                 BorderThickness="1" Padding="20" Width="600" CornerRadius="10">
@@ -76,7 +71,6 @@
                 <ListView x:Name="PendingProductsList" ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.View>
                         <GridView>
-                            <!-- Product Avatar -->
                             <GridViewColumn Header="Avatar" Width="50">
                                 <GridViewColumn.CellTemplate>
                                     <DataTemplate>
@@ -85,10 +79,8 @@
                                 </GridViewColumn.CellTemplate>
                             </GridViewColumn>
 
-                            <!-- Product Name -->
                             <GridViewColumn Header="Product Name" DisplayMemberBinding="{Binding ProductName}" Width="200"/>
 
-                            <!-- Product Price -->
                             <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price}" Width="100"/>
                         </GridView>
                     </ListView.View>

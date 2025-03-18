@@ -5,7 +5,6 @@
         WindowStartupLocation="CenterScreen" ResizeMode="NoResize" Background="#ECF0F1" Loaded="Window_Loaded">
 
     <Window.Resources>
-        <!-- Sidebar Button Style -->
         <Style x:Key="SidebarButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="White"/>
@@ -66,16 +65,13 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Sidebar -->
         <StackPanel Background="#2C3E50" Width="240">
-            <!-- Profile Section -->
             <Border CornerRadius="50" Background="White" Width="120" Height="120" HorizontalAlignment="Center">
                 <Image x:Name="avaAdmin" Width="100" Height="100" Margin="10" ClipToBounds="True" Stretch="UniformToFill"/>
             </Border>
             <TextBlock x:Name="txtAdminName" Text="Admin" Foreground="White" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" Margin="10 5 10 2"/>
             <Separator Background="#BDC3C7" Height="1" Margin="10"/>
 
-            <!-- Sidebar Buttons -->
             <StackPanel>
                 <Button Content="📂 Quản lý thể loại" Name="btnCategories" Click="btnCategories_Click" Style="{StaticResource SidebarButton}" Background="#1ABC9C"/>
                 <Button Content="🏭 Quản lý Nhà Cung Cấp" Name="btnSuppliers" Click="btnSuppliers_Click" Style="{StaticResource SidebarButton}" Background="#9B59B6"/>
@@ -88,11 +84,9 @@
             <Button Content="🚪 Đăng Xuất" Name="btnLogout" Click="btnLogout_Click" Style="{StaticResource SidebarButton}" Background="#C0392B"/>
             <ToggleButton Style="{StaticResource GearButtonStyle}" Content="⚙️" Name="btnSettings" HorizontalAlignment="Center" VerticalAlignment="Top" Click="GearButton_Click">
                 <ToggleButton.ContextMenu>
-                    <!-- Customized ContextMenu with Icons -->
                     <ContextMenu x:Name="SettingsMenu" Background="#34495E" BorderBrush="#16A085" BorderThickness="1" Padding="5">
                         <ContextMenu.ItemContainerStyle>
                             <Style TargetType="MenuItem">
-                                <!-- Customize MenuItem Appearance -->
                                 <Setter Property="Foreground" Value="White"/>
                                 <Setter Property="FontSize" Value="14"/>
                                 <Setter Property="Padding" Value="10,5"/>
@@ -100,11 +94,9 @@
                                 <Setter Property="Cursor" Value="Hand"/>
                                 <Setter Property="HorizontalAlignment" Value="Stretch"/>
                                 <Style.Triggers>
-                                    <!-- Change background color when hovered -->
                                     <Trigger Property="IsMouseOver" Value="True">
                                         <Setter Property="Background" Value="#16A085"/>
                                     </Trigger>
-                                    <!-- Change background color when clicked -->
                                     <Trigger Property="IsPressed" Value="True">
                                         <Setter Property="Background" Value="#1ABC9C"/>
                                     </Trigger>
@@ -112,7 +104,6 @@
                             </Style>
                         </ContextMenu.ItemContainerStyle>
 
-                        <!-- MenuItems with icons -->
                         <MenuItem Header="🔑 API KEY" Click="MenuItem_Click" />
                     </ContextMenu>
                 </ToggleButton.ContextMenu>
@@ -127,10 +118,8 @@
 
         <Border x:Name="SettingsOverlay" Grid.ColumnSpan="2" Background="#34495E" Width="300" Height="300" HorizontalAlignment="Center" VerticalAlignment="Center" BorderBrush="#16A085" BorderThickness="2" Padding="20" Visibility="Collapsed" CornerRadius="10">
             <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" >
-                <!-- TextBlock for API Key Input -->
                 <TextBlock Text="Nhập API KEY: " Foreground="White" FontSize="16" HorizontalAlignment="Center" Margin="0, 0, 0, 10"/>
 
-                <!-- Layout for API Key TextBox -->
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10">
                     <TextBox x:Name="ApiKeyPasswordBox" Width="200" HorizontalAlignment="Center" FontSize="14" Padding="10" Background="#2C3E50" Foreground="White" BorderBrush="#16A085" BorderThickness="2"/>
                 </StackPanel>

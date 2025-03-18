@@ -1,25 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using DataAccess.Models;
 using Service;
 
 namespace WPF.Admin
 {
-    /// <summary>
-    /// Interaction logic for ManageCategory.xaml
-    /// </summary>
+   
     public partial class ManageCategory : Page
     {
         private CategoryService _categoryService;
@@ -80,8 +67,30 @@ namespace WPF.Admin
             Category category = (Category)CategoryGrid.SelectedItem;
             if (category != null)
             {
-                category.CategoryName = txtEditCategoryName.Text;
-                category.Description = txtEditDescription.Text;
+                // Lấy giá trị từ input
+                string categoryName = txtEditCategoryName.Text.Trim();
+                string description = txtEditDescription.Text.Trim();
+
+                if (string.IsNullOrEmpty(categoryName))
+                {
+                    MessageBox.Show("Tên thể loại không được để trống!");
+                    return;
+                }
+                if (categoryName.Length > 50)
+                {
+                    MessageBox.Show("Tên thể loại không được dài quá 50 ký tự!");
+                    return;
+                }
+
+                if (description.Length > 200)
+                {
+                    MessageBox.Show("Mô tả không được dài quá 200 ký tự!");
+                    return;
+                }
+
+                category.CategoryName = categoryName;
+                category.Description = description;
+
                 if (_categoryService.updateCategorias(category))
                 {
                     MessageBox.Show("Sửa thể loại thành công!");
@@ -92,13 +101,11 @@ namespace WPF.Admin
                 else
                 {
                     MessageBox.Show("Sửa thể loại thất bại!");
-
                 }
             }
             else
             {
-                MessageBox.Show("Hãy chọn loại để sửa !");
-
+                MessageBox.Show("Hãy chọn loại để sửa!");
             }
         }
 
@@ -116,21 +123,46 @@ namespace WPF.Admin
 
         private void SaveCategory_Click(object sender, RoutedEventArgs e)
         {
+            // Lấy giá trị từ input và loại bỏ khoảng trắng thừa
+            string categoryName = txtCategoryName.Text.Trim();
+            string description = txtDescription.Text.Trim();
+
+            // Validation cho CategoryName
+            if (string.IsNullOrEmpty(categoryName))
+            {
+                MessageBox.Show("Tên thể loại không được để trống!");
+                return;
+            }
+            if (categoryName.Length > 50)
+            {
+                MessageBox.Show("Tên thể loại không được dài quá 50 ký tự!");
+                return;
+            }
+
+            // Validation cho Description (tùy chọn)
+            if (description.Length > 200)
+            {
+                MessageBox.Show("Mô tả không được dài quá 200 ký tự!");
+                return;
+            }
+
+            // Tạo đối tượng Category và gán giá trị
             Category category = new Category();
-            category.CategoryName = txtCategoryName.Text;
-            category.Description = txtDescription.Text;
+            category.CategoryName = categoryName;
+            category.Description = description;
+
+            // Gọi service để thêm danh mục
             if (_categoryService.addCategorias(category))
             {
                 MessageBox.Show("Thêm thể loại thành công!");
                 loadData();
                 AddCategoryPanel.Visibility = Visibility.Collapsed;
-
+                clearForm();
             }
             else
             {
                 MessageBox.Show("Thêm thể loại thất bại!");
             }
-
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

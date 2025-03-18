@@ -1,19 +1,13 @@
-﻿using System;
-using System.Net;
-using System.Net.Mail;
+﻿
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Controls;
-using WPF;
-using DataAccess.Models;
-using Microsoft.Win32;
 using Service;
 
 namespace WPF
 {
     public partial class ForgetPass : Window
     {
-        private string generatedOTP = ""; // Lưu OTP tạm thời
+        private string generatedOTP = "";
         private DataAccess.Models.User User;
         private UserService service;
         private EmailSenderService emailSenderService;
@@ -52,7 +46,7 @@ namespace WPF
             {
                 if (emailSenderService.SendEmail(to, generatedOTP))
                 {
-                    // Ẩn emailPanel, hiện otpPanel
+
                     MessageBox.Show($"Mã xác nhận đã gửi thành công!", "Email Gửi Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
                     emailPanel.Visibility = Visibility.Collapsed;
                     otpPanel.Visibility = Visibility.Visible;
@@ -71,8 +65,8 @@ namespace WPF
 
         }
 
-        private int otpAttempts = 0; // Biến đếm số lần nhập OTP sai
-        private const int maxOtpAttempts = 3; // Số lần thử tối đa trước khi chặn
+        private int otpAttempts = 0;
+        private const int maxOtpAttempts = 3;
 
         private void VerifyOTP_Click(object sender, RoutedEventArgs e)
         {
@@ -96,7 +90,7 @@ namespace WPF
                 }
 
                 // Kiểm tra OTP hợp lệ
-                if (inputOtp.Equals(generatedOTP,StringComparison.OrdinalIgnoreCase))
+                if (inputOtp.Equals(generatedOTP, StringComparison.OrdinalIgnoreCase))
                 {
                     MessageBox.Show("Xác thực OTP thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                     otpPanel.Visibility = Visibility.Collapsed;
@@ -105,7 +99,7 @@ namespace WPF
                 else
                 {
                     otpAttempts++; // Tăng số lần nhập sai
-                    if(otpAttempts >= maxOtpAttempts)
+                    if (otpAttempts >= maxOtpAttempts)
                     {
                         MessageBox.Show("Bạn đã nhập sai OTP quá nhiều lần. Vui lòng thử gửi lại mã!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                         btnResendOTP.Visibility = Visibility.Visible;
@@ -127,42 +121,37 @@ namespace WPF
                 string newPassword = txtNewPassword.Password.Trim();
                 string confirmPassword = txtConfirmPassword.Password.Trim();
 
-                // Kiểm tra mật khẩu không được để trống
                 if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
                 {
                     MessageBox.Show("Vui lòng nhập đầy đủ mật khẩu mới!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // Kiểm tra mật khẩu có ít nhất 6 ký tự
                 if (newPassword.Length < 6)
                 {
                     MessageBox.Show("Mật khẩu phải có ít nhất 6 ký tự!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // Kiểm tra mật khẩu nhập lại có khớp không
                 if (newPassword != confirmPassword)
                 {
                     MessageBox.Show("Mật khẩu nhập lại không khớp!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // Kiểm tra User có tồn tại không trước khi cập nhật mật khẩu
                 if (User == null)
                 {
                     MessageBox.Show("Không tìm thấy thông tin người dùng!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                // Mã hóa mật khẩu mới và cập nhật
                 User.Password = HashPassword(newPassword);
                 if (service.UpdateUser(User))
                 {
                     MessageBox.Show("Mật khẩu đã được đặt lại thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                     Login login = new();
                     login.Show();
-                    this.Close(); // Đóng form sau khi đổi mật khẩu thành công
+                    this.Close(); 
                 }
                 else
                 {

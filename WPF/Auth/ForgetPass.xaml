@@ -6,7 +6,6 @@
 
     <Grid>
 
-        <!-- Khung chính -->
         <Border Background="White" CornerRadius="12" Padding="20"
                 Width="380" Height="330" HorizontalAlignment="Center" VerticalAlignment="Center"
                 BorderBrush="#D1D1D1" BorderThickness="1" Effect="{DynamicResource DropShadowEffect}">
@@ -29,7 +28,6 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                <!-- Tiêu đề -->
                 <TextBlock x:Name="lblTitle" Text="Quên Mật Khẩu" FontSize="22" FontWeight="Bold"
                            Foreground="#2C3E50" HorizontalAlignment="Center" Margin="0,10"/>
 
@@ -43,7 +41,6 @@
             BorderThickness="0" Cursor="Hand" Margin="0,10,0,0"
             HorizontalAlignment="Center" Click="SendEmail_Click"/>
 
-                    <!-- Nút "Chưa có tài khoản? Đăng ký" -->
                     <Button x:Name="btnRegister" Content="Chưa có tài khoản? Đăng ký" Width="200" Height="35"
             Background="Transparent" Foreground="Blue" FontWeight="Bold"
             BorderThickness="0" Cursor="Hand" Margin="0,10,0,0"
@@ -56,7 +53,6 @@
                     <TextBox x:Name="txtOTP" Width="320" Height="40"
              BorderBrush="Gray" BorderThickness="1" Padding="10"/>
 
-                    <!-- Nút Gửi lại mã xác nhận -->
                     <Button x:Name="btnResendOTP" Visibility="Collapsed" Content="Gửi lại mã xác nhận" Width="160" Height="40"
 Background="Transparent" Foreground="Red" FontWeight="Bold"
 BorderThickness="0" Cursor="Hand" Margin="0,15,0,0"
@@ -70,7 +66,6 @@ HorizontalAlignment="Left" Click="ResendOTP_Click"/>
                 </StackPanel>
 
 
-                <!-- Nhập mật khẩu mới -->
                 <StackPanel x:Name="passwordPanel" Margin="0,15" Visibility="Collapsed">
                     <TextBlock Text="Nhập mật khẩu mới" FontSize="14" Foreground="Gray"/>
                     <PasswordBox x:Name="txtNewPassword" Width="320" Height="40"

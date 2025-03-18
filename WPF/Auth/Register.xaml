@@ -15,17 +15,14 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Margin="0,5">
-                    <!-- Tiêu đề -->
                     <TextBlock Text="Đăng ký" FontSize="22" FontWeight="Bold"
                                Foreground="#333333" HorizontalAlignment="Center" Margin="0,5"/>
 
-                    <!-- Nhập Full Name -->
                     <StackPanel Margin="0,5">
                         <TextBlock Text="Họ Tên" FontSize="14" Foreground="Gray"/>
                         <TextBox x:Name="fullname" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
                     </StackPanel>
 
-                    <!-- Nhập Email -->
                     <StackPanel Margin="0,5">
                         <TextBlock Text="Email" FontSize="14" Foreground="Gray"/>
                         <TextBox x:Name="email" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>

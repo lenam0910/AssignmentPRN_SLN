@@ -1,25 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using DataAccess.Models;
 using Service;
 
 namespace WPF.Admin
 {
-    /// <summary>
-    /// Interaction logic for ManageProducts.xaml
-    /// </summary>
+   
     public partial class ManageProducts : Page
     {
         private ProductService ProductService;
@@ -91,16 +78,64 @@ namespace WPF.Admin
 
         private void SaveProduct_Click(object sender, RoutedEventArgs e)
         {
-            Product product = null;
-            product = ProductGrid.SelectedItem as Product;
+            // Lấy và làm sạch input
+            string productName = txtProductName.Text.Trim();
+            string priceText = txtProductPrice.Text.Trim();
+            string quantityText = txtProductQuantity.Text.Trim();
+            string description = txtProductDescription.Text.Trim();
+
+            // Validation cho ProductName
+            if (string.IsNullOrEmpty(productName))
+            {
+                MessageBox.Show("Tên sản phẩm không được để trống!");
+                return;
+            }
+            if (productName.Length > 100)
+            {
+                MessageBox.Show("Tên sản phẩm không được dài quá 100 ký tự!");
+                return;
+            }
+
+            // Validation cho Price
+            if (!decimal.TryParse(priceText, out decimal price) || price < 0)
+            {
+                MessageBox.Show("Giá sản phẩm phải là số hợp lệ và không âm!");
+                return;
+            }
+
+            // Validation cho QuantityInStock
+            if (!int.TryParse(quantityText, out int quantity) || quantity < 0)
+            {
+                MessageBox.Show("Số lượng tồn kho phải là số nguyên hợp lệ và không âm!");
+                return;
+            }
+
+            // Validation cho Description (tùy chọn)
+            if (description.Length > 500)
+            {
+                MessageBox.Show("Mô tả không được dài quá 500 ký tự!");
+                return;
+            }
+
+            // Validation cho CategoryId và SupplierId
+            int categoryId = (int)cbCategories.SelectedValue;
+            int supplierId = (int)cbSuppliers.SelectedValue;
+            if (categoryId <= 0 || supplierId <= 0)
+            {
+                MessageBox.Show("Vui lòng chọn danh mục và nhà cung cấp hợp lệ!");
+                return;
+            }
+
+            Product product = ProductGrid.SelectedItem as Product;
             if (product != null)
             {
-                product.ProductName = txtProductName.Text;
-                product.Price = decimal.Parse(txtProductPrice.Text);
-                product.QuantityInStock = int.Parse(txtProductQuantity.Text);
-                product.Description = txtProductDescription.Text;
-                product.CategoryId = (int)cbCategories.SelectedValue;
-                product.SupplierId = (int)cbSuppliers.SelectedValue;
+                // Cập nhật sản phẩm
+                product.ProductName = productName;
+                product.Price = price;
+                product.QuantityInStock = quantity;
+                product.Description = description;
+                product.CategoryId = categoryId;
+                product.SupplierId = supplierId;
                 product.IsApproved = true;
 
                 if (ProductService.UpdaterProduct(product))
@@ -110,25 +145,35 @@ namespace WPF.Admin
                     clear();
                     MessageBox.Show("Sửa sản phẩm thành công!");
                 }
-
-
+                else
+                {
+                    MessageBox.Show("Sửa sản phẩm thất bại!");
+                }
             }
             else
             {
-                product = new();
-                product.ProductName = txtProductName.Text;
-                product.Price = decimal.Parse(txtProductPrice.Text);
-                product.QuantityInStock = int.Parse(txtProductQuantity.Text);
-                product.Description = txtProductDescription.Text;
-                product.CategoryId = (int)cbCategories.SelectedValue;
-                product.SupplierId = (int)cbSuppliers.SelectedValue;
-                product.IsApproved = true;
-                if ( ProductService.AddProduct(product)){
-                    ProductPopup.Visibility = Visibility.Collapsed;
+                // Thêm sản phẩm mới
+                product = new Product
+                {
+                    ProductName = productName,
+                    Price = price,
+                    QuantityInStock = quantity,
+                    Description = description,
+                    CategoryId = categoryId,
+                    SupplierId = supplierId,
+                    IsApproved = true
+                };
 
+                if (ProductService.AddProduct(product))
+                {
+                    ProductPopup.Visibility = Visibility.Collapsed;
                     load();
                     clear();
                     MessageBox.Show("Thêm sản phẩm thành công!");
+                }
+                else
+                {
+                    MessageBox.Show("Thêm sản phẩm thất bại!");
                 }
             }
         }

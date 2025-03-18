@@ -18,7 +18,6 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- Nút chức năng -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0" VerticalAlignment="Bottom">
             <Button Content="➕ Thêm" Width="100" Height="35" Background="#28a745" Foreground="White" Margin="5" Click="OpenAddSupplierPopup"/>
             <Button Content="✏ Sửa" Width="100" Height="35" Background="#ffc107" Foreground="Black" Margin="5" Click="OpenEditSupplierPopup"/>
@@ -26,7 +25,6 @@
             <Button Content="📜 Duyệt nhà cung cấp" Width="140" Height="35" Background="#17a2b8" Foreground="White" Margin="5" Click="OpenPendingProductsPopup"/>
         </StackPanel>
 
-        <!-- Popup Thêm/Sửa Supplier -->
         <Border x:Name="SupplierPopup" Visibility="Collapsed" Width="400" Background="White" Padding="20">
             <StackPanel>
                 <TextBlock x:Name="SupplierPopupTitle" FontSize="18" FontWeight="Bold"/>
@@ -52,13 +50,10 @@
                 <ListView Name="PendingSuppliersList"   ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.View>
                         <GridView>
-                            <!-- Supplier Name -->
                             <GridViewColumn Header="Supplier Name" DisplayMemberBinding="{Binding SupplierName}" Width="100"/>
 
-                            <!-- Supplier Email -->
                             <GridViewColumn Header="Supplier Email" DisplayMemberBinding="{Binding Email}" Width="100"/>
 
-                            <!-- Supplier Phone -->
                             <GridViewColumn Header="Supplier Phone" DisplayMemberBinding="{Binding Phone}" Width="50"/>
                         </GridView>
                     </ListView.View>
@@ -66,10 +61,7 @@
 
 
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,20,10,0">
-                    <!-- Approve Button -->
                     <Button Content="✔ Duyệt" Width="120" Height="35" Background="#28a745" Foreground="White" Click="ApproveSupplier_Click"/>
-
-                    <!-- Close Button -->
                     <Button Content="❌ Đóng" Width="120" Height="35" Background="#dc3545" Foreground="White" Click="ClosePopup"/>
                 </StackPanel>
             </StackPanel>

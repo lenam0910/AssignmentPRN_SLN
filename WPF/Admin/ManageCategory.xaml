@@ -4,11 +4,9 @@
       Title="Quản lý Thể Loại" Background="#f8f9fa" Loaded="Page_Loaded">
     <Grid Margin="20">
 
-        <!-- Tiêu đề -->
         <TextBlock Text="Danh sách thể loại" FontSize="22" FontWeight="Bold" Foreground="#333" 
                    HorizontalAlignment="Center" Margin="0,10,0,20"/>
 
-        <!-- DataGrid hiển thị thể loại -->
         <DataGrid x:Name="CategoryGrid" AutoGenerateColumns="False" IsReadOnly="True" 
                   SelectionMode="Single" AlternatingRowBackground="#e9ecef" 
                   GridLinesVisibility="None" BorderThickness="1" BorderBrush="#ced4da" 
@@ -20,14 +18,12 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- Nút Thêm, Sửa, Xóa -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20" VerticalAlignment="Bottom">
             <Button Content="➕ Thêm" Width="100" Height="35" Background="#28a745" Foreground="White" Margin="5" Click="AddCategory_Click"/>
             <Button Content="✏ Sửa" Width="100" Height="35" Background="#ffc107" Foreground="Black" Margin="5" Click="EditCategory_Click"/>
             <Button Content="❌ Xóa" Width="100" Height="35" Background="#dc3545" Foreground="White" Margin="5" Click="DeleteCategory_Click"/>
         </StackPanel>
 
-        <!-- Popup Thêm thể loại -->
         <Border x:Name="AddCategoryPanel" Visibility="Collapsed" HorizontalAlignment="Center" 
                 VerticalAlignment="Center" Background="White" BorderBrush="#ced4da" 
                 BorderThickness="1" Padding="20" Width="400" CornerRadius="10">
@@ -49,7 +45,6 @@
             </StackPanel>
         </Border>
 
-        <!-- Popup Chỉnh sửa thể loại -->
         <Border x:Name="EditCategoryPanel" Visibility="Collapsed" HorizontalAlignment="Center" 
                 VerticalAlignment="Center" Background="White" BorderBrush="#ced4da" 
                 BorderThickness="1" Padding="20" Width="400" CornerRadius="10">

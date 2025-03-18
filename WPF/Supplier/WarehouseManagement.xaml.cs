@@ -2,8 +2,7 @@
 using System.Windows.Controls;
 using DataAccess.Models;
 using Service;
-using System.Linq;
-using System.Collections.Generic;
+
 
 namespace WPF.Supplier
 {

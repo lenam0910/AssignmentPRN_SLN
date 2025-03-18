@@ -1,27 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
+
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using DataAccess.Models;
-using Microsoft.Xaml.Behaviors;
+
 using Service;
 
 namespace WPF.Admin
 {
-    /// <summary>
-    /// Interaction logic for ManageSuppliers.xaml
-    /// </summary>
+
     public partial class ManageSuppliers : Page
     {
         private SupplierService SupplierService;
@@ -89,7 +77,7 @@ namespace WPF.Admin
             }
         }
 
-       
+
 
         private void OpenPendingProductsPopup(object sender, RoutedEventArgs e)
         {
@@ -113,20 +101,63 @@ namespace WPF.Admin
         {
             clear();
         }
-        
 
-      
+
+
         private void SaveSupplier_Click(object sender, RoutedEventArgs e)
         {
-            DataAccess.Models.Supplier supp =  null;
-            supp = SupplierGrid.SelectedItem as DataAccess.Models.Supplier;
+            // Lấy và làm sạch input
+            string supplierName = txtSupplierName.Text.Trim();
+            string email = txtSupplierEmail.Text.Trim();
+            string phone = txtSupplierPhone.Text.Trim();
 
+            // Validation cho SupplierName
+            if (string.IsNullOrEmpty(supplierName))
+            {
+                MessageBox.Show("Tên nhà cung cấp không được để trống!");
+                return;
+            }
+            if (supplierName.Length > 100)
+            {
+                MessageBox.Show("Tên nhà cung cấp không được dài quá 100 ký tự!");
+                return;
+            }
+
+            // Validation cho Email
+            if (string.IsNullOrEmpty(email))
+            {
+                MessageBox.Show("Email không được để trống!");
+                return;
+            }
+            if (email.Length > 150)
+            {
+                MessageBox.Show("Email không được dài quá 150 ký tự!");
+                return;
+            }
+            if (!Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            {
+                MessageBox.Show("Email không đúng định dạng!");
+                return;
+            }
+
+            // Validation cho Phone
+            if (string.IsNullOrEmpty(phone))
+            {
+                MessageBox.Show("Số điện thoại không được để trống!");
+                return;
+            }
+            if (!Regex.IsMatch(phone, @"^\d{10,11}$"))
+            {
+                MessageBox.Show("Số điện thoại phải chứa 10-11 chữ số và chỉ được chứa số!");
+                return;
+            }
+
+            DataAccess.Models.Supplier supp = SupplierGrid.SelectedItem as DataAccess.Models.Supplier;
             if (supp != null)
             {
-                supp.SupplierName = txtSupplierName.Text;
-                supp.Email  = txtSupplierEmail.Text;   
-                supp.Phone = txtSupplierPhone.Text;
-                
+                supp.SupplierName = supplierName;
+                supp.Email = email;
+                supp.Phone = phone;
                 supp.IsApproved = true;
 
                 if (SupplierService.UpdateSupplier(supp))
@@ -134,26 +165,33 @@ namespace WPF.Admin
                     SupplierPopup.Visibility = Visibility.Collapsed;
                     load();
                     clear();
-                    MessageBox.Show("Sửa sản nhà cung cấp thành công!");
+                    MessageBox.Show("Sửa nhà cung cấp thành công!");
                 }
-
-
+                else
+                {
+                    MessageBox.Show("Sửa nhà cung cấp thất bại!");
+                }
             }
             else
             {
-                supp = new();
-                supp.SupplierName = txtSupplierName.Text;
-                supp.Email = txtSupplierEmail.Text;
-                supp.Phone = txtSupplierPhone.Text;
+                supp = new DataAccess.Models.Supplier
+                {
+                    SupplierName = supplierName,
+                    Email = email,
+                    Phone = phone,
+                    IsApproved = true
+                };
 
-                supp.IsApproved = true;
                 if (SupplierService.SaveSupplier(supp))
                 {
                     SupplierPopup.Visibility = Visibility.Collapsed;
-
                     load();
                     clear();
                     MessageBox.Show("Thêm nhà cung cấp thành công!");
+                }
+                else
+                {
+                    MessageBox.Show("Thêm nhà cung cấp thất bại!");
                 }
             }
         }
@@ -173,6 +211,6 @@ namespace WPF.Admin
             }
         }
 
-      
+
     }
 }
