@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-﻿
-=======
+
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +6,6 @@ using System.Linq;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
->>>>>>> 5bda7778c812512b0adc04c2b56bd3c2e844d3bc
 using System.Windows;
 using System.Windows.Controls.Primitives;
 

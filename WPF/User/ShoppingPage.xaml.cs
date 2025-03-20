@@ -20,7 +20,6 @@ using static MaterialDesignThemes.Wpf.Theme;
 using Newtonsoft.Json.Linq;
 using DataAccess.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
-using Microsoft.Office.Interop.Excel;
 using System.Collections.ObjectModel;
 
 namespace WPF.User

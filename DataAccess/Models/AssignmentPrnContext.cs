@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace DataAccess.Models;
 
@@ -40,14 +41,21 @@ public partial class AssignmentPrnContext : DbContext
     public virtual DbSet<Warehouse> Warehouses { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=DESKTOP-QNT6I2D\\MSSQLSERVER01;Database= AssignmentPRN;User Id=sa;Password=123456;TrustServerCertificate=true;Trusted_Connection=SSPI;Encrypt=false;");
+    //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+    //        => optionsBuilder.UseSqlServer("server =(local); database = AssignmentPRN;uid=sa;pwd=123;TrustServerCertificate=true");
+    {
+        var config = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
 
+        if (!optionsBuilder.IsConfigured)
+        {
+            optionsBuilder.UseSqlServer(config.GetConnectionString("value"));
+        }
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<ApiKey>(entity =>
         {
-            entity.HasKey(e => e.ApiKeyId).HasName("PK__ApiKeys__2F1343126FE968FD");
+            entity.HasKey(e => e.ApiKeyId).HasName("PK__ApiKeys__2F13431291758B18");
 
             entity.Property(e => e.ApiKeyId).HasColumnName("ApiKeyID");
             entity.Property(e => e.ApiKey1)
@@ -67,7 +75,7 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<Category>(entity =>
         {
-            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A2BE287C82A");
+            entity.HasKey(e => e.CategoryId).HasName("PK__Categori__19093A2B17414371");
 
             entity.Property(e => e.CategoryId).HasColumnName("CategoryID");
             entity.Property(e => e.CategoryName).HasMaxLength(100);
@@ -76,7 +84,7 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<Inventory>(entity =>
         {
-            entity.HasKey(e => e.InventoryId).HasName("PK__Inventor__F5FDE6D362ADF348");
+            entity.HasKey(e => e.InventoryId).HasName("PK__Inventor__F5FDE6D385E410A9");
 
             entity.ToTable("Inventory");
 
@@ -87,7 +95,7 @@ public partial class AssignmentPrnContext : DbContext
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.StockStatus)
                 .HasMaxLength(60)
-                .HasDefaultValue("In Stock");
+                .HasDefaultValue("Nh?p");
             entity.Property(e => e.SupplierId).HasColumnName("SupplierID");
             entity.Property(e => e.WarehouseId).HasColumnName("WarehouseID");
 
@@ -109,7 +117,7 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAF2A554EAD");
+            entity.HasKey(e => e.OrderId).HasName("PK__Orders__C3905BAFF0BAC552");
 
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
             entity.Property(e => e.OrderDate)
@@ -127,7 +135,7 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<OrderDetail>(entity =>
         {
-            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__D3B9D30CCDDDFBB5");
+            entity.HasKey(e => e.OrderDetailId).HasName("PK__OrderDet__D3B9D30C5FFBA884");
 
             entity.Property(e => e.OrderDetailId).HasColumnName("OrderDetailID");
             entity.Property(e => e.OrderId).HasColumnName("OrderID");
@@ -153,7 +161,7 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6ED8E32C296");
+            entity.HasKey(e => e.ProductId).HasName("PK__Products__B40CC6ED9F400C5E");
 
             entity.Property(e => e.ProductId).HasColumnName("ProductID");
             entity.Property(e => e.Avatar).HasMaxLength(255);
@@ -177,9 +185,9 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.RoleId).HasName("PK__Roles__8AFACE3A4D88B35F");
+            entity.HasKey(e => e.RoleId).HasName("PK__Roles__8AFACE3AF3C4CE6A");
 
-            entity.HasIndex(e => e.RoleName, "UQ__Roles__8A2B6160CD39564A").IsUnique();
+            entity.HasIndex(e => e.RoleName, "UQ__Roles__8A2B61607F76B4FD").IsUnique();
 
             entity.Property(e => e.RoleId).HasColumnName("RoleID");
             entity.Property(e => e.RoleName).HasMaxLength(20);
@@ -187,9 +195,9 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<Supplier>(entity =>
         {
-            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__4BE6669489718459");
+            entity.HasKey(e => e.SupplierId).HasName("PK__Supplier__4BE66694E6909361");
 
-            entity.HasIndex(e => e.Email, "UQ__Supplier__A9D105341EAD1303").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Supplier__A9D105347C1910FF").IsUnique();
 
             entity.Property(e => e.SupplierId).HasColumnName("SupplierID");
             entity.Property(e => e.Avatar).HasMaxLength(255);
@@ -201,7 +209,7 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<TransactionLog>(entity =>
         {
-            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__55433A4BE263815A");
+            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__55433A4B1ED84117");
 
             entity.Property(e => e.TransactionId).HasColumnName("TransactionID");
             entity.Property(e => e.ChangeDate)
@@ -236,9 +244,9 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCACFB1DF18B");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__1788CCAC3F4DEA8B");
 
-            entity.HasIndex(e => e.Username, "UQ__Users__536C85E44542B99B").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__Users__536C85E4C54C82D9").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("UserID");
             entity.Property(e => e.Address).HasMaxLength(255);
@@ -259,11 +267,11 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<UserSupplier>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__UserSupp__1788CCAC76661BB1");
+            entity.HasKey(e => e.UserId).HasName("PK__UserSupp__1788CCACCD3832EF");
 
             entity.ToTable("UserSupplier");
 
-            entity.HasIndex(e => e.SupplierId, "UQ__UserSupp__4BE66695E04D09BC").IsUnique();
+            entity.HasIndex(e => e.SupplierId, "UQ__UserSupp__4BE66695A7F53DCC").IsUnique();
 
             entity.Property(e => e.UserId)
                 .ValueGeneratedNever()
@@ -281,7 +289,7 @@ public partial class AssignmentPrnContext : DbContext
 
         modelBuilder.Entity<Warehouse>(entity =>
         {
-            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__2608AFD946919386");
+            entity.HasKey(e => e.WarehouseId).HasName("PK__Warehous__2608AFD92F4150B3");
 
             entity.Property(e => e.WarehouseId).HasColumnName("WarehouseID");
             entity.Property(e => e.Location).HasMaxLength(255);

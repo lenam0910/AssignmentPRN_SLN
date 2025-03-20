@@ -227,15 +227,9 @@ namespace WPF.Supplier
         // Hủy chỉnh sửa
         private void CancelEdit_Click(object sender, RoutedEventArgs e)
         {
-            WarehouseComboBox.SelectedValue = null;
-            InventoryDataGrid.ItemsSource = null;
+           
             clear();
-            ExportBtn.Visibility = Visibility.Collapsed;
-            SaveBtn.Visibility = Visibility.Visible;
-            OtherWareHouse.Visibility = Visibility.Collapsed;
-            ProductStack.Visibility = Visibility.Collapsed;
-            status.Visibility = Visibility.Visible;
-            txtStockStatus.SelectedValue = null;
+            
         }
         private void clear()
         {
@@ -247,12 +241,19 @@ namespace WPF.Supplier
             txtRemain.Text = "";
             txtProductName.IsEnabled = true;
             txtStockStatus.IsEnabled = true;
-            WarehouseComboBox.IsEnabled = true; 
-
+            WarehouseComboBox.IsEnabled = true;
+            ExportBtn.Visibility = Visibility.Collapsed;
+            SaveBtn.Visibility = Visibility.Visible;
+            OtherWareHouse.Visibility = Visibility.Collapsed;
+            ProductStack.Visibility = Visibility.Collapsed;
+            status.Visibility = Visibility.Visible;
+            txtStockStatus.SelectedValue = null;
+            WarehouseComboBox.SelectedValue = null;
             InventoryDataGrid.ItemsSource = null;
             txtRemain.Text = "";
             txtOtherWarehouse.IsEnabled = true;
             txtOtherWarehouse.SelectedValue = null;
+            
 
         }
         // Sửa kho hàng
