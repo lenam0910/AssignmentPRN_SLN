@@ -49,6 +49,21 @@ GO
 
 
 
+
+
+
+
+-- Tạo bảng danh mục sản phẩm
+CREATE TABLE Categories (
+    CategoryID INT IDENTITY(1,1) PRIMARY KEY,
+    CategoryName NVARCHAR(100) NOT NULL,
+    Description NVARCHAR(255) NULL,
+		IsDeleted BIT NOT NULL DEFAULT 0
+
+);
+
+
+
 -- Tạo bảng nhà cung cấp
 CREATE TABLE Suppliers (
     SupplierID INT IDENTITY(1,1) PRIMARY KEY,
@@ -62,27 +77,30 @@ CREATE TABLE Suppliers (
 	IsDeleted BIT NOT NULL DEFAULT 0
 );
 
--- Tạo bảng kho hàng (Kho thuộc quyền quản lý của Supplier)
-CREATE TABLE Warehouses (
-    WarehouseID INT IDENTITY(1,1) PRIMARY KEY,
-    WarehouseName NVARCHAR(100) NOT NULL,
-    Location NVARCHAR(255),
-    Capacity INT NULL,
-    SupplierID INT NOT NULL,
-		IsApproved BIT NOT NULL DEFAULT 0,
-    FOREIGN KEY (SupplierID) REFERENCES Suppliers(SupplierID),
-		IsDeleted BIT NOT NULL DEFAULT 0
-
+-- Tạo bảng vai trò người dùng
+CREATE TABLE Roles (
+    RoleID INT IDENTITY(1,1) PRIMARY KEY,
+    RoleName NVARCHAR(20) UNIQUE NOT NULL
+);
+-- Tạo bảng người dùng
+CREATE TABLE Users (
+    UserID INT IDENTITY(1,1) PRIMARY KEY,
+    SupplierID INT   NULL,
+    Username NVARCHAR(50) UNIQUE NOT NULL,
+    Password NVARCHAR(255) NOT NULL,
+    FullName NVARCHAR(100) NOT NULL,
+    Email NVARCHAR(100) NOT NULL,
+    Phone NVARCHAR(15),
+    DateOfBirth DATE NULL,
+    Gender NVARCHAR(10) NULL,
+    RoleID INT NOT NULL,
+    Avatar NVARCHAR(255) NULL,
+	Address NVARCHAR(255) NULL,
+		IsDeleted BIT NOT NULL DEFAULT 0,
+    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID),
+    FOREIGN KEY (SupplierID) REFERENCES Suppliers(SupplierID)
 );
 
--- Tạo bảng danh mục sản phẩm
-CREATE TABLE Categories (
-    CategoryID INT IDENTITY(1,1) PRIMARY KEY,
-    CategoryName NVARCHAR(100) NOT NULL,
-    Description NVARCHAR(255) NULL,
-		IsDeleted BIT NOT NULL DEFAULT 0
-
-);
 
 -- Tạo bảng sản phẩm (Mỗi sản phẩm thuộc về 1 Supplier)
 CREATE TABLE Products (
@@ -100,42 +118,19 @@ CREATE TABLE Products (
     FOREIGN KEY (SupplierID) REFERENCES Suppliers(SupplierID)
 );
 
--- Tạo bảng kho hàng sản phẩm (Supplier quản lý sản phẩm trong kho)
-CREATE TABLE Inventory (
-    InventoryID INT IDENTITY(1,1) PRIMARY KEY,
-    ProductID INT NOT NULL,
-    WarehouseID INT NOT NULL,
+-- Tạo bảng kho hàng (Kho thuộc quyền quản lý của Supplier)
+CREATE TABLE Warehouses (
+    WarehouseID INT IDENTITY(1,1) PRIMARY KEY,
+    WarehouseName NVARCHAR(100) NOT NULL,
+    Location NVARCHAR(255),
+    Capacity INT NULL,
     SupplierID INT NOT NULL,
-    Quantity INT NOT NULL DEFAULT 0,
-    StockStatus NVARCHAR(60) DEFAULT 'Nhập',
-    LastUpdated DATETIME DEFAULT GETDATE(),
-		IsDeleted BIT NOT NULL DEFAULT 0,
-    FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
-    FOREIGN KEY (WarehouseID) REFERENCES Warehouses(WarehouseID),
-    FOREIGN KEY (SupplierID) REFERENCES Suppliers(SupplierID)
+		IsApproved BIT NOT NULL DEFAULT 0,
+    FOREIGN KEY (SupplierID) REFERENCES Suppliers(SupplierID),
+		IsDeleted BIT NOT NULL DEFAULT 0
+
 );
 
--- Tạo bảng vai trò người dùng
-CREATE TABLE Roles (
-    RoleID INT IDENTITY(1,1) PRIMARY KEY,
-    RoleName NVARCHAR(20) UNIQUE NOT NULL
-);
--- Tạo bảng người dùng
-CREATE TABLE Users (
-    UserID INT IDENTITY(1,1) PRIMARY KEY,
-    Username NVARCHAR(50) UNIQUE NOT NULL,
-    Password NVARCHAR(255) NOT NULL,
-    FullName NVARCHAR(100) NOT NULL,
-    Email NVARCHAR(100) NOT NULL,
-    Phone NVARCHAR(15),
-    DateOfBirth DATE NULL,
-    Gender NVARCHAR(10) NULL,
-    RoleID INT NOT NULL,
-    Avatar NVARCHAR(255) NULL,
-	Address NVARCHAR(255) NULL,
-		IsDeleted BIT NOT NULL DEFAULT 0,
-    FOREIGN KEY (RoleID) REFERENCES Roles(RoleID),
-);
 CREATE TABLE ApiKeys (
     ApiKeyID INT IDENTITY(1,1) PRIMARY KEY,  -- Mã định danh API Key
     UserID INT NOT NULL,                      -- Liên kết với User
@@ -168,7 +163,20 @@ CREATE TABLE OrderDetails (
     FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
     FOREIGN KEY (WarehouseID) REFERENCES Warehouses(WarehouseID)
 );
-
+-- Tạo bảng kho hàng sản phẩm (Supplier quản lý sản phẩm trong kho)
+CREATE TABLE Inventory (
+    InventoryID INT IDENTITY(1,1) PRIMARY KEY,
+    ProductID INT NOT NULL,
+    WarehouseID INT NOT NULL,
+    SupplierID INT NOT NULL,
+    Quantity INT NOT NULL DEFAULT 0,
+    StockStatus NVARCHAR(60) DEFAULT 'Nhập',
+    LastUpdated DATETIME DEFAULT GETDATE(),
+		IsDeleted BIT NOT NULL DEFAULT 0,
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID),
+    FOREIGN KEY (WarehouseID) REFERENCES Warehouses(WarehouseID),
+    FOREIGN KEY (SupplierID) REFERENCES Suppliers(SupplierID)
+);
 -- Tạo bảng nhật ký giao dịch
 CREATE TABLE TransactionLogs (
     TransactionID INT IDENTITY(1,1) PRIMARY KEY,
@@ -185,12 +193,7 @@ CREATE TABLE TransactionLogs (
     FOREIGN KEY (SupplierID) REFERENCES Suppliers(SupplierID),
     FOREIGN KEY (UserID) REFERENCES Users(UserID)
 );
-CREATE TABLE UserSupplier (
-    UserID INT PRIMARY KEY,
-    SupplierID INT UNIQUE NOT NULL,
-    FOREIGN KEY (UserID) REFERENCES Users(UserID) ON DELETE CASCADE,
-    FOREIGN KEY (SupplierID) REFERENCES Suppliers(SupplierID) ON DELETE CASCADE
-);
+
 
 -- ✅ Chèn dữ liệu mẫu vào bảng Roles
 INSERT INTO Roles (RoleName) VALUES ('Admin'), ('User'), ('Supplier');
@@ -203,20 +206,21 @@ INSERT INTO Roles (RoleName) VALUES ('Admin'), ('User'), ('Supplier');
 -- ✅ Chèn dữ liệu mẫu vào bảng Suppliers
 INSERT INTO Suppliers (SupplierName, ContactInfo, Email, Phone) 
 VALUES 
-('Công ty ABC', N'123 Đường ABC, TP. HCM', 'abccompany@example.com', '0901234567')
+('Công ty ABC', N'123 Đường ABC, TP. HCM', 'abccompany1@example.com', '0901234567'),
+('Công ty ABC', N'123 Đường ABC, TP. HCM', 'abccompany2@example.com', '0901234567'),
+('Công ty ABC', N'123 Đường ABC, TP. HCM', 'abccompany3@example.com', '0901234567')
 
 
 
 INSERT INTO Users (Username, Password, FullName, Email, Phone, DateOfBirth, Gender, RoleID, Avatar, Address) 
 VALUES 
 (N'admin', '123', N'Le Xuan Hoang Nam', 'lenam7546@gmail.com', '0987654321', '1990-01-01', 'Male', 1, 'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\IMG_1071.JPG', N'Hà Nội'),
-(N'user', '123', N'Hoang Van Duy', 'lnam22871@gmail.com', '0971234567', '1995-05-10', 'Female', 2, 'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\IMG_1071.JPG', N'Hồ Chí Minh'),
-(N'supplier', '123', N'Thuy Duong', 'user02@example.com', '0962345678', '1998-09-15', 'Male', 3, 'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\IMG_1071.JPG', N'Đà Nẵng');
+(N'user', '123', N'Hoang Van Duy', 'lnam22871@gmail.com', '0971234567', '1995-05-10', 'Female', 2, 'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\IMG_1071.JPG', N'Hồ Chí Minh')
 
--- Sửa lại bảng UserSupplier để chèn dữ liệu đúng
-INSERT INTO UserSupplier (UserID, SupplierID) VALUES 
-(3, 1)  -- User ID 3 thuộc Supplier ID 1
--- ✅ Chèn dữ liệu mẫu vào bảng Users (Thêm địa chỉ)
+INSERT INTO Users (Username,SupplierID, Password, FullName, Email, Phone, DateOfBirth, Gender, RoleID, Avatar, Address) 
+VALUES 
+
+(N'supplier',3, '123', N'Thuy Duong', 'user02@example.com', '0962345678', '1998-09-15', 'Male', 3, 'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\IMG_1071.JPG', N'Đà Nẵng');
 
 INSERT INTO Categories (CategoryName, Description) 
 VALUES 
