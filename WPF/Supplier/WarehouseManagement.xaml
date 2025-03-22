@@ -3,25 +3,19 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="Quản Lý Kho Hàng" Loaded="Page_Loaded" >
 
-    <!-- Root Grid -->
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Tiêu đề -->
             <RowDefinition Height="*"/>
-            <!-- DataGrid và ListBox -->
             <RowDefinition Height="Auto"/>
-            <!-- Nút thao tác -->
         </Grid.RowDefinitions>
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <!-- DataGrid -->
             <ColumnDefinition Width="1*"/>
-            <!-- ListBox -->
         </Grid.ColumnDefinitions>
 
-        <!-- Tiêu đề -->
         <TextBlock Text="Quản Lý Kho Hàng" FontSize="24" FontWeight="Bold" Foreground="#37474F"
                    Margin="10" HorizontalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2"/>
 
@@ -31,7 +25,6 @@
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- DataGrid hiển thị kho hàng -->
             <DataGrid x:Name="WarehouseDataGrid" Grid.Column="0" AutoGenerateColumns="False"
                       SelectionMode="Single" ScrollViewer.VerticalScrollBarVisibility="Auto"
                       SelectionChanged="WarehouseDataGrid_SelectionChanged" CanUserAddRows="False">
@@ -48,7 +41,6 @@
                         <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="10" Margin="5"
                     Padding="10" Background="White">
                             <StackPanel Orientation="Horizontal" Margin="5">
-                                <!-- Ảnh sản phẩm -->
                                 <Image Source="{Binding Avatar}" Width="100" Height="100" Margin="0,0,10,0" 
                            Stretch="UniformToFill" ClipToBounds="True">
                                     <Image.Style>
@@ -65,11 +57,11 @@
 
                                 <!-- Thông tin sản phẩm -->
                                 <StackPanel Orientation="Vertical">
-                                    <TextBlock Text="{Binding ProductName}" FontWeight="Bold" FontSize="16"
+                                    <TextBlock Text="{Binding Product.ProductName}" FontWeight="Bold" FontSize="16"
                                    Foreground="#37474F" Margin="0,0,0,5"/>
-                                    <TextBlock Text="{Binding QuantityInStock, StringFormat='Số lượng: {0}'}"
+                                    <TextBlock Text="{Binding Quantity, StringFormat='Số lượng: {0}'}"
                                    FontSize="14" Foreground="#616161" Margin="0,0,0,3"/>
-                                    <TextBlock Text="{Binding Price, StringFormat='Giá: {0:C}'}" 
+                                    <TextBlock Text="{Binding Product.Price, StringFormat='Giá: {0:C}'}" 
                                    FontSize="14" Foreground="#D32F2F" FontWeight="Bold"/>
                                 </StackPanel>
                             </StackPanel>

@@ -44,8 +44,8 @@ namespace WPF.Supplier
 
         private List<TransactionLog> lstTran()
         {
-            var lst = service.GetAllBySupplierID(supplierService.GetSuppliersByUserId(user.UserId).SupplierId);
-            var lstProduct = productService.GetAllProducts();
+            var lst = service.GetAllBySupplierID(supplierService.GetSupplierByUserId(user.UserId).SupplierId);
+            var lstProduct = productService.GetAllProductsForLog();   
             var lstWare = warehousesService.getAll();
             var lstSupplier = supplierService.GetAllSuppliers();
             var lstUser = userService.getAll();

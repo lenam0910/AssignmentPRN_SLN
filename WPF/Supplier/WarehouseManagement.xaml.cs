@@ -12,21 +12,21 @@ namespace WPF.Supplier
         private readonly ProductService productService;
         private readonly InventoryService inventoryService;
         private readonly DataAccess.Models.User user;
-        private UserSupplierService userSupplierService;
         private DataAccess.Models.Supplier supplier;
+        private SupplierService SupplierService;
         public WarehouseManagement()
         {
             user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
-            userSupplierService = new UserSupplierService();
             InitializeComponent();
             warehouseService = new WarehousesService();
+            SupplierService = new();
             productService = new ProductService();
             inventoryService = new InventoryService();
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            supplier = userSupplierService.GetSupplierByUserId(user.UserId);
+            supplier = SupplierService.GetSupplierByUserId(user.UserId);
             if (supplier.SupplierId != null)
             {
                 LoadWarehouses(supplier.SupplierId);
@@ -53,17 +53,10 @@ namespace WPF.Supplier
         private void LoadProducts(int warehouseId)
         {
             var inventoryItems = inventoryService.GetInventoryListByWarehouseId(warehouseId);
-            var lstProduct = productService.GetAllProducts();
-            var products = new List<Product>();
+            var products = new List<Inventory>();
             foreach (var product in inventoryItems)
             {
-                foreach (var item in lstProduct)
-                {
-                    if (product.ProductId == item.ProductId)
-                    {
-                        products.Add(item);
-                    }
-                }
+                products.Add(product);
             }
 
             ProductListBox.ItemsSource = products;
@@ -190,14 +183,14 @@ namespace WPF.Supplier
                     return;
                 }
 
-           
+
                 if (!int.TryParse(txtEditCapacity.Text.Trim(), out int capacity) || capacity <= 0)
                 {
                     MessageBox.Show("Sức chứa phải là một số nguyên lớn hơn 0!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-        
+
                 if (WarehouseDataGrid.SelectedItem is not Warehouse selectedWarehouse)
                 {
                     MessageBox.Show("Hãy chọn kho hàng để sửa!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);

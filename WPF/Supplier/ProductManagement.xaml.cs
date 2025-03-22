@@ -19,13 +19,11 @@ namespace WPF.Supplier
         private SupplierService supplierService;
         private ProductService productService;
         private DataAccess.Models.Supplier supplier;
-        private UserSupplierService UserSupplierService;
         private DataAccess.Models.User user;
         public ProductManagement()
         {
             user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
 
-            UserSupplierService = new UserSupplierService();
             categoryService = new();
             supplierService = new();
             productService = new();
@@ -35,14 +33,12 @@ namespace WPF.Supplier
 
         private void LoadData()
         {
-            supplier = UserSupplierService.GetSupplierByUserId(user.UserId);
-            // Load danh mục sản phẩm
+            supplier = supplierService.GetSupplierByUserId(user.UserId);
             cbCategory.ItemsSource = categoryService.getAll();
             cbCategory.DisplayMemberPath = "CategoryName";
             cbCategory.SelectedValuePath = "CategoryId";
 
 
-            // Load danh sách sản phẩm
             lstProducts.ItemsSource = productService.GetAllProductsBySupplierId(supplier.SupplierId);
 
         }
@@ -51,7 +47,6 @@ namespace WPF.Supplier
         {
             try
             {
-                // Kiểm tra input đầu vào
                 if (string.IsNullOrWhiteSpace(txtProductName.Text) ||
                     string.IsNullOrWhiteSpace(txtPrice.Text) ||
                     cbCategory.SelectedValue == null)
@@ -60,7 +55,7 @@ namespace WPF.Supplier
                     return;
                 }
 
-                // Kiểm tra UserAccount
+       
                 if (!Application.Current.Properties.Contains("UserAccount") ||
                     Application.Current.Properties["UserAccount"] is not DataAccess.Models.User u)
                 {
@@ -68,30 +63,28 @@ namespace WPF.Supplier
                     return;
                 }
 
-                // Kiểm tra giá sản phẩm hợp lệ
+           
                 if (!decimal.TryParse(txtPrice.Text, out decimal price) || price <= 0)
                 {
                     MessageBox.Show("Giá sản phẩm phải là một số hợp lệ và lớn hơn 0!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // Kiểm tra số lượng sản phẩm hợp lệ
                 if (!int.TryParse(txtStock.Text, out int stock) || stock < 0)
                 {
                     MessageBox.Show("Số lượng sản phẩm phải là một số nguyên không âm!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // Tạo sản phẩm mới
                 Product newProduct = new Product
                 {
                     ProductName = txtProductName.Text.Trim(),
                     Price = price,
                     QuantityInStock = stock,
                     CategoryId = (int)cbCategory.SelectedValue,
-                    SupplierId = supplier?.SupplierId ?? 0, // Kiểm tra supplier có null không
+                    SupplierId = supplier?.SupplierId ?? 0, 
                     Description = txtDescription.Text?.Trim(),
-                    Avatar = !string.IsNullOrEmpty(destinationPath) ? destinationPath : null // Chỉ lưu avatar nếu có đường dẫn
+                    Avatar = !string.IsNullOrEmpty(destinationPath) ? destinationPath : null 
                 };
 
                 // Thêm sản phẩm vào database

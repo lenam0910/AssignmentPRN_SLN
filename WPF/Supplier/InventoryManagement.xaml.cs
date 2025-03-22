@@ -19,7 +19,6 @@ namespace WPF.Supplier
         private TransactionLogService transactionLogService;
         private Warehouse warehouse;
         private Product product;
-        private UserSupplierService userSupplierService;
         private DataAccess.Models.Supplier supplier;
         private UserService userService;
         private SupplierService supplierService;
@@ -29,7 +28,6 @@ namespace WPF.Supplier
             inventoryService = new InventoryService();
             warehousesService = new WarehousesService();
             productService = new ProductService();
-            userSupplierService = new UserSupplierService();
             supplierService = new();
             transactionLogService = new TransactionLogService();
             userService = new();
@@ -43,7 +41,7 @@ namespace WPF.Supplier
         private void LoadData()
         {
 
-            supplier = userSupplierService.GetSupplierByUserId(user.UserId);
+            supplier = supplierService.GetSupplierByUserId(user.UserId);
             WarehouseComboBox.ItemsSource = warehousesService.GetAllWarehousesByIdSupplier(supplier.SupplierId);
             WarehouseComboBox.DisplayMemberPath = "WarehouseName";
             WarehouseComboBox.SelectedValuePath = "WarehouseId";
@@ -463,7 +461,6 @@ namespace WPF.Supplier
                 {
                     if (InventoryDataGrid.Items.Count > 0) // Kiểm tra có dữ liệu không
                     {
-                        InventoryDataGrid.SelectedIndex = 0; // Chọn dòng đầu tiên
                         var selectedInventory = (Inventory)InventoryDataGrid.SelectedItem;
                         if (selectedInventory == null)
                         {

@@ -12,12 +12,12 @@ namespace WPF
     public partial class Login : Window
     {
         private UserService userService;
-        private UserSupplierService userSupplierService;
+        private SupplierService supplierService;
         public Login()
         {
-            userSupplierService = new UserSupplierService();
             InitializeComponent();
             userService = new();
+            supplierService = new();
 
         }
 
@@ -61,7 +61,7 @@ namespace WPF
                     return;
                 }
 
-                var supplier = userSupplierService.GetSupplierByUserIdForLogin(account.UserId);
+                var supplier = supplierService.GetSupplierByUserId(account.UserId);
 
                 if (rememberMeCheckBox.IsChecked == true)
                 {

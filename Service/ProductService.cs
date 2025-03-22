@@ -38,6 +38,14 @@ namespace Service
 
             return lstDis;
         }
+
+        public List<Product> GetAllProductsForLog()
+        {
+            var lst = repository.GetAll();
+            
+
+            return lst;
+        }
         public ObservableCollection<Product> GetAllProductsByObser()
         {
             var lst = repository.GetAll();

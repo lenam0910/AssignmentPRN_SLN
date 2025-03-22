@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
@@ -15,7 +16,10 @@ namespace Repository
         {
             _context = new AssignmentPrnContext();
         }
-
+        public Supplier GetSupplierByIdUser(int id)
+        {
+            return _context.Suppliers.Include(x => x.Users).FirstOrDefault(x => x.Users.Any(x => x.UserId == id));
+        }
 
         public Supplier GetSupplierById(int id)
         {

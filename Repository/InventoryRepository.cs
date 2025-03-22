@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
@@ -35,7 +36,7 @@ namespace Repository
        
         public List<Inventory> GetAllInventory()
         {
-            return prnContext.Inventories.ToList();
+            return prnContext.Inventories.Include(x => x.Product).Include(x => x.Warehouse).Include(x => x.Supplier).ToList();
         }
 
     }

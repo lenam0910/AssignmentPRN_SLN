@@ -7,6 +7,7 @@ using System.Windows;
 
 using System.Windows.Media.Imaging;
 using DataAccess.Models;
+using Microsoft.IdentityModel.Tokens;
 using Service;
 
 namespace WPF.Supplier
@@ -16,16 +17,16 @@ namespace WPF.Supplier
     /// </summary>
     public partial class RegisterSupplier : Window
     {
-        private string saveDirectory = @"C:\Users\ADMIN\Desktop\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Supplier\";
+        private string saveDirectory = @"C:\Users\THIS PC\Desktop\prn211\AssignmentPRN_SLN\DataAccess\Images\Supplier\";
         private string selectedFilePath;
         private string fileName;
-        private string destinationPath = null;
+        private string destinationPath ;
         private SupplierService supplierService;
         private UserService userService;
-        private UserSupplierService userSupplierService;
+        private DataAccess.Models.User user;    
         public RegisterSupplier()
         {
-            userSupplierService = new UserSupplierService();
+            user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             InitializeComponent();
             supplierService = new();
             userService = new();
@@ -67,38 +68,32 @@ namespace WPF.Supplier
                     return;
                 }
 
-                // Tạo đối tượng Supplier
                 DataAccess.Models.Supplier supplier = new()
                 {
                     SupplierName = txtSupplierName.Text.Trim(),
                     ContactInfo = txtContactInfo.Text.Trim(),
                     Email = txtEmail.Text.Trim(),
                     Phone = txtPhone.Text.Trim(),
-                    Avatar = !string.IsNullOrEmpty(destinationPath) ? destinationPath : null // Chỉ lưu Avatar nếu có
+                    Avatar = !string.IsNullOrEmpty(destinationPath) ? destinationPath : null 
                 };
 
-                // Lưu thông tin nhà cung cấp
                 if (supplierService.SaveSupplier(supplier))
                 {
-                    // Liên kết User với Supplier
-                    UserSupplier userSupplier = new()
-                    {
-                        SupplierId = supplier.SupplierId,
-                        UserId = user.UserId
-                    };
-                    userSupplierService.Add(userSupplier);
+                    user.SupplierId = supplier.SupplierId;
 
-                    // Lưu Avatar nếu có ảnh
-                    if (!string.IsNullOrEmpty(destinationPath))
+
+
+                    if (!string.IsNullOrEmpty(destinationPath) && !string.IsNullOrEmpty(selectedFilePath))
                     {
-                        saveAvatarSupplier();
+                                saveAvatarSupplier();
                     }
-
-                    // Hiển thị thông báo và chuyển sang màn hình Login
-                    MessageBox.Show("Đăng ký thông tin nhà cung cấp thành công! Hãy chờ Admin duyệt!");
-                    Login login = new Login();
-                    login.Show();
-                    this.Hide();
+                    if(userService.UpdateUser(user)){
+                        MessageBox.Show("Đăng ký thông tin nhà cung cấp thành công! Hãy chờ Admin duyệt!");
+                        Login login = new Login();
+                        login.Show();
+                        this.Hide();
+                    }
+                   
                 }
                 else
                 {
@@ -111,13 +106,11 @@ namespace WPF.Supplier
             }
         }
 
-        // Kiểm tra email hợp lệ
         private bool IsValidEmail(string email)
         {
             return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
         }
 
-        // Kiểm tra số điện thoại hợp lệ (Việt Nam: 10 chữ số)
         private bool IsValidPhoneNumber(string phoneNumber)
         {
             return Regex.IsMatch(phoneNumber, @"^0\d{9}$");

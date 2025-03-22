@@ -19,10 +19,8 @@ namespace WPF.Supplier
     public partial class SupplierDashboard : Window
     {
         private SupplierService supplierService;
-        private UserSupplierService userSupplierService;
         public SupplierDashboard()
         {
-            userSupplierService = new();
             supplierService = new SupplierService();
             InitializeComponent();
         }
@@ -32,7 +30,7 @@ namespace WPF.Supplier
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             DataAccess.Models.User user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
-            var supplier = userSupplierService.GetSupplierByUserId(user.UserId);
+            var supplier = supplierService.GetSupplierByUserId(user.UserId);
             if (user != null)
             {
                 if (!string.IsNullOrEmpty(user.Avatar))

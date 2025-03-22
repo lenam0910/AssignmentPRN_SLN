@@ -28,13 +28,12 @@ namespace WPF.Supplier
         private SupplierService _supplierService;
         private DataAccess.Models.User user;
         private DataAccess.Models.Supplier supplier;
-        private UserSupplierService userSupplierService;
         public UpdateProfilePage()
         {
-            userSupplierService = new();
             user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             _userService = new UserService();
             _supplierService = new SupplierService();
+            supplier = _supplierService.GetSupplierByUserId(user.UserId);
             InitializeComponent();
             Load();
         }
@@ -42,7 +41,6 @@ namespace WPF.Supplier
         private void Load()
         {
 
-            supplier = _supplierService.GetSuppliersByUserId(user.UserId);
             txtFullName.Text = user.Username;
             txtUserEmail.Text = user.Email;
             txtPassword.Password = user.Password;
@@ -67,7 +65,7 @@ namespace WPF.Supplier
             txtSupplierPhone.Text = supplier.Phone;
 
 
-            DataAccess.Models.Supplier sup = userSupplierService.GetSupplierByUserId(user.UserId);
+            DataAccess.Models.Supplier sup = _supplierService.GetSupplierByUserId(user.UserId);
             if (!string.IsNullOrEmpty(sup.Avatar))
             {
                 string imagePathSupplier = supplier.Avatar;

@@ -15,17 +15,17 @@ namespace WPF.Supplier
         private WarehousesService warehousesService;
         private OrderService orderService;
         private ProductService productService;
+        private SupplierService SupplierService;
         private OrderDetailService orderDetailService;
         private DataAccess.Models.User user;
-        private UserSupplierService userSupplierService;
 
         public ProductIncomePage()
         {
             user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             warehousesService = new WarehousesService();
             orderService = new OrderService();
-            userSupplierService = new UserSupplierService();
             productService = new ProductService();
+            SupplierService = new SupplierService();
             orderDetailService = new OrderDetailService();
             InitializeComponent();
         }
@@ -35,7 +35,6 @@ namespace WPF.Supplier
             user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             warehousesService = new WarehousesService();
             orderService = new OrderService();
-            userSupplierService = new UserSupplierService();
             productService = new ProductService();
             orderDetailService = new OrderDetailService();
             InitializeComponent();
@@ -48,7 +47,7 @@ namespace WPF.Supplier
 
         public void load()
         {
-            WarehouseComboBox.ItemsSource = warehousesService.GetAllWarehousesByIdSupplier(userSupplierService.GetSupplierByUserId(user.UserId).SupplierId);
+            WarehouseComboBox.ItemsSource = warehousesService.GetAllWarehousesByIdSupplier(SupplierService.GetSupplierByUserId(user.UserId).SupplierId);
             WarehouseComboBox.DisplayMemberPath = "WarehouseName";
             WarehouseComboBox.SelectedValuePath = "WarehouseId";
         }

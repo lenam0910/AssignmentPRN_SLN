@@ -22,6 +22,8 @@ namespace Repository
             return _context.Users.FirstOrDefault(x => x.Username == username && x.Password == password);
         }
 
+        
+
         public User checkDuplicateUserName(string username)
         {
             return _context.Users.FirstOrDefault(x => x.Username == username);
@@ -51,6 +53,11 @@ namespace Repository
         public User GetByEmail(string email)
         {
             return _context.Users.FirstOrDefault(x => x.Email.ToLower() == email.ToLower());
+        }
+
+        public User getbyid(int id)
+        {
+            return _context.Users.FirstOrDefault(x => x.UserId == id);
         }
         public bool Update(User u)
         {

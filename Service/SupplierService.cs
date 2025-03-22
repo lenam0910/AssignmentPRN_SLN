@@ -11,11 +11,11 @@ namespace Service
     public class SupplierService
     {
         private SupplierRepository supplierRepository;
-        private UserSupplierService userSupplierService;
+        private UserRepository userRepository;
         public SupplierService()
         {
             supplierRepository = new();
-            userSupplierService = new UserSupplierService();
+            userRepository = new();
         }
 
         public Supplier GetSupplierById(int id)
@@ -26,10 +26,10 @@ namespace Service
         {
             return supplierRepository.GetSupplierBySupplierName(supplierName);
         }
-        public Supplier GetSuppliersByUserId(int userId)
+       public Supplier GetSupplierByUserId(int userId)
         {
-            var lst = userSupplierService.GetSupplierByUserId(userId);
-            return lst;
+            var user = userRepository.getbyid(userId);
+            return supplierRepository.GetSupplierByIdUser(user.UserId);
         }
         public List<Supplier> GetAllSuppliers()
         {
