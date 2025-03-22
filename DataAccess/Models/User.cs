@@ -7,6 +7,8 @@ public partial class User
 {
     public int UserId { get; set; }
 
+    public int? SupplierId { get; set; }
+
     public string Username { get; set; } = null!;
 
     public string Password { get; set; } = null!;
@@ -35,7 +37,7 @@ public partial class User
 
     public virtual Role Role { get; set; } = null!;
 
-    public virtual ICollection<TransactionLog> TransactionLogs { get; set; } = new List<TransactionLog>();
+    public virtual Supplier? Supplier { get; set; }
 
-    public virtual UserSupplier? UserSupplier { get; set; }
+    public virtual ICollection<TransactionLog> TransactionLogs { get; set; } = new List<TransactionLog>();
 }
