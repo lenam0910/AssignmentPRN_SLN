@@ -95,27 +95,58 @@ namespace WPF.Supplier
 
         private void FilterLogs(object sender, RoutedEventArgs e)
         {
-
-            DateTime from = (DateTime)dpFromDate.SelectedDate;
-            DateTime to = (DateTime)dpToDate.SelectedDate;
-            if (txtSearch != null)
+            if (!dpFromDate.SelectedDate.HasValue || !dpToDate.SelectedDate.HasValue)
             {
-                foreach (var item in transactionLogsLst)
-                {
-                    if (item.Product.ProductName.Contains(txtSearch.Text) && item.ChangeDate.Value >= from.Date && item.ChangeDate.Value <= to.Date)
-                    {
+                MessageBox.Show("Vui lòng chọn ngày bắt đầu và ngày kết thúc!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
 
-                    }
-                    else
+            DateTime from = dpFromDate.SelectedDate.Value;
+            from = from.Date; // Đầu ngày: 00:00:00
+
+            DateTime to = dpToDate.SelectedDate.Value;
+            to = to.Date.AddHours(23).AddMinutes(59).AddSeconds(59); // Cuối ngày: 23:59:59
+
+            if (from > to)
+            {
+                MessageBox.Show("Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            // Chuẩn hóa múi giờ (nếu cần)
+            from = from.ToUniversalTime();
+            to = to.ToUniversalTime();
+            if(txtSearch.Text.Equals("Tìm sản phẩm", StringComparison.OrdinalIgnoreCase))
+            {
+                txtSearch.Text = "";
+            }
+            var filteredLogs = new List<TransactionLog>();
+            if (!string.IsNullOrEmpty(txtSearch.Text))
+            {
+                for (int i = 0; i < transactionLogsLst.Count(); i++)
+                {
+                    if (transactionLogsLst.ElementAt(i).Product.ProductName.Contains(txtSearch.Text, StringComparison.OrdinalIgnoreCase) && transactionLogsLst.ElementAt(i).ChangeDate.Value >= from && transactionLogsLst.ElementAt(i).ChangeDate.Value <= to)
                     {
-                        transactionLogsLst.Remove(item);
+                        filteredLogs.Add(transactionLogsLst.ElementAt(i));
                     }
                 }
             }
-            dgTransactionLogs.ItemsSource = transactionLogsLst;
-        }
+            else
+            {
+                for (int i = 0; i < transactionLogsLst.Count(); i++)
+                {
+                    if (transactionLogsLst.ElementAt(i).ChangeDate.Value >= from && transactionLogsLst.ElementAt(i).ChangeDate.Value <= to)
+                    {
+                        filteredLogs.Add(transactionLogsLst.ElementAt(i));
+                    }
+                }
+            }
+                
+           
 
-        private void Page_Loaded(object sender, RoutedEventArgs e)
+            dgTransactionLogs.ItemsSource = filteredLogs.ToList();
+        }
+        private void Page_Loaded(object sender, RoutedEventArgs e) 
         {
             LoadData();
         }
@@ -124,7 +155,7 @@ namespace WPF.Supplier
         {
             if(transactionLogsLst != null)
             {
-                var filteredList = transactionLogsLst.Where(item => item.Product.ProductName.Equals(txtSearch.Text)).ToList();
+                var filteredList = transactionLogsLst.Where(item => item.Product.ProductName.Contains(txtSearch.Text,StringComparison.OrdinalIgnoreCase)).ToList();
                 if (filteredList != null)
                 {
                     dgTransactionLogs.ItemsSource = null;

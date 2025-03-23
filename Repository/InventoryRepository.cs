@@ -36,7 +36,7 @@ namespace Repository
        
         public List<Inventory> GetAllInventory()
         {
-            return prnContext.Inventories.Include(x => x.Product).Include(x => x.Warehouse).Include(x => x.Supplier).ToList();
+            return prnContext.Inventories.Include(x => x.Product).Include(x => x.Warehouse).Include(x => x.Supplier).AsNoTracking().ToList();
         }
 
     }

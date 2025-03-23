@@ -67,9 +67,10 @@ HorizontalAlignment="Left" Click="ResendOTP_Click"/>
 
 
                 <StackPanel x:Name="passwordPanel" Margin="0,15" Visibility="Collapsed">
-                    <TextBlock Text="Nhập mật khẩu mới" FontSize="14" Foreground="Gray"/>
+                    <TextBlock Text="Mật khẩu mới" FontSize="14" Foreground="Gray"/>
                     <PasswordBox x:Name="txtNewPassword" Width="320" Height="40"
                                  BorderBrush="Gray" BorderThickness="1" Padding="10"/>
+                    <TextBlock Text="Nhập lại mật khẩu mới" FontSize="14" Foreground="Gray"/>
                     <PasswordBox x:Name="txtConfirmPassword" Width="320" Height="40"
                BorderBrush="Gray" BorderThickness="1" Padding="10"/>
                     <Button x:Name="btnResetPassword" Content="Đặt lại mật khẩu" Width="180" Height="40"

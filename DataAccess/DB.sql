@@ -206,21 +206,20 @@ INSERT INTO Roles (RoleName) VALUES ('Admin'), ('User'), ('Supplier');
 -- ✅ Chèn dữ liệu mẫu vào bảng Suppliers
 INSERT INTO Suppliers (SupplierName, ContactInfo, Email, Phone) 
 VALUES 
-('Công ty ABC', N'123 Đường ABC, TP. HCM', 'abccompany1@example.com', '0901234567'),
-('Công ty ABC', N'123 Đường ABC, TP. HCM', 'abccompany2@example.com', '0901234567'),
-('Công ty ABC', N'123 Đường ABC, TP. HCM', 'abccompany3@example.com', '0901234567')
+('Công ty ABC', N'123 Đường ABC, TP. HCM', 'abccompany1@example.com', '0901234567')
+
 
 
 
 INSERT INTO Users (Username, Password, FullName, Email, Phone, DateOfBirth, Gender, RoleID, Avatar, Address) 
 VALUES 
-(N'admin', '123', N'Le Xuan Hoang Nam', 'lenam7546@gmail.com', '0987654321', '1990-01-01', 'Male', 1, 'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\IMG_1071.JPG', N'Hà Nội'),
-(N'user', '123', N'Hoang Van Duy', 'lnam22871@gmail.com', '0971234567', '1995-05-10', 'Female', 2, 'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\IMG_1071.JPG', N'Hồ Chí Minh')
+(N'admin', 'pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM=', N'Le Xuan Hoang Nam', 'lenam7546@gmail.com', '0987654321', '1990-01-01', 'Male', 1, 'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\IMG_1071.JPG', N'Hà Nội'),
+(N'user', 'pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM=', N'Hoang Van Duy', 'lnam22871@gmail.com', '0971234567', '1995-05-10', 'Female', 2, 'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\IMG_1071.JPG', N'Hồ Chí Minh')
 
 INSERT INTO Users (Username,SupplierID, Password, FullName, Email, Phone, DateOfBirth, Gender, RoleID, Avatar, Address) 
 VALUES 
 
-(N'supplier',3, '123', N'Thuy Duong', 'user02@example.com', '0962345678', '1998-09-15', 'Male', 3, 'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\IMG_1071.JPG', N'Đà Nẵng');
+(N'supplier',1, 'pmWkWSBCL51Bfkhn79xPuKBKHz//H6B+mY6G9/eieuM=', N'Thuy Duong', 'user02@example.com', '0962345678', '1998-09-15', 'Male', 3, 'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\IMG_1071.JPG', N'Đà Nẵng');
 
 INSERT INTO Categories (CategoryName, Description) 
 VALUES 
@@ -264,3 +263,4 @@ INSERT INTO Orders (UserID, Status) VALUES (2, N'Chờ xử lý');
 INSERT INTO OrderDetails (OrderID, ProductID, Quantity, WarehouseID, PriceAtOrder) 
 VALUES 
 (1, 1, 1, 1, 15000000);
+

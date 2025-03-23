@@ -17,7 +17,7 @@
         <TextBlock Grid.Row="0" Text="Phân Phối Hàng" FontSize="24" FontWeight="Bold" Foreground="#37474F" HorizontalAlignment="Center" Margin="10" Grid.ColumnSpan="2"/>
 
         <DataGrid x:Name="InventoryDataGrid" AutoGenerateColumns="False" Height="300" Margin="20" SelectionMode="Single" Grid.Column="0" Grid.Row="1" CanUserAddRows="False"
-                  IsReadOnly="True">
+                  IsReadOnly="True" SelectionChanged="InventoryDataGrid_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Sản phẩm" Binding="{Binding Product.ProductName}" Width="2*"/>
                 <DataGridTextColumn Header="Số lượng" Binding="{Binding Quantity}" Width="*"/>
@@ -35,11 +35,9 @@
             </DataGrid.Columns>
         </DataGrid>
 
-        <!-- Right side: Form to Add/Edit Inventory -->
         <StackPanel Grid.Column="1" Grid.Row="1" Margin="20">
             <TextBlock FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
 
-            <!-- ComboBox to select Warehouse -->
             <TextBlock Text="Chọn Kho" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
             <ComboBox x:Name="WarehouseComboBox" Margin="0,5" SelectionChanged="WarehouseComboBox_SelectionChanged"/>
 
@@ -77,7 +75,6 @@
 
             <TextBlock Text="Lưu ý" FontSize="14" FontWeight="Bold" Foreground="Gray"/>
             <TextBox x:Name="txtNote" Margin="0,5"/>
-            <!-- Buttons to Add/Update -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,20">
                 <Button x:Name="ExportBtn" Visibility="Collapsed"  Content="Xuất" Width="120" Height="40" Background="#4CAF50" Foreground="White"  Margin="10" Click="ExportBtn_Click" />
                 <Button x:Name="EditBtn" Visibility="Collapsed"  Content="Sửa" Width="120" Height="40" Background="#4CAF50" Foreground="White"  Margin="10" Click="EditBtn_Click"/>

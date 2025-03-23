@@ -14,9 +14,9 @@ namespace WPF
         private string selectedFilePath;
         private string fileName;
         private string destinationPath = null;
-        public Register()
+        public Register()  
         {
-            InitializeComponent();
+            InitializeComponent();  
             service = new UserService();
         }
 

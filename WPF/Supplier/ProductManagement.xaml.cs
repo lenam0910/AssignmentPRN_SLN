@@ -87,10 +87,9 @@ namespace WPF.Supplier
                     Avatar = !string.IsNullOrEmpty(destinationPath) ? destinationPath : null 
                 };
 
-                // Thêm sản phẩm vào database
                 if (productService.AddProduct(newProduct))
                 {
-                    // Lưu avatar nếu có ảnh
+                    
                     if (!string.IsNullOrEmpty(destinationPath))
                     {
                         saveAvatar();
@@ -124,18 +123,18 @@ namespace WPF.Supplier
                 selectedFilePath = openFileDialog.FileName;
                 fileName = System.IO.Path.GetFileName(selectedFilePath);
 
-                // Get the timestamp and append it to the filename
+              
                 string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                 string fileNameWithTimestamp = System.IO.Path.GetFileNameWithoutExtension(fileName) + "_" + timestamp + System.IO.Path.GetExtension(fileName);
 
                 destinationPath = System.IO.Path.Combine(saveDirectory, fileNameWithTimestamp);
 
-                // Tạo thư mục nếu chưa có
+            
                 Directory.CreateDirectory(saveDirectory);
 
 
 
-                // Hiển thị ảnh lên UI
+   
                 imgProduct.Source = new BitmapImage(new Uri(selectedFilePath));
                 imgProduct.Visibility = Visibility.Visible;
 
@@ -180,12 +179,12 @@ namespace WPF.Supplier
 
         private void DeleteProduct_Click(object sender, RoutedEventArgs e)
         {
-            // Lấy sản phẩm đang được chọn từ ListBox
+            
             var selectedProduct = (sender as Button).DataContext as Product;
 
             if (selectedProduct != null)
             {
-                // Xác nhận xóa sản phẩm
+
                 var result = MessageBox.Show($"Bạn có chắc muốn xóa sản phẩm: {selectedProduct.ProductName}?", "Xác nhận", MessageBoxButton.YesNo);
                 if (result == MessageBoxResult.Yes)
                 {
@@ -212,14 +211,14 @@ namespace WPF.Supplier
         {
             try
             {
-                // Kiểm tra ID sản phẩm hợp lệ
+       
                 if (!int.TryParse(txtId.Text, out int productId))
                 {
                     MessageBox.Show("ID sản phẩm không hợp lệ!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // Lấy thông tin sản phẩm từ database
+              
                 var product = productService.GetProductById(productId);
                 if (product == null)
                 {
@@ -227,7 +226,7 @@ namespace WPF.Supplier
                     return;
                 }
 
-                // Kiểm tra input đầu vào
+               
                 if (string.IsNullOrWhiteSpace(txtProductName.Text) ||
                     string.IsNullOrWhiteSpace(txtPrice.Text) ||
                     string.IsNullOrWhiteSpace(txtStock.Text) ||
@@ -237,21 +236,21 @@ namespace WPF.Supplier
                     return;
                 }
 
-                // Kiểm tra giá sản phẩm hợp lệ
+                
                 if (!decimal.TryParse(txtPrice.Text, out decimal price) || price <= 0)
                 {
                     MessageBox.Show("Giá sản phẩm phải là một số hợp lệ và lớn hơn 0!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // Kiểm tra số lượng sản phẩm hợp lệ
+               
                 if (!int.TryParse(txtStock.Text, out int stock) || stock < 0)
                 {
                     MessageBox.Show("Số lượng sản phẩm phải là một số nguyên không âm!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // Cập nhật thông tin sản phẩm
+           
                 product.ProductName = txtProductName.Text.Trim();
                 product.Price = price;
                 product.QuantityInStock = stock;
@@ -259,13 +258,13 @@ namespace WPF.Supplier
                 product.Description = txtDescription.Text?.Trim();
                 product.IsApproved = false;
 
-                // Chỉ cập nhật Avatar nếu có thay đổi
+           
                 if (!string.IsNullOrEmpty(destinationPath))
                 {
                     product.Avatar = destinationPath;
                 }
 
-                // Cập nhật sản phẩm
+       
                 if (productService.UpdaterProduct(product))
                 {
                     saveAvatar();

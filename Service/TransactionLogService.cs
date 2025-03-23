@@ -22,10 +22,10 @@ namespace Service
             return repository.GetTransactionLog(transactionId);
         }
 
-        public List<TransactionLog> GetAllTransactions()
+        public List<TransactionLog> GetAllTransactions() 
         {
             return repository.GetAll();
-        }
+        } 
         public List<TransactionLog> GetAllBySupplierID(int id)
         {
             var lst = repository.GetAll();

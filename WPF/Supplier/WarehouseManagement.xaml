@@ -12,7 +12,7 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
-            <!-- DataGrid -->
+     
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
@@ -55,7 +55,6 @@
                                     </Image.Style>
                                 </Image>
 
-                                <!-- Thông tin sản phẩm -->
                                 <StackPanel Orientation="Vertical">
                                     <TextBlock Text="{Binding Product.ProductName}" FontWeight="Bold" FontSize="16"
                                    Foreground="#37474F" Margin="0,0,0,5"/>
@@ -72,7 +71,7 @@
 
         </Grid>
 
-        <!-- Hàng chứa các nút Thêm, Sửa, Xóa -->
+
         <StackPanel Grid.Row="2" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Center" Margin="10">
             <Button Content="Thêm Kho" Width="120" Height="40" Background="#4CAF50" Foreground="White"
                     Click="AddWarehouse_Click" Margin="10"/>
@@ -82,7 +81,7 @@
                     Click="DeleteWarehouse_Click" Margin="10"/>
         </StackPanel>
 
-        <!-- Popup Thêm Kho -->
+    
         <Grid x:Name="PopupOverlay" Visibility="Collapsed" Background="#80000000"
       Grid.RowSpan="3" Grid.ColumnSpan="2">
             <Border Background="White" BorderBrush="#0078D4" BorderThickness="2" Padding="20" Width="400" CornerRadius="12"
@@ -112,7 +111,6 @@
             </Border>
         </Grid>
 
-        <!-- Popup Sửa Kho -->
         <Grid x:Name="EditWarehousePopup" Visibility="Collapsed" Background="#80000000"
       Grid.RowSpan="3" Grid.ColumnSpan="2">
             <Border Background="White" BorderBrush="#0078D4" BorderThickness="2" Padding="20" Width="400" CornerRadius="12"

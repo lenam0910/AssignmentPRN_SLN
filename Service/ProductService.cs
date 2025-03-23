@@ -104,8 +104,34 @@ namespace Service
 
             return lstDis;
         }
-      
+        public List<Product> GetAllProductsBySupplierIdForExport(int id)
+        {
+            var lst = repository.GetAll();
+            var lstDis = new List<Product>();
+            foreach (Product items in lst)
+            {
+                if (items.SupplierId == id && items.IsApproved == true)
+                {
+                    lstDis.Add(items);
+                }
+            }
 
+            return lstDis;
+        }
+        public List<Product> GetAllProductsBySupplierIdForInventory(int id)
+        {
+            var lst = repository.GetAll();
+            var lstDis = new List<Product>();
+            foreach (Product items in lst)
+            {
+                if ( items.SupplierId == id && items.IsApproved == true)
+                {
+                    lstDis.Add(items);
+                }
+            }
+
+            return lstDis;
+        }
 
 
         public bool AddProduct(Product product)

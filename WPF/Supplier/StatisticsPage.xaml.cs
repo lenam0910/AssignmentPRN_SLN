@@ -21,18 +21,13 @@ namespace WPF.Supplier
         private void LoadStatistics()
         {
 
-            // 1. Tổng số kho hàng
+            
             int totalWarehouses = warehousesService.getAll().Count(w => !w.IsDeleted);
             txtTotalWarehouses.Text = totalWarehouses.ToString();
 
-            // 2. Tổng số lượng sản phẩm trong kho
+            
             int totalProducts = inventoryService.GetInventoryList().Sum(i => i.Quantity);
             txtTotalProducts.Text = totalProducts.ToString();
-
-
-            
-           
-  
 
 
         }

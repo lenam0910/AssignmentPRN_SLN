@@ -11,9 +11,7 @@ using Service;
 
 namespace WPF.Supplier
 {
-    /// <summary>
-    /// Interaction logic for UpdateProfilePage.xaml
-    /// </summary>
+
     public partial class UpdateProfilePage : Page
     {
         private string saveDirectoryUser = @"C:\Users\ADMIN\Desktop\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\";

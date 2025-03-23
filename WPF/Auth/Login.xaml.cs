@@ -46,14 +46,15 @@ namespace WPF
             {
                 string uName = name.Text?.Trim();
                 string unHashPass = password.Password?.Trim();
+                string hassPass = HashPassword(unHashPass);
 
-                if (string.IsNullOrEmpty(uName) || string.IsNullOrEmpty(unHashPass))
+                if (string.IsNullOrEmpty(uName) || string.IsNullOrEmpty(hassPass))
                 {
                     MessageBox.Show("Vui lòng nhập tên đăng nhập và mật khẩu!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                var account = userService.Login(uName, unHashPass);
+                var account = userService.Login(uName, hassPass);
 
                 if (account == null)
                 {

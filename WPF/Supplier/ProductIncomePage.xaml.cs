@@ -7,9 +7,7 @@ using Service;
 
 namespace WPF.Supplier
 {
-    /// <summary>
-    /// Interaction logic for ProductIncomePage.xaml
-    /// </summary>
+
     public partial class ProductIncomePage : Page
     {
         private WarehousesService warehousesService;

@@ -74,14 +74,12 @@ namespace WPF
             {
                 string inputOtp = txtOTP.Text.Trim();
 
-                // Kiểm tra OTP không được để trống
                 if (string.IsNullOrEmpty(inputOtp))
                 {
                     MessageBox.Show("Vui lòng nhập mã OTP!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // Kiểm tra số lần thử OTP
                 if (otpAttempts >= maxOtpAttempts)
                 {
                     MessageBox.Show("Bạn đã nhập sai OTP quá nhiều lần. Vui lòng thử lại sau!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -89,7 +87,6 @@ namespace WPF
                     return;
                 }
 
-                // Kiểm tra OTP hợp lệ
                 if (inputOtp.Equals(generatedOTP, StringComparison.OrdinalIgnoreCase))
                 {
                     MessageBox.Show("Xác thực OTP thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -98,7 +95,7 @@ namespace WPF
                 }
                 else
                 {
-                    otpAttempts++; // Tăng số lần nhập sai
+                    otpAttempts++; 
                     if (otpAttempts >= maxOtpAttempts)
                     {
                         MessageBox.Show("Bạn đã nhập sai OTP quá nhiều lần. Vui lòng thử gửi lại mã!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -192,7 +189,7 @@ namespace WPF
             {
                 if (emailSenderService.SendEmail(to, generatedOTP))
                 {
-                    // Ẩn emailPanel, hiện otpPanel
+                   
                     MessageBox.Show($"Gửi lại mã xác nhận đã gửi thành công!", "Email Gửi Thành Công", MessageBoxButton.OK, MessageBoxImage.Information);
                     emailPanel.Visibility = Visibility.Collapsed;
                     otpPanel.Visibility = Visibility.Visible;

@@ -12,9 +12,7 @@ using Service;
 
 namespace WPF.Supplier
 {
-    /// <summary>
-    /// Interaction logic for RegisterSupplier.xaml
-    /// </summary>
+  
     public partial class RegisterSupplier : Window
     {
         private string saveDirectory = @"C:\Users\THIS PC\Desktop\prn211\AssignmentPRN_SLN\DataAccess\Images\Supplier\";
@@ -36,7 +34,7 @@ namespace WPF.Supplier
         {
             try
             {
-                // Kiểm tra xem tài khoản người dùng có tồn tại hay không
+
                 if (!Application.Current.Properties.Contains("UserAccount") ||
                     Application.Current.Properties["UserAccount"] is not DataAccess.Models.User user)
                 {
@@ -44,7 +42,7 @@ namespace WPF.Supplier
                     return;
                 }
 
-                // Kiểm tra input đầu vào
+   
                 if (string.IsNullOrWhiteSpace(txtSupplierName.Text) ||
                     string.IsNullOrWhiteSpace(txtContactInfo.Text) ||
                     string.IsNullOrWhiteSpace(txtEmail.Text) ||
@@ -54,14 +52,14 @@ namespace WPF.Supplier
                     return;
                 }
 
-                // Kiểm tra email hợp lệ
+       
                 if (!IsValidEmail(txtEmail.Text))
                 {
                     MessageBox.Show("Email không hợp lệ!");
                     return;
                 }
 
-                // Kiểm tra số điện thoại hợp lệ
+              
                 if (!IsValidPhoneNumber(txtPhone.Text))
                 {
                     MessageBox.Show("Số điện thoại không hợp lệ!");
@@ -141,18 +139,18 @@ namespace WPF.Supplier
                 selectedFilePath = openFileDialog.FileName;
                 fileName = System.IO.Path.GetFileName(selectedFilePath);
 
-                // Get the timestamp and append it to the filename
+            
                 string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                 string fileNameWithTimestamp = System.IO.Path.GetFileNameWithoutExtension(fileName) + "_" + timestamp + System.IO.Path.GetExtension(fileName);
 
                 destinationPath = System.IO.Path.Combine(saveDirectory, fileNameWithTimestamp);
 
-                // Tạo thư mục nếu chưa có
+        
                 Directory.CreateDirectory(saveDirectory);
 
 
 
-                // Hiển thị ảnh lên UI
+         
                 avatarImage.Source = new BitmapImage(new Uri(selectedFilePath));
                 avatarImage.Visibility = Visibility.Visible;
             }
