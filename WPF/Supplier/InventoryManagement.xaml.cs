@@ -24,10 +24,7 @@ namespace WPF.Supplier
 
         public InventoryManagement()
         {
-            inventoryService = new InventoryService();
-            warehousesService = new WarehousesService();
-            productService = new ProductService();
-            supplierService = new();
+            
             transactionLogService = new TransactionLogService();
             userService = new();
             InitializeComponent();
@@ -38,7 +35,10 @@ namespace WPF.Supplier
 
         private void LoadData()
         {
-
+            supplierService = new();
+            productService = new();
+            warehousesService = new();
+            inventoryService = new(); 
             supplier = supplierService.GetSupplierByUserId(user.UserId);
             WarehouseComboBox.ItemsSource = warehousesService.GetAllWarehousesByIdSupplier(supplier.SupplierId);
             WarehouseComboBox.DisplayMemberPath = "WarehouseName";
@@ -49,6 +49,11 @@ namespace WPF.Supplier
         }
         private void loadInvetory(int warehouseId)
         {
+            supplierService = new();
+            productService = new();
+            warehousesService = new();
+            inventoryService = new();
+
             var lst = inventoryService.GetInventoryListByWarehouseId(warehouseId);
             var lstProduct = productService.GetAllProductsBySupplierId(supplier.SupplierId);
 
@@ -72,6 +77,11 @@ namespace WPF.Supplier
 
         private void WarehouseComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            supplierService = new();
+            productService = new();
+            warehousesService = new();
+            inventoryService = new();
+
             if (WarehouseComboBox.SelectedValue != null)
             {
                 var selectedWarehouse = (int)WarehouseComboBox.SelectedValue;
@@ -91,6 +101,11 @@ namespace WPF.Supplier
 
         private void SaveInventory_Click(object sender, RoutedEventArgs e)
         {
+            supplierService = new();
+            productService = new();
+            warehousesService = new();
+            inventoryService = new();
+
             try
             {
                 warehouse = WarehouseComboBox.SelectedItem as Warehouse;
@@ -156,6 +171,7 @@ namespace WPF.Supplier
                 {
                     existingInventory.Quantity += quantityToAdd;
                     existingInventory.LastUpdated = DateTime.Now;
+
                     if (!inventoryService.UpdateInventory(existingInventory))
                     {
                         MessageBox.Show("Lỗi khi cập nhật kho hàng!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -247,11 +263,15 @@ namespace WPF.Supplier
         
         private void EditInventory_Click(object sender, RoutedEventArgs e)
         {
-            
+            supplierService = new();
+            productService = new();
+            warehousesService = new();
+            inventoryService = new();
+
             var selectedInventory = (Inventory)InventoryDataGrid.SelectedItem;
-            if(selectedInventory.Product.IsDeleted == true)
+        if(selectedInventory.Product.IsDeleted == true || selectedInventory.Product.IsApproved == false)
             {
-                MessageBox.Show("Sản phẩm không còn để sửa!");
+                MessageBox.Show("Sản phẩm không còn để sửa hoặc chưa được duyệt!");
                 return;
             }
             else
@@ -280,6 +300,11 @@ namespace WPF.Supplier
    
         private void DeleteInventory_Click(object sender, RoutedEventArgs e)
         {
+            supplierService = new();
+            productService = new();
+            warehousesService = new();
+            inventoryService = new();
+
             var selectedInventory = (Inventory)InventoryDataGrid.SelectedItem;
             if (selectedInventory != null)
             {
@@ -516,6 +541,10 @@ namespace WPF.Supplier
 
         private void ExportBtn_Click(object sender, RoutedEventArgs e)
         {
+            supplierService = new();
+            productService = new();
+            warehousesService = new();
+            inventoryService = new();
             try
             {
                 warehouse = WarehouseComboBox.SelectedItem as Warehouse;

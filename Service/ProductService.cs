@@ -104,13 +104,14 @@ namespace Service
 
             return lstDis;
         }
+
         public List<Product> GetAllProductsBySupplierIdForExport(int id)
         {
             var lst = repository.GetAll();
             var lstDis = new List<Product>();
             foreach (Product items in lst)
             {
-                if (items.SupplierId == id && items.IsApproved == true)
+                if (items.SupplierId == id )
                 {
                     lstDis.Add(items);
                 }

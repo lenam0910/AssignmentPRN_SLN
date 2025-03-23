@@ -160,13 +160,13 @@ namespace WPF.Supplier
 
                 if (!string.IsNullOrEmpty(selectedProduct.Avatar))
                 {
+                    imgProduct.Visibility = Visibility.Visible;
                     imgProduct.Source = new BitmapImage(new Uri(selectedProduct.Avatar));
                 }
                 else
                 {
                     imgProduct.Source = null;
                 }
-                imgProduct.Visibility = Visibility.Visible;
                 addProduct.Visibility = Visibility.Collapsed;
                 stpBtn.Visibility = Visibility.Visible;
             }
@@ -258,23 +258,28 @@ namespace WPF.Supplier
                 product.Description = txtDescription.Text?.Trim();
                 product.IsApproved = false;
 
-           
+
                 if (!string.IsNullOrEmpty(destinationPath))
                 {
                     product.Avatar = destinationPath;
+                    saveAvatar();
+                }
+                else
+                {
+                    product.Avatar = null;
                 }
 
-       
+
+
                 if (productService.UpdaterProduct(product))
                 {
-                    saveAvatar();
                     Title.Text = "Thêm Sản Phẩm";
                     addProduct.Visibility = Visibility.Visible;
                     stpBtn.Visibility = Visibility.Collapsed;
                     imgProduct.Visibility = Visibility.Collapsed;
                     clear();
                     LoadData();
-                    MessageBox.Show("Sửa thông tin sản phẩm thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Sửa thông tin sản phẩm thành công! Hãy chờ duyệt!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {

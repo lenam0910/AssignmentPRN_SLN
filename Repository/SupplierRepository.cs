@@ -18,7 +18,7 @@ namespace Repository
         }
         public Supplier GetSupplierByIdUser(int id)
         {
-            return _context.Suppliers.Include(x => x.Users).FirstOrDefault(x => x.Users.Any(x => x.UserId == id));
+            return _context.Suppliers.AsNoTracking().Include(x => x.Users).FirstOrDefault(x => x.Users.Any(x => x.UserId == id));
         }
 
         public Supplier GetSupplierById(int id)

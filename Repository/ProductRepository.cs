@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
@@ -34,7 +35,7 @@ namespace Repository
         }
         public List<Product> GetAll()
         {
-            return _prnContext.Products.ToList();
+            return _prnContext.Products.AsNoTracking().ToList();
         }
 
     }

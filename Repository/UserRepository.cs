@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
@@ -57,7 +58,7 @@ namespace Repository
 
         public User getbyid(int id)
         {
-            return _context.Users.FirstOrDefault(x => x.UserId == id);
+            return _context.Users.AsNoTracking().FirstOrDefault(x => x.UserId == id);
         }
         public bool Update(User u)
         {

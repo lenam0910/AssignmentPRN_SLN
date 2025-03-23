@@ -17,7 +17,7 @@
         <TextBlock Grid.Row="0" Text="Phân Phối Hàng" FontSize="24" FontWeight="Bold" Foreground="#37474F" HorizontalAlignment="Center" Margin="10" Grid.ColumnSpan="2"/>
 
         <DataGrid x:Name="InventoryDataGrid" AutoGenerateColumns="False" Height="300" Margin="20" SelectionMode="Single" Grid.Column="0" Grid.Row="1" CanUserAddRows="False"
-                  IsReadOnly="True" SelectionChanged="InventoryDataGrid_SelectionChanged">
+                  IsReadOnly="True" SelectionChanged="InventoryDataGrid_SelectionChanged" >
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Sản phẩm" Binding="{Binding Product.ProductName}" Width="2*"/>
                 <DataGridTextColumn Header="Số lượng" Binding="{Binding Quantity}" Width="*"/>
