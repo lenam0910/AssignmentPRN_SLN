@@ -44,7 +44,7 @@ namespace WPF.Admin
 
         private void btnProducts_Click(object sender, RoutedEventArgs e)
         {
-            MainFrame.Navigate (new ManageProducts());
+            MainFrame.Navigate(new ManageProducts());
         }
 
         private void btnWarehouses_Click(object sender, RoutedEventArgs e)

@@ -30,22 +30,24 @@ namespace WPF.User
         private InventoryService inventoryService;
         public OrdersPage()
         {
-            inventoryService = new InventoryService();
-            productService = new ProductService();
-            orderDetailService = new OrderDetailService();
-            orderService = new OrderService();
+            
             user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             InitializeComponent();
         }
 
         private void load()
         {
+            inventoryService = new InventoryService();
+            productService = new ProductService();
+            orderDetailService = new OrderDetailService();
+            orderService = new OrderService();
             order = orderService.GetOrderByUserId(user.UserId);
             if (order == null)
             {
                 MessageBox.Show("Bạn chưa thêm đơn hàng nào!");
                 return;
             }
+
             var lstOrder = orderDetailService.GetAllOrders();
             decimal total = 0;
 
@@ -54,7 +56,7 @@ namespace WPF.User
                 var item = lstOrder[i];
                 if (item.OrderId != order.OrderId)
                 {
-                    lstOrder.RemoveAt(i); 
+                    lstOrder.RemoveAt(i);
                 }
                 else
                 {
@@ -62,22 +64,35 @@ namespace WPF.User
                 }
             }
 
-            var lstProduct = productService.GetAllProducts();
-            foreach (var item in lstOrder)
+            var lstProduct = inventoryService.GetInventoryList();
+
+            for (int i = lstOrder.Count - 1; i >= 0; i--)
             {
-                foreach (var item2 in lstProduct)
+                var orderItem = lstOrder[i];
+                bool productExistsAndNotDeleted = false;
+
+                foreach (var product in lstProduct)
                 {
-                    if (item.ProductId == item2.ProductId)
+                    if (product.ProductId == orderItem.ProductId && product.IsDeleted != true)
                     {
-                        item.Product = item2;
+                        productExistsAndNotDeleted = true;
+                        orderItem.Product = product.Product;
+                        break;
                     }
+                }
+
+                if (!productExistsAndNotDeleted)
+                {
+                    total -= orderItem.PriceAtOrder;
+                    orderItem.IsDeleted = true;
+                    orderDetailService.UpdateOrderDetail(orderItem); 
+                    lstOrder.RemoveAt(i);
                 }
             }
 
             OrdersListView.ItemsSource = lstOrder;
             TotalAmountText.Text = "Tổng tiền: " + total + "đ";
         }
-
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             load();
@@ -85,6 +100,10 @@ namespace WPF.User
 
         public int getQuantityProduct(int ProductId, int warehouseId)
         {
+            inventoryService = new InventoryService();
+            productService = new ProductService();
+            orderDetailService = new OrderDetailService();
+            orderService = new OrderService();
             var inventory = inventoryService.GetInventoryByWarehousesID(warehouseId);
             int quantity = 0;
 
@@ -101,8 +120,14 @@ namespace WPF.User
         }
         private void BuyNow_Click(object sender, RoutedEventArgs e)
         {
+            inventoryService = new InventoryService();
+            productService = new ProductService();
+            orderDetailService = new OrderDetailService();
+            orderService = new OrderService();
+
             var lstOrder = orderDetailService.GetAllOrders();
             decimal total = 0;
+
             for (int i = lstOrder.Count - 1; i >= 0; i--)
             {
                 var item = lstOrder[i];
@@ -115,16 +140,29 @@ namespace WPF.User
                     total += item.PriceAtOrder;
                 }
             }
+
             var lstProduct = inventoryService.GetInventoryList();
-            foreach (var item in lstOrder)
+
+            for (int i = lstOrder.Count - 1; i >= 0; i--)
             {
-                foreach (var item2 in lstProduct)
+                var orderItem = lstOrder[i];
+                bool productExistsAndNotDeleted = false;
+
+                foreach (var inventoryItem in lstProduct)
                 {
-                    if (item.ProductId == item2.ProductId)
+                    if (orderItem.ProductId == inventoryItem.ProductId && inventoryItem.IsDeleted != true)
                     {
-                        item2.Quantity -= item.Quantity;
-                        inventoryService.UpdateInventory(item2);
+                        productExistsAndNotDeleted = true;
+                        inventoryItem.Quantity -= orderItem.Quantity;
+                        inventoryService.UpdateInventory(inventoryItem);
+                        break; 
                     }
+                }
+
+                if (!productExistsAndNotDeleted)
+                {
+                    total -= orderItem.PriceAtOrder;
+                    lstOrder.RemoveAt(i);
                 }
             }
 
@@ -137,6 +175,10 @@ namespace WPF.User
 
         private void DeleteItem_Click(object sender, RoutedEventArgs e)
         {
+            inventoryService = new InventoryService();
+            productService = new ProductService();
+            orderDetailService = new OrderDetailService();
+            orderService = new OrderService();
             e.Handled = true;
             if (sender is System.Windows.Controls.Button button && button.DataContext is OrderDetail orderDetail)
             {
@@ -148,6 +190,10 @@ namespace WPF.User
 
         private void DecreaseQuantity_Click(object sender, RoutedEventArgs e)
         {
+            inventoryService = new InventoryService();
+            productService = new ProductService();
+            orderDetailService = new OrderDetailService();
+            orderService = new OrderService();
             e.Handled = true;
             if (sender is System.Windows.Controls.Button button && button.DataContext is OrderDetail orderDetail)
             {
@@ -163,6 +209,10 @@ namespace WPF.User
 
         private void IncreaseQuantity_Click(object sender, RoutedEventArgs e)
         {
+            inventoryService = new InventoryService();
+            productService = new ProductService();
+            orderDetailService = new OrderDetailService();
+            orderService = new OrderService();
             e.Handled = true;
             if (sender is System.Windows.Controls.Button button && button.DataContext is OrderDetail orderDetail)
             {

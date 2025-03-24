@@ -45,36 +45,26 @@ namespace WPF.User
         private void OrdersListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             order = OrdersListView.SelectedItem as Order;
-            var lstOrder = orderDetailService.GetAllOrders();
-            decimal total = 0;
-            foreach (var item in lstOrder)
-            {
-                if (item.OrderId != order.OrderId)
-                {
-                    lstOrder.Remove(item);
-                }
-                else
-                {
-                    total += item.PriceAtOrder;
-                }
-            }
+            if (order == null) return; 
+
+            var lstOrder = orderDetailService.GetAllOrders()
+                .Where(item => item.OrderId == order.OrderId)
+                .ToList();
+
+            decimal total = lstOrder.Sum(item => item.PriceAtOrder);
+
             var lstProduct = productService.GetAllProducts();
+
             foreach (var item in lstOrder)
             {
-                foreach (var item2 in lstProduct)
-                {
-                    if (item.ProductId == item2.ProductId)
-                    {
-                        item.Product = item2;
-                    }
-                }
+                item.Product = lstProduct.FirstOrDefault(p => p.ProductId == item.ProductId);
             }
+
             OrderIdText.Text = "Mã đơn hàng: " + order.OrderId;
             OrderDateText.Text = "Ngày đặt hàng: " + order.OrderDate;
             OrderStatusText.Text = "Trạng thái: " + order.Status;
             OrderDetailsDataGrid.ItemsSource = lstOrder;
             ProductListView.Visibility = Visibility.Visible;
-
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)

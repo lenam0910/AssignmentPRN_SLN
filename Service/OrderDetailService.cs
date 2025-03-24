@@ -50,14 +50,14 @@ namespace Service
             }
             return lstDpl;
         }
-        public OrderDetail GetOrdersDetailByProductIdAndOrderID(int productId, int orderId)
+        public OrderDetail GetOrdersDetailByOrderidAndWarehouseID(int warehouseId, int orderId)
         {
-            var lst = repository.getAll(); // Lấy toàn bộ danh sách OrderDetail từ database
+            var lst = repository.getAll(); 
             foreach (var item in lst)
             {
-                if (item.ProductId == productId && item.OrderId == orderId && item.IsDeleted ==false)
+                if (item.WarehouseId == warehouseId && item.OrderId == orderId && item.IsDeleted ==false )
                 {
-                    return item; // Trả về đối tượng đúng
+                    return item; 
                 }
             }
             return null;

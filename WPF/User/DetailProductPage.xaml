@@ -17,28 +17,28 @@
        
         <!-- Hình ảnh sản phẩm -->
         <Border Grid.Column="0" Background="White" Padding="8" CornerRadius="8">
-            <Image Source="{Binding Avatar}" Width="200" Height="200" Stretch="UniformToFill"/>
+            <Image Source="{Binding Product.Avatar}" Width="200" Height="200" Stretch="UniformToFill"/>
         </Border>
         <Button Content="🔙 Trở về" Background="Transparent" Foreground="#2C3E50" FontSize="14"
      HorizontalAlignment="Left" VerticalAlignment="Top" Padding="10,5" Margin="10"
      Click="GoBack_Click"/>
         <!-- Thông tin sản phẩm -->
         <StackPanel Grid.Column="1" Background="White" Margin="10,0,0,0" VerticalAlignment="Center">
-            <TextBlock Text="{Binding ProductName}" FontSize="20" FontWeight="Bold" Foreground="#2C3E50"/>
+            <TextBlock Text="{Binding Product.ProductName}" FontSize="20" FontWeight="Bold" Foreground="#2C3E50"/>
             <TextBlock>
                 <Run Text="Giá: " FontSize="18" FontWeight="Bold" Foreground="#2C3E50"/>
-                <Run Text="{Binding Price, StringFormat=C0}" FontSize="18" FontWeight="Bold" Foreground="#E74C3C"/>
+                <Run Text="{Binding Product.Price, StringFormat=C0}" FontSize="18" FontWeight="Bold" Foreground="#E74C3C"/>
             </TextBlock>
             <TextBlock>
                 <Run Text="Kho: " FontSize="14" FontWeight="Bold" Foreground="#2C3E50"/>
-                <Run Text="{Binding QuantityInStock}" FontSize="14" Foreground="#7D7D7D"/>
+                <Run Text="{Binding Quantity}" FontSize="14" Foreground="#7D7D7D"/>
             </TextBlock>
             <TextBlock>
                 <Run Text="Nhà cung cấp: " FontSize="14" FontWeight="Bold" Foreground="#2C3E50"/>
-                <Run Text="{Binding Supplier.Name}" FontSize="14" Foreground="#7D7D7D"/>
+                <Run Text="{Binding Supplier.SupplierName}" FontSize="14" Foreground="#7D7D7D"/>
             </TextBlock>
             <TextBlock Text="Mô tả sản phẩm:" FontSize="14" FontWeight="Bold" Margin="0,8,0,4"/>
-            <TextBlock Text="{Binding Description}" FontSize="12" TextWrapping="Wrap" Foreground="#2C3E50" MaxWidth="400"/>
+            <TextBlock Text="{Binding Product.Description}" FontSize="12" TextWrapping="Wrap" Foreground="#2C3E50" MaxWidth="400"/>
 
             <!-- Ô chỉnh sửa số lượng -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,12,0,12">

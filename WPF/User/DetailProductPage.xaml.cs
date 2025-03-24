@@ -25,30 +25,31 @@ namespace WPF.User
         private OrderService orderService;
         private OrderDetailService orderDetailService;
         private ProductService productService;
-        private Product productRoot;
+        private Inventory inventoryRoot;
         private SupplierService supplierService;
         private InventoryService inventoryService;
         private OrderDetail orderDetail;
         private int selectedQuantity = 0;
         private DataAccess.Models.User user;
 
-        public DetailProductPage(Product product)
+        public DetailProductPage(Inventory inventory)
         {
             user = System.Windows.Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
-            orderDetailService = new OrderDetailService();
-            orderService = new OrderService();
-            inventoryService = new InventoryService();
-            supplierService = new SupplierService();
-            productService = new ProductService();
-            this.productRoot = product;
+           
+            this.inventoryRoot = inventory;
             InitializeComponent();
             selectedQuan.Text = selectedQuantity.ToString();
         }
 
         private void BuyNow_Click(object sender, RoutedEventArgs e)
         {
+            orderDetailService = new OrderDetailService();
+            orderService = new OrderService();
+            inventoryService = new InventoryService();
+            supplierService = new SupplierService();
+            productService = new ProductService();
             int quantity = 1;
-            int getQuantityInven = inventoryService.getTotalQuantityByProductId(productRoot.ProductId);
+            int getQuantityInven = inventoryService.getTotalQuantityByProductId(inventoryRoot.ProductId);
 
 
 
@@ -64,7 +65,8 @@ namespace WPF.User
                 }
             }
 
-            OrderDetail orderDetail = orderDetailService.GetOrdersDetailByProductIdAndOrderID(productRoot.ProductId, order.OrderId);
+            OrderDetail orderDetail = orderDetailService.GetOrdersDetailByOrderidAndWarehouseID(inventoryRoot.Warehouse.WarehouseId, order.OrderId);
+
             if (orderDetail == null)
             {
                 if (quantity > getQuantityInven)
@@ -75,10 +77,10 @@ namespace WPF.User
                 orderDetail = new OrderDetail
                 {
                     OrderId = order.OrderId,
-                    ProductId = productRoot.ProductId,
-                    WarehouseId = productRoot.CategoryId,
+                    ProductId = inventoryRoot.ProductId,
+                    WarehouseId = inventoryRoot.WarehouseId,
                     Quantity = quantity,
-                    PriceAtOrder = quantity * productRoot.Price
+                    PriceAtOrder = quantity * inventoryRoot.Product.Price
                 };
 
                 if (orderDetailService.AddOrderDetail(orderDetail))
@@ -95,7 +97,7 @@ namespace WPF.User
                     return;
                 }
                 orderDetail.Quantity = quantity + orderDetail.Quantity;
-                orderDetail.PriceAtOrder = orderDetail.Quantity * productRoot.Price;
+                orderDetail.PriceAtOrder = orderDetail.Quantity * inventoryRoot.Product.Price;
 
                 if (orderDetailService.UpdateOrderDetail(orderDetail))
                 {
@@ -107,6 +109,11 @@ namespace WPF.User
 
         private void AddToCart_Click(object sender, RoutedEventArgs e)
         {
+            orderDetailService = new OrderDetailService();
+            orderService = new OrderService();
+            inventoryService = new InventoryService();
+            supplierService = new SupplierService();
+            productService = new ProductService();
             int quantity = int.Parse(selectedQuan.Text);
 
             Order order = orderService.GetOrderByUserId(user.UserId);
@@ -120,16 +127,16 @@ namespace WPF.User
                 }
             }
 
-             orderDetail = orderDetailService.GetOrdersDetailByProductIdAndOrderID(productRoot.ProductId, order.OrderId);
+            orderDetail = orderDetailService.GetOrdersDetailByOrderidAndWarehouseID(inventoryRoot.Warehouse.WarehouseId, order.OrderId);
             if (orderDetail == null)
             {
                 orderDetail = new OrderDetail
                 {
                     OrderId = order.OrderId,
-                    ProductId = productRoot.ProductId,
-                    WarehouseId = productRoot.CategoryId,
+                    ProductId = inventoryRoot.ProductId,
+                    WarehouseId = inventoryRoot.WarehouseId,
                     Quantity = quantity,
-                    PriceAtOrder = quantity * productRoot.Price
+                    PriceAtOrder = quantity * inventoryRoot.Product.Price
                 };
 
                 if (orderDetailService.AddOrderDetail(orderDetail))
@@ -141,7 +148,7 @@ namespace WPF.User
             else
             {
                 orderDetail.Quantity = quantity ;
-                orderDetail.PriceAtOrder = orderDetail.Quantity * productRoot.Price;
+                orderDetail.PriceAtOrder = orderDetail.Quantity * inventoryRoot.Product.Price;
 
                 if (orderDetailService.UpdateOrderDetail(orderDetail))
                 {
@@ -158,22 +165,12 @@ namespace WPF.User
 
         private void load()
         {
-            var lstSup = supplierService.GetAllSuppliers();
-            var lstInven = inventoryService.GetInventoryList();
-            foreach (DataAccess.Models.Supplier item in lstSup)
-            {
-                if (item.SupplierId == productRoot.SupplierId)
-                {
-                    productRoot.Supplier = item;
-                }
-            }
-            foreach (DataAccess.Models.Inventory item in lstInven)
-            {
-                if (item.ProductId == productRoot.ProductId)
-                {
-                    productRoot.QuantityInStock = item.Quantity;
-                }
-            }
+            orderDetailService = new OrderDetailService();
+            orderService = new OrderService();
+            inventoryService = new InventoryService();
+            supplierService = new SupplierService();
+            productService = new ProductService();
+            
             Order order = orderService.GetOrderByUserId(user.UserId);
             if (order == null)
             {
@@ -185,13 +182,22 @@ namespace WPF.User
                 }
             }
 
-             orderDetail = orderDetailService.GetOrdersDetailByProductIdAndOrderID(productRoot.ProductId, order.OrderId);
+             orderDetail = orderDetailService.GetOrdersDetailByOrderidAndWarehouseID(inventoryRoot.Warehouse.WarehouseId, order.OrderId);
             if (orderDetail != null)
             {
                 selectedQuantity = orderDetail.Quantity;
                 selectedQuan.Text = selectedQuantity.ToString();
             }
-            this.DataContext = productRoot;
+            var supplier = supplierService.GetAllSuppliers();
+            foreach (var item in supplier)
+            {
+                if (item.SupplierId == inventoryRoot.Product.SupplierId)
+                {
+                    inventoryRoot.Product.Supplier = item;
+                    break;
+                }
+            }   
+            this.DataContext = inventoryRoot;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -201,7 +207,7 @@ namespace WPF.User
 
         private void IncreaseQuantity(object sender, RoutedEventArgs e)
         {
-            if (selectedQuantity < productRoot.QuantityInStock)
+            if (selectedQuantity < inventoryRoot.Product.QuantityInStock)
             {
                 selectedQuantity++;
                 selectedQuan.Text = selectedQuantity.ToString();

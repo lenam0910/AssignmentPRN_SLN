@@ -45,16 +45,13 @@
                                     <ColumnDefinition Width="260"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Ảnh sản phẩm -->
-                                <Image Source="{Binding Avatar}" Width="90" Height="90" Grid.Column="0" Stretch="UniformToFill" Margin="5"/>
+                                <Image Source="{Binding Product.Avatar}" Width="90" Height="90" Grid.Column="0" Stretch="UniformToFill" Margin="5"/>
 
-                                <!-- Thông tin sản phẩm -->
                                 <StackPanel Grid.Column="1" Margin="10,0,0,0">
-                                    <TextBlock Text="{Binding ProductName}" FontSize="16" FontWeight="Bold"/>
-                                    <TextBlock Text="{Binding Price, StringFormat='Giá: {0:C}'}" FontSize="14" Foreground="#E74C3C" Margin="0,5,0,0"/>
+                                    <TextBlock Text="{Binding Product.ProductName}" FontSize="16" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding Product.Price, StringFormat='Giá: {0:C}'}" FontSize="14" Foreground="#E74C3C" Margin="0,5,0,0"/>
                                 </StackPanel>
 
-                                <!-- Khu vực chọn số lượng và thêm vào giỏ -->
                                 <StackPanel Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
                                     <Button Content="🛒 Thêm hàng" Background="#3498DB" Foreground="White" 
                                     FontSize="14" Width="110" Height="35" 

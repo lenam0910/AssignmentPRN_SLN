@@ -41,7 +41,6 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Sidebar Navigation -->
         <StackPanel Background="#2C3E50" Width="240" >
             <Border CornerRadius="50" Background="White" Width="120" Height="120" HorizontalAlignment="Center">
                 <Image x:Name="avaSupplier" Width="100" Height="100" Margin="10" ClipToBounds="True" Stretch="UniformToFill"/>

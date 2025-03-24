@@ -42,16 +42,11 @@ namespace WPF.User
         private WarehousesService WarehousesService;
         public ShoppingPage()
         {
-            WarehousesService = new WarehousesService();
-            orderDetailService = new OrderDetailService();
-            orderService = new OrderService();
+         
             user = System.Windows.Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
-            categoryService = new CategoryService();
             chatBotAI = new();
-            supplierService = new SupplierService();
-            inventoryService = new InventoryService();
+           
             chatHistory = new StringBuilder();
-            productService = new ProductService();
             InitializeComponent();
         }
 
@@ -113,32 +108,28 @@ namespace WPF.User
         }
         private void load()
         {
+            productService = new ProductService();
+            inventoryService = new InventoryService();
+            categoryService = new();
+
             var inventory = inventoryService.GetInventoryList();
             var products = productService.GetAllProducts();
-            var lstDisplay = new List<Product>();
-            if (products == null || !products.Any())
+
+            if (inventory == null || !inventory.Any())
             {
                 MessageBox.Show("Danh sách sản phẩm trống!");
+                return; 
             }
-            foreach (Product product in products)
-            {
-                foreach (Inventory item in inventory)
-                {
 
-                    if (item.ProductId == product.ProductId)
-                    {
-                        lstDisplay.Add(product);
-                    }
-                }
-            }
+           
+
             CategoryFilter.ItemsSource = categoryService.getAll();
             CategoryFilter.DisplayMemberPath = "CategoryName";
             CategoryFilter.SelectedValuePath = "CategoryId";
-            lstProduct.ItemsSource = lstDisplay;
-         
+            lstProduct.ItemsSource = inventory;
+
             CategoryFilter.SelectedItem = null;
         }
-
         private void Page_Loaded_1(object sender, RoutedEventArgs e)
         {
             load();
@@ -146,10 +137,11 @@ namespace WPF.User
 
         private async void lstProduct_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Product product = lstProduct.SelectedItem as Product;
+
+            Inventory product = lstProduct.SelectedItem as Inventory;
             if (product != null)
             {
-                string input = $"GIới thiệu ngắn gọn về ưu điểm và nhược điểm của sản phẩm" + product.ProductName + " này cho tôi, bạn với tư cách một người tư vấn sản phẩm";
+                string input = $"GIới thiệu ngắn gọn về ưu điểm và nhược điểm của sản phẩm" + product.Product.ProductName + " này cho tôi, bạn với tư cách một người tư vấn sản phẩm";
                 await helpBot(input);
                 ChatGptPopup.Visibility = Visibility.Visible;
                 OpenChatButton.Visibility = Visibility.Collapsed;
@@ -162,32 +154,19 @@ namespace WPF.User
 
 
 
-        public int getWarehouseByProductId(int ProductId)
-        {
-            var inventory = inventoryService.GetInventoryList();
-            var products = productService.GetAllProducts();
-            if (products == null || !products.Any())
-            {
-                MessageBox.Show("Danh sách sản phẩm trống!");
-            }
-            foreach (Product product in products)
-            {
-                foreach (Inventory item in inventory)
-                {
-                    if (item.ProductId == product.ProductId && product.ProductId == ProductId)
-                    {
-                        return item.WarehouseId;
-                    }
-                }
-            }
-            return 0;
-        }
+        
 
         private void BuyNowButton_Click(object sender, RoutedEventArgs e)
         {
             e.Handled = true;
-
-            if (sender is System.Windows.Controls.Button button && button.DataContext is Product selectedProduct)
+            categoryService = new CategoryService();
+            productService = new ProductService();
+            supplierService = new SupplierService();
+            inventoryService = new InventoryService();
+            WarehousesService = new WarehousesService();
+            orderDetailService = new OrderDetailService();
+            orderService = new OrderService();
+            if (sender is System.Windows.Controls.Button button && button.DataContext is Inventory selectedProduct)
             {
                 int quantity = 1;
                 int getQuantityInven = inventoryService.getTotalQuantityByProductId(selectedProduct.ProductId);
@@ -202,11 +181,11 @@ namespace WPF.User
                     if (orderService.addOrder(order))
                     {
                         MessageBox.Show("Tạo giỏ hàng mới thành công!");
-                        order = orderService.GetOrderByUserId(user.UserId); // Lấy lại Order sau khi thêm
+                        order = orderService.GetOrderByUserId(user.UserId); 
                     }
                 }
 
-                OrderDetail orderDetail = orderDetailService.GetOrdersDetailByProductIdAndOrderID(selectedProduct.ProductId, order.OrderId);
+                OrderDetail orderDetail = orderDetailService.GetOrdersDetailByOrderidAndWarehouseID(selectedProduct.Warehouse.WarehouseId, order.OrderId);
                 if (orderDetail == null)
                 {
                     if (quantity > getQuantityInven)
@@ -218,9 +197,9 @@ namespace WPF.User
                     {
                         OrderId = order.OrderId,
                         ProductId = selectedProduct.ProductId,
-                        WarehouseId = getWarehouseByProductId(selectedProduct.ProductId),
+                        WarehouseId = selectedProduct.Warehouse.WarehouseId,
                         Quantity = quantity,
-                        PriceAtOrder = quantity * selectedProduct.Price
+                        PriceAtOrder = quantity * selectedProduct.Product.Price
                     };
 
                     if (orderDetailService.AddOrderDetail(orderDetail))
@@ -237,7 +216,7 @@ namespace WPF.User
                         return;
                     }
                     orderDetail.Quantity = quantity + orderDetail.Quantity;
-                    orderDetail.PriceAtOrder = orderDetail.Quantity * selectedProduct.Price;
+                    orderDetail.PriceAtOrder = orderDetail.Quantity * selectedProduct.Product.Price;
 
                     if (orderDetailService.UpdateOrderDetail(orderDetail))
                     {
@@ -252,6 +231,13 @@ namespace WPF.User
 
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
+            categoryService = new CategoryService();
+            productService = new ProductService();
+            supplierService = new SupplierService();
+            inventoryService = new InventoryService();
+            WarehousesService = new WarehousesService();
+            orderDetailService = new OrderDetailService();
+            orderService = new OrderService();
             if (string.IsNullOrEmpty(SearchBox.Text))
             {
                 load();
@@ -294,6 +280,13 @@ namespace WPF.User
 
         private void CategoryFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            categoryService = new CategoryService();
+            productService = new ProductService();
+            supplierService = new SupplierService();
+            inventoryService = new InventoryService();
+            WarehousesService = new WarehousesService();
+            orderDetailService = new OrderDetailService();
+            orderService = new OrderService();
             if (CategoryFilter.SelectedItem == null)
             {
                 load();
@@ -338,10 +331,9 @@ namespace WPF.User
         {
             e.Handled = true;
 
-            if (sender is System.Windows.Controls.Button button && button.DataContext is Product selectedProduct)
+            if (sender is System.Windows.Controls.Button button && button.DataContext is Inventory selectedInventory)
             {
-                NavigationService?.Navigate(new DetailProductPage(selectedProduct));
-
+                NavigationService?.Navigate(new DetailProductPage(selectedInventory));
             }
         }
     }
