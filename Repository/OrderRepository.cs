@@ -31,7 +31,7 @@ namespace Repository
 
         public List<Order> GetAllOrders()
         {
-            return _prnContext.Orders.ToList();
+            return _prnContext.Orders.Include(x=> x.OrderDetails).AsNoTracking().ToList();
         }
 
         public List<Order> GetAllOrdersInfor()

@@ -21,7 +21,7 @@ namespace Repository
         }
         public List<OrderDetail> getAll()
         {
-            return _prnContext.OrderDetails.ToList();
+            return _prnContext.OrderDetails.AsNoTracking().ToList();
         }
 
         public OrderDetail get(int id)

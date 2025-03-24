@@ -42,11 +42,12 @@ namespace WPF.User
             orderDetailService = new OrderDetailService();
             orderService = new OrderService();
             order = orderService.GetOrderByUserId(user.UserId);
-            if (order == null)
+            if (order == null || order.OrderDetails == null)
             {
                 MessageBox.Show("Bạn chưa thêm đơn hàng nào!");
                 return;
             }
+
 
             var lstOrder = orderDetailService.GetAllOrders();
             decimal total = 0;
@@ -124,6 +125,11 @@ namespace WPF.User
             productService = new ProductService();
             orderDetailService = new OrderDetailService();
             orderService = new OrderService();
+            if (order == null || order.OrderDetails == null)
+            {
+                MessageBox.Show("Bạn chưa có đơn hàng nào để thanh toán!");
+                return;
+            }
 
             var lstOrder = orderDetailService.GetAllOrders();
             decimal total = 0;
@@ -154,8 +160,9 @@ namespace WPF.User
                     {
                         productExistsAndNotDeleted = true;
                         inventoryItem.Quantity -= orderItem.Quantity;
+                        inventoryItem.Product = null;
+                        inventoryItem.Supplier = null; 
                         inventoryService.UpdateInventory(inventoryItem);
-                        break; 
                     }
                 }
 
