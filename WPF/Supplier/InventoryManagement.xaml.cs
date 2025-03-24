@@ -305,7 +305,8 @@ namespace WPF.Supplier
             warehousesService = new();
             inventoryService = new();
 
-            var selectedInventory = (Inventory)InventoryDataGrid.SelectedItem;
+            var button = sender as Button;
+            var selectedInventory = button?.DataContext as Inventory;
             if (selectedInventory != null)
             {
                 warehouse = (Warehouse)WarehouseComboBox.SelectedItem;

@@ -199,7 +199,11 @@ namespace WPF.Supplier
                 MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}");
             }
         }
-
+        private string HashPassword(string password)
+        {
+            return Convert.ToBase64String(System.Security.Cryptography.SHA256.Create()
+                .ComputeHash(System.Text.Encoding.UTF8.GetBytes(password)));
+        }
         private void SaveUser_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -237,7 +241,8 @@ namespace WPF.Supplier
                 // Chỉ cập nhật mật khẩu nếu người dùng nhập mật khẩu mới
                 if (!string.IsNullOrWhiteSpace(txtPassword.Password))
                 {
-                    user.Password = txtPassword.Password;
+                    string hassPass = HashPassword(txtPassword.Password);
+                    user.Password = hassPass;
                 }
 
                 // Cập nhật Avatar nếu có thay đổi

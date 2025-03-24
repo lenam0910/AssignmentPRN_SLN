@@ -139,7 +139,8 @@ namespace WPF.User
                 // Chỉ cập nhật mật khẩu nếu người dùng nhập mật khẩu mới
                 if (!string.IsNullOrWhiteSpace(txtPassword.Password))
                 {
-                    user.Password = txtPassword.Password;
+                    string hassPass = HashPassword(txtPassword.Password);
+                    user.Password = hassPass;
                 }
 
                 // Cập nhật ảnh đại diện nếu có thay đổi
@@ -171,13 +172,17 @@ namespace WPF.User
             }
         }
 
-        // Kiểm tra định dạng email hợp lệ
+        private string HashPassword(string password)
+        {
+            return Convert.ToBase64String(System.Security.Cryptography.SHA256.Create()
+                .ComputeHash(System.Text.Encoding.UTF8.GetBytes(password)));
+        }
         private bool IsValidEmail(string email)
         {
             return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
         }
 
-        // Kiểm tra định dạng số điện thoại hợp lệ (Việt Nam: 10 chữ số)
+
         private bool IsValidPhoneNumber(string phoneNumber)
         {
             return Regex.IsMatch(phoneNumber, @"^0\d{9}$");

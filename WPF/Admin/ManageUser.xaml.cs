@@ -101,14 +101,19 @@ namespace WPF.Admin
                 MessageBox.Show("Hãy chọn trong bảng trước khi xóa!");
             }
         }
-
+        private string HashPassword(string password)
+        {
+            return Convert.ToBase64String(System.Security.Cryptography.SHA256.Create()
+                .ComputeHash(System.Text.Encoding.UTF8.GetBytes(password)));
+        }
         private void SaveUser_Click(object sender, RoutedEventArgs e)
         {
             DataAccess.Models.User user = new DataAccess.Models.User();
             user.FullName = fullname.Text;
             user.Email = email.Text;
             user.Username = username.Text;
-            user.Password = password.Password;
+            string hassPass = HashPassword(password.Password);
+            user.Password = hassPass;
             user.RoleId = (int)roleComboBox.SelectedValue;
             if (UserService.CreateUser(user))
             {
