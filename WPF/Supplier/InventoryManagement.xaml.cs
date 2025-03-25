@@ -260,7 +260,34 @@ namespace WPF.Supplier
             EditBtn.Visibility = Visibility.Collapsed;
 
         }
-        
+        private void clear2()
+        {
+            txtProductName.ItemsSource = productService.GetAllProductsBySupplierId(supplier.SupplierId);
+            txtProductName.DisplayMemberPath = "ProductName";
+            txtProductName.SelectedValuePath = "ProductId";
+            product = null;
+            warehouse = null;
+            txtProductName.SelectedValue = null;
+            txtQuantity.Clear();
+            txtStockStatus.SelectedValue = null;
+            txtRemain.Text = "";
+            txtProductName.IsEnabled = true;
+            txtStockStatus.IsEnabled = true;
+            WarehouseComboBox.IsEnabled = true;
+            ExportBtn.Visibility = Visibility.Collapsed;
+            SaveBtn.Visibility = Visibility.Visible;
+            OtherWareHouse.Visibility = Visibility.Collapsed;
+            ProductStack.Visibility = Visibility.Collapsed;
+            status.Visibility = Visibility.Visible;
+            txtStockStatus.SelectedValue = null;
+            InventoryDataGrid.ItemsSource = null;
+            txtRemain.Text = "";
+            txtOtherWarehouse.IsEnabled = true;
+            txtOtherWarehouse.SelectedValue = null;
+            EditBtn.Visibility = Visibility.Collapsed;
+
+        }
+
         private void EditInventory_Click(object sender, RoutedEventArgs e)
         {
             supplierService = new();
@@ -337,7 +364,7 @@ namespace WPF.Supplier
                                 var selectedWarehouse = (int)WarehouseComboBox.SelectedValue;
                                 if (selectedWarehouse != null)
                                 {
-                                    clear();
+                                    clear2  ();
                                     loadInvetory(selectedWarehouse);
                                 }
                                 MessageBox.Show("Đã xóa kho hàng.");

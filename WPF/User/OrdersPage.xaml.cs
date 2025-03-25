@@ -17,9 +17,7 @@ using Service;
 
 namespace WPF.User
 {
-    /// <summary>
-    /// Interaction logic for OrdersPage.xaml
-    /// </summary>
+   
     public partial class OrdersPage : Page
     {
         private OrderService orderService;
@@ -42,12 +40,12 @@ namespace WPF.User
             orderDetailService = new OrderDetailService();
             orderService = new OrderService();
             order = orderService.GetOrderByUserId(user.UserId);
+
             if (order == null || order.OrderDetails == null)
             {
                 MessageBox.Show("Bạn chưa thêm đơn hàng nào!");
                 return;
             }
-
 
             var lstOrder = orderDetailService.GetAllOrders();
             decimal total = 0;
@@ -78,7 +76,6 @@ namespace WPF.User
                     {
                         productExistsAndNotDeleted = true;
                         orderItem.Product = product.Product;
-                        break;
                     }
                 }
 
@@ -86,14 +83,22 @@ namespace WPF.User
                 {
                     total -= orderItem.PriceAtOrder;
                     orderItem.IsDeleted = true;
-                    orderDetailService.UpdateOrderDetail(orderItem); 
+                    orderDetailService.UpdateOrderDetail(orderItem);
                     lstOrder.RemoveAt(i);
                 }
+            }
+
+        
+            if (lstOrder.Count == 0)
+            {
+                order.Status = "Đã bị hủy";
+                orderService.updateOrder(order);  
             }
 
             OrdersListView.ItemsSource = lstOrder;
             TotalAmountText.Text = "Tổng tiền: " + total + "đ";
         }
+
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             load();
@@ -125,9 +130,16 @@ namespace WPF.User
             productService = new ProductService();
             orderDetailService = new OrderDetailService();
             orderService = new OrderService();
+
             if (order == null || order.OrderDetails == null)
             {
                 MessageBox.Show("Bạn chưa có đơn hàng nào để thanh toán!");
+                return;
+            }
+
+            if (order.Status != "Chờ xử lý")
+            {
+                MessageBox.Show("Chỉ có thể thanh toán các đơn hàng có trạng thái 'Chờ xử lý'.");
                 return;
             }
 
@@ -161,7 +173,7 @@ namespace WPF.User
                         productExistsAndNotDeleted = true;
                         inventoryItem.Quantity -= orderItem.Quantity;
                         inventoryItem.Product = null;
-                        inventoryItem.Supplier = null; 
+                        inventoryItem.Supplier = null;
                         inventoryService.UpdateInventory(inventoryItem);
                     }
                 }
@@ -173,12 +185,14 @@ namespace WPF.User
                 }
             }
 
-            order.Status = "Đã Thanh Toán";
+            order.Status = "Đặt hàng thành công!";
+
             if (orderService.updateOrder(order))
             {
                 NavigationService?.Navigate(new TransactionsPage());
             }
         }
+
 
         private void DeleteItem_Click(object sender, RoutedEventArgs e)
         {

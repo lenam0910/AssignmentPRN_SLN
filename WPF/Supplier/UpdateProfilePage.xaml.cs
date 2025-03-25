@@ -208,7 +208,6 @@ namespace WPF.Supplier
         {
             try
             {
-                // Kiểm tra dữ liệu đầu vào
                 if (string.IsNullOrWhiteSpace(txtFullName.Text) ||
                     string.IsNullOrWhiteSpace(txtUserEmail.Text) ||
                     string.IsNullOrWhiteSpace(txtUserPhone.Text) ||
@@ -218,41 +217,35 @@ namespace WPF.Supplier
                     return;
                 }
 
-                // Kiểm tra email hợp lệ
                 if (!IsValidEmail(txtUserEmail.Text))
                 {
                     MessageBox.Show("Email không hợp lệ!");
                     return;
                 }
 
-                // Kiểm tra số điện thoại hợp lệ
                 if (!IsValidPhoneNumber(txtUserPhone.Text))
                 {
                     MessageBox.Show("Số điện thoại không hợp lệ!");
                     return;
                 }
 
-                // Cập nhật thông tin người dùng
                 user.FullName = txtFullName.Text.Trim();
                 user.Email = txtUserEmail.Text.Trim();
                 user.Phone = txtUserPhone.Text.Trim();
                 user.Address = txtUserAddress.Text.Trim();
 
-                // Chỉ cập nhật mật khẩu nếu người dùng nhập mật khẩu mới
                 if (!string.IsNullOrWhiteSpace(txtPassword.Password))
                 {
                     string hassPass = HashPassword(txtPassword.Password);
                     user.Password = hassPass;
                 }
 
-                // Cập nhật Avatar nếu có thay đổi
                 if (imgUserAvatar.Source != null && !string.IsNullOrEmpty(destinationPathUser))
                 {
                     DeleteOldUserAvatar();
                     user.Avatar = destinationPathUser;
                 }
 
-                // Gọi service để cập nhật
                 if (_userService.UpdateUser(user))
                 {
                     if (imgUserAvatar.Source != null)
@@ -272,13 +265,11 @@ namespace WPF.Supplier
             }
         }
 
-        // Kiểm tra email hợp lệ
         private bool IsValidEmail(string email)
         {
             return Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
         }
 
-        // Kiểm tra số điện thoại hợp lệ (Việt Nam: 10 chữ số)
         private bool IsValidPhoneNumber(string phoneNumber)
         {
             return Regex.IsMatch(phoneNumber, @"^0\d{9}$");

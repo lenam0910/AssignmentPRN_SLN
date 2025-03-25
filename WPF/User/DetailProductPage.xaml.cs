@@ -207,7 +207,7 @@ namespace WPF.User
 
         private void IncreaseQuantity(object sender, RoutedEventArgs e)
         {
-            if (selectedQuantity < inventoryRoot.Product.QuantityInStock)
+            if (selectedQuantity < inventoryRoot.Quantity)
             {
                 selectedQuantity++;
                 selectedQuan.Text = selectedQuantity.ToString();
