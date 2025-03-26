@@ -4,15 +4,12 @@
       Title="Orders History" Loaded="Page_Loaded">
 
     <Grid Background="#ECF0F1" Margin="10">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <!-- Cột danh sách order -->
-            <ColumnDefinition Width="*" />
-            <!-- Cột chi tiết order -->
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         
-        <!-- Danh sách đơn hàng -->
-        <StackPanel Grid.Column="0" Background="White">
+        <StackPanel Grid.Row="0" Background="White">
             <TextBlock Text="📦 Danh sách đơn hàng" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
 
             <DataGrid x:Name="OrdersListView" AutoGenerateColumns="False" SelectionChanged="OrdersListView_SelectionChanged" HeadersVisibility="Column">
@@ -25,7 +22,7 @@
         </StackPanel>
 
 
-        <StackPanel x:Name="ProductListView" Grid.Column="1" Background="White" Visibility="Collapsed" >
+        <StackPanel x:Name="ProductListView" Grid.Row="1" Background="White" Visibility="Collapsed" >
             <TextBlock Text="🛒 Chi tiết đơn hàng" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
 
             <TextBlock x:Name="OrderIdText" FontSize="16" FontWeight="Bold" Foreground="#2980B9" Margin="0,5"/>

@@ -72,19 +72,19 @@ namespace WPF.Admin
 
         private void OpenAddProductPopup(object sender, RoutedEventArgs e)
         {
+            cate.Visibility = Visibility.Visible;
+            sup.Visibility = Visibility.Visible;
             ProductPopup.Visibility = Visibility.Visible;
             ProductGrid.SelectedItem = null;
         }
 
         private void SaveProduct_Click(object sender, RoutedEventArgs e)
         {
-            // Lấy và làm sạch input
             string productName = txtProductName.Text.Trim();
             string priceText = txtProductPrice.Text.Trim();
             string quantityText = txtProductQuantity.Text.Trim();
             string description = txtProductDescription.Text.Trim();
 
-            // Validation cho ProductName
             if (string.IsNullOrEmpty(productName))
             {
                 MessageBox.Show("Tên sản phẩm không được để trống!");
@@ -96,28 +96,24 @@ namespace WPF.Admin
                 return;
             }
 
-            // Validation cho Price
             if (!decimal.TryParse(priceText, out decimal price) || price < 0)
             {
                 MessageBox.Show("Giá sản phẩm phải là số hợp lệ và không âm!");
                 return;
             }
 
-            // Validation cho QuantityInStock
             if (!int.TryParse(quantityText, out int quantity) || quantity < 0)
             {
                 MessageBox.Show("Số lượng tồn kho phải là số nguyên hợp lệ và không âm!");
                 return;
             }
 
-            // Validation cho Description (tùy chọn)
             if (description.Length > 500)
             {
                 MessageBox.Show("Mô tả không được dài quá 500 ký tự!");
                 return;
             }
 
-            // Validation cho CategoryId và SupplierId
             int categoryId = (int)cbCategories.SelectedValue;
             int supplierId = (int)cbSuppliers.SelectedValue;
             if (categoryId <= 0 || supplierId <= 0)
@@ -129,7 +125,6 @@ namespace WPF.Admin
             Product product = ProductGrid.SelectedItem as Product;
             if (product != null)
             {
-                // Cập nhật sản phẩm
                 product.ProductName = productName;
                 product.Price = price;
                 product.QuantityInStock = quantity;

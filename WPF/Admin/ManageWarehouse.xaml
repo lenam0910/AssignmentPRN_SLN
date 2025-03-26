@@ -4,19 +4,17 @@
       Title="Quản lý Kho Hàng" Background="#f8f9fa" Loaded="Page_Loaded">
     <Grid Margin="20">
 
-        <!-- Tiêu đề -->
         <StackPanel Orientation="Vertical" Margin="0,0,0,5" VerticalAlignment="Top" HorizontalAlignment="Center">
             <TextBlock Text="Danh sách kho hàng" FontSize="22" FontWeight="Bold" Foreground="#333" 
                        HorizontalAlignment="Center" Margin="0,0,0,10"/>
             <StackPanel Orientation="Horizontal" Margin="0,0,400,0">
                 <TextBlock Text="Chọn nhà cung cấp: " FontSize="14" VerticalAlignment="Center"/>
-                <ComboBox x:Name="SupplierComboBox" Width="256" Height="30"  
+                <ComboBox x:Name="SupplierComboBox" Width="150" Height="30"  
                           SelectionChanged="SupplierComboBox_SelectionChanged" 
                           FontWeight="Bold" FontSize="14"/>
             </StackPanel>
         </StackPanel>
 
-        <!-- DataGrid hiển thị kho hàng -->
         <DataGrid x:Name="WarehouseGrid" AutoGenerateColumns="False" IsReadOnly="True" 
                   SelectionMode="Single" AlternatingRowBackground="#e9ecef"
                   GridLinesVisibility="None" BorderThickness="1" BorderBrush="#ced4da" 
@@ -47,7 +45,6 @@
                 </StackPanel>
             </StackPanel>
         </Border>
-        <!-- Nút Thêm, Sửa, Xóa -->
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20" VerticalAlignment="Bottom">
             <Button Content="➕ Thêm" Width="100" Height="35" Background="#28a745" Foreground="White" Margin="5" Click="OpenAddWarehousePopup"/>
             <Button Content="✏ Sửa" Width="100" Height="35" Background="#ffc107" Foreground="Black" Margin="5" Click="OpenEditWarehousePopup"/>
@@ -55,7 +52,6 @@
             <Button Content="📜 Duyệt kho hàng" Width="150" Height="35" Background="#17a2b8" Foreground="White" Margin="5" Click="OpenPendingWarehousesPopup"/>
         </StackPanel>
 
-        <!-- Popup Thêm kho hàng -->
         <Border x:Name="AddWarehousePanel" Visibility="Collapsed" HorizontalAlignment="Center" 
                 VerticalAlignment="Center" Background="White" BorderBrush="#ced4da" 
                 BorderThickness="1" Padding="20" Width="400" CornerRadius="10">
@@ -75,7 +71,6 @@
             </StackPanel>
         </Border>
 
-        <!-- Popup danh sách kho hàng chưa duyệt -->
         <Border x:Name="PendingWarehousesPopup" Visibility="Collapsed" HorizontalAlignment="Center" 
         VerticalAlignment="Center" Background="White" BorderBrush="#ced4da" 
         BorderThickness="1" Padding="20" Width="500" CornerRadius="10">
@@ -85,13 +80,9 @@
                 <ListView Name="PendingWarehouseGrid"   ScrollViewer.VerticalScrollBarVisibility="Auto">
                     <ListView.View>
                         <GridView>
-                            <!-- Warehouse ID -->
                             <GridViewColumn Header="Warehouse ID" DisplayMemberBinding="{Binding WarehouseID}" Width="50"/>
-                            <!-- Warehouse Name -->
                             <GridViewColumn Header="Warehouse Name" DisplayMemberBinding="{Binding WarehouseName}" Width="120"/>
-                            <!-- Location -->
                             <GridViewColumn Header="Location" DisplayMemberBinding="{Binding Location}" Width="120"/>
-                            <!-- Capacity -->
                             <GridViewColumn Header="Capacity" DisplayMemberBinding="{Binding Capacity}" Width="50"/>
                         </GridView>
                     </ListView.View>

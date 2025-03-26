@@ -290,41 +290,40 @@ namespace WPF.Supplier
 
         private void EditInventory_Click(object sender, RoutedEventArgs e)
         {
+            Button editButton = sender as Button;
+            if (editButton == null) return;
+
+            Inventory selectedInventory = editButton.DataContext as Inventory;
+            if (selectedInventory == null)
+            {
+                MessageBox.Show("Không thể lấy thông tin dòng!");
+                return;
+            }
+
+            if (selectedInventory.Product.IsDeleted == true || selectedInventory.Product.IsApproved == false)
+            {
+                MessageBox.Show("Sản phẩm không còn để sửa hoặc chưa được duyệt!");
+                return;
+            }
+
             supplierService = new();
             productService = new();
             warehousesService = new();
             inventoryService = new();
 
-            var selectedInventory = (Inventory)InventoryDataGrid.SelectedItem;
-        if(selectedInventory.Product.IsDeleted == true || selectedInventory.Product.IsApproved == false)
-            {
-                MessageBox.Show("Sản phẩm không còn để sửa hoặc chưa được duyệt!");
-                return;
-            }
-            else
-            {
-                SaveBtn.Visibility = Visibility.Collapsed;
-                EditBtn.Visibility = Visibility.Visible;
-                if (selectedInventory != null)
-                {
+            SaveBtn.Visibility = Visibility.Collapsed;
+            EditBtn.Visibility = Visibility.Visible;
 
-                    txtProductName.Text = selectedInventory.Product.ProductName;
-                    Product p = productService.GetProductById(selectedInventory.Product.ProductId);
-                    txtRemain.Text = "(Còn lại: " + (selectedInventory.Quantity + p.QuantityInStock) + ")";
-                    int oldQuantity = selectedInventory.Quantity;
-                    txtProductName.SelectedValue = selectedInventory.Product.ProductId;
-                    txtStockStatus.Text = selectedInventory.StockStatus;
-                    txtQuantity.Text = selectedInventory.Quantity.ToString();
-
-
-                    loadInvetory(selectedInventory.WarehouseId);
-
-                }
-            }
-            
+            txtProductName.Text = selectedInventory.Product.ProductName; 
+            Product p = productService.GetProductById(selectedInventory.Product.ProductId);
+            txtRemain.Text = "(Còn lại: " + (selectedInventory.Quantity + p.QuantityInStock) + ")";
+            txtQuantity.Text = selectedInventory.Quantity.ToString();
+            txtStockStatus.Text = selectedInventory.StockStatus; 
+            loadInvetory(selectedInventory.WarehouseId);
+            InventoryDataGrid.SelectedItem = selectedInventory; 
         }
 
-   
+
         private void DeleteInventory_Click(object sender, RoutedEventArgs e)
         {
             supplierService = new();
@@ -364,7 +363,7 @@ namespace WPF.Supplier
                                 var selectedWarehouse = (int)WarehouseComboBox.SelectedValue;
                                 if (selectedWarehouse != null)
                                 {
-                                    clear2  ();
+                                    clear2();
                                     loadInvetory(selectedWarehouse);
                                 }
                                 MessageBox.Show("Đã xóa kho hàng.");

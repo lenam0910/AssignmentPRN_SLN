@@ -88,11 +88,11 @@ namespace WPF
                         break;
 
                     default:
-                        if (supplier == null)
+                        if (supplier == null || supplier.IsDeleted == true)
                         {
                             new RegisterSupplier().Show();
                         }
-                        else if (supplier.IsApproved == true)
+                        else if (supplier.IsApproved == true && supplier.IsDeleted == false)
                         {
                             new SupplierDashboard().Show();
                         }

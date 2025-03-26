@@ -46,7 +46,7 @@ namespace WPF.Supplier
             }
 
                 txtBlockHead.Text = " " + user.Username;
-            MainFrame.Navigate(new StatisticsPage());
+            MainFrame.Navigate(new StatisticsPage(supplier));
 
 
         }

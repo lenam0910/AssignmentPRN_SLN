@@ -32,7 +32,7 @@ namespace Repository
 
         public List<Supplier> GetAllSuppliers()
         {
-            return _context.Suppliers.ToList();
+            return _context.Suppliers.Include(x=> x.Users).AsNoTracking().ToList();
         }
 
         public void SaveSupplier(Supplier supplier)

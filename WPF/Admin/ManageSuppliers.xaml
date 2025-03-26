@@ -25,17 +25,32 @@
             <Button Content="📜 Duyệt nhà cung cấp" Width="140" Height="35" Background="#17a2b8" Foreground="White" Margin="5" Click="OpenPendingProductsPopup"/>
         </StackPanel>
 
-        <Border x:Name="SupplierPopup" Visibility="Collapsed" Width="400" Background="White" Padding="20">
-            <StackPanel>
-                <TextBlock x:Name="SupplierPopupTitle" FontSize="18" FontWeight="Bold"/>
-                <Image x:Name="imgSupplierAvatar" Width="100" Height="100" HorizontalAlignment="Center" Visibility="Collapsed"/>
-                <TextBox x:Name="txtSupplierName" />
-                <TextBox x:Name="txtSupplierEmail" />
-                <TextBox x:Name="txtSupplierPhone" />
-                <ComboBox x:Name="cbUsers" Visibility="Collapsed"/>
-                <StackPanel Orientation="Horizontal">
-                    <Button Content="Lưu" Click="SaveSupplier_Click"/>
-                    <Button Content="Hủy" Click="ClosePopup"/>
+        <Border x:Name="SupplierPopup" Visibility="Collapsed" HorizontalAlignment="Center" 
+        VerticalAlignment="Center" Background="White" BorderBrush="#ced4da" 
+        BorderThickness="1" Padding="20" Width="400" CornerRadius="10">
+            <StackPanel Margin="10">
+                <TextBlock x:Name="SupplierPopupTitle" Text="Thêm Nhà Cung Cấp" FontSize="20" FontWeight="Bold" 
+                   HorizontalAlignment="Center" Margin="0,10"/>
+                <Image x:Name="imgSupplierAvatar" Width="100" Height="100" HorizontalAlignment="Center" Margin="0,10" Visibility="Collapsed"/>
+                <StackPanel Margin="0,5">
+                    <TextBlock Text="Tên nhà cung cấp"/>
+                    <TextBox x:Name="txtSupplierName" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
+                </StackPanel>
+                <StackPanel Margin="0,5">
+                    <TextBlock Text="Email"/>
+                    <TextBox x:Name="txtSupplierEmail" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
+                </StackPanel>
+                <StackPanel Margin="0,5">
+                    <TextBlock Text="Số điện thoại"/>
+                    <TextBox x:Name="txtSupplierPhone" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
+                </StackPanel>
+                <StackPanel x:Name="combobox" Margin="0,5">
+                    <TextBlock Text="Người dùng"/>
+                    <ComboBox x:Name="cbUsers" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1" Visibility="Visible"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,20,10,0">
+                    <Button Content="Lưu" Width="120" Height="35" Background="#0078D4" Foreground="White" Click="SaveSupplier_Click"/>
+                    <Button Content="Hủy" Width="120" Height="35" Background="#dc3545" Foreground="White" Click="ClosePopup"/>
                 </StackPanel>
             </StackPanel>
         </Border>

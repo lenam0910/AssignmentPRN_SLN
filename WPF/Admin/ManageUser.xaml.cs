@@ -27,17 +27,7 @@ namespace WPF.Admin
         {
             var list = UserService.getAll();
             var listRole = RoleService.GetAll();
-            foreach (var item in list)
-            {
-                foreach (var role in listRole)
-                {
-                    if (item.RoleId == role.RoleId)
-                    {
-                        item.Role = role;
-                    }
-
-                }
-            }
+           
             UserGrid.ItemsSource = list;
 
 
@@ -75,7 +65,7 @@ namespace WPF.Admin
                 txtFullname.Text = user.FullName;
                 txtEmail.Text = user.Email;
                 txtUsername.Text = user.Username;
-                roleComboBox2.SelectedValue = user.Role.RoleId;
+                roleComboBox2.SelectedValue = user.RoleId;
             }
             else
             {
@@ -141,7 +131,7 @@ namespace WPF.Admin
             user.Email = txtEmail.Text;
             user.Username = txtUsername.Text;
             user.RoleId = (int)roleComboBox2.SelectedValue;
-            if (UserService.UpdateUser(user))
+            if (UserService.UpdateUserRole(user))
             {
                 MessageBox.Show("Sửa người dùng thành công!");
                 load();

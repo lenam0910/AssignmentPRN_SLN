@@ -9,9 +9,9 @@ namespace WPF.Supplier
     {
         private WarehousesService warehousesService;
         private InventoryService inventoryService;
-
-        public StatisticsPage()
-        {
+        private DataAccess.Models.Supplier supplierReal;
+        public StatisticsPage(DataAccess.Models.Supplier supplier)
+        {  supplierReal = supplier;
             warehousesService = new WarehousesService();
             inventoryService = new InventoryService();
             InitializeComponent();
@@ -22,11 +22,11 @@ namespace WPF.Supplier
         {
 
             
-            int totalWarehouses = warehousesService.getAll().Count(w => !w.IsDeleted);
+            int totalWarehouses = warehousesService.getAll().Count(w => !w.IsDeleted && w.SupplierId == supplierReal.SupplierId);
             txtTotalWarehouses.Text = totalWarehouses.ToString();
 
             
-            int totalProducts = inventoryService.GetInventoryList().Sum(i => i.Quantity);
+            int totalProducts = inventoryService.GetInventoryList().Where(a => a.SupplierId == supplierReal.SupplierId).Sum(i => i.Quantity);
             txtTotalProducts.Text = totalProducts.ToString();
 
 

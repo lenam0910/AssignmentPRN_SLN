@@ -28,6 +28,5 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Folder Include="Images\Supplier\" />
-	  <Folder Include="Images\Product\" />
 	</ItemGroup>
 </Project>

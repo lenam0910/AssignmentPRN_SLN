@@ -35,7 +35,7 @@ namespace Repository
 
         public List<Warehouse> GetAll()
         {
-            return _context.Warehouses.ToList();
+            return _context.Warehouses.Include(x => x.Inventories).ToList();
         }
     }
 }

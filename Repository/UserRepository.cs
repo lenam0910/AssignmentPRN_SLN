@@ -22,8 +22,12 @@ namespace Repository
         {
             return _context.Users.FirstOrDefault(x => x.Username == username && x.Password == password);
         }
+        public User GetUserByID(int id)
+        {
+            return _context.Users.FirstOrDefault(x => x.UserId == id);
+        }
 
-        
+
 
         public User checkDuplicateUserName(string username)
         {
@@ -31,7 +35,7 @@ namespace Repository
         }
         public List<User> GetAll()
         {
-            var lst = _context.Users.ToList();
+            var lst = _context.Users.Include(x=> x.Role).Include(x => x.Supplier).ToList();
             var newLst = new List<User>();
             foreach(User user in lst)
             {

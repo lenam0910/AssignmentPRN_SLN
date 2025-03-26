@@ -54,7 +54,7 @@ namespace Service
             var display = new List<Order>();
             foreach (var item in lst)
             {
-                if (item.IsDeleted == false && item.Status.Equals("Đã Thanh Toán", StringComparison.OrdinalIgnoreCase))
+                if (item.IsDeleted == false && item.Status != null && item.Status.Trim().Equals("Đặt hàng thành công!", StringComparison.OrdinalIgnoreCase))
                 {
                     display.Add(item);
                 }

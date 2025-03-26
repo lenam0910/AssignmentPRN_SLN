@@ -47,8 +47,9 @@ namespace WPF.Admin
             {
                 AddWarehousePanel.Visibility = Visibility.Visible;
                 EditWarehousePanel.Visibility = Visibility.Collapsed;
-                WarehouseGrid.SelectedItem = null;
-                clear();
+                txtWarehouseName.Clear();
+                txtLocation.Clear();
+                txtCapacity.Clear();
             }
             else
             {
@@ -91,9 +92,18 @@ namespace WPF.Admin
                 if (WarehouseGrid.SelectedItem != null)
                 {
                     Warehouse warehouse = WarehouseGrid.SelectedItem as Warehouse;
-                    warehousesService.DeleteWarehouses(warehouse);
-                    MessageBox.Show("Xoá kho hàng thành công!");
-                    load2(supplier);
+                    if(warehouse.Inventories.Count > 0)
+                    {
+                        MessageBox.Show("Kho hàng đang chứa hàng hóa không thể xoá!");
+                        return;
+                    }
+                    else
+                    {
+                        warehousesService.DeleteWarehouses(warehouse);
+                        MessageBox.Show("Xoá kho hàng thành công!");
+                        load2(supplier);
+                    }
+                        
 
                 }
                 else

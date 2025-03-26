@@ -112,7 +112,7 @@ namespace WPF.User
             inventoryService = new InventoryService();
             categoryService = new();
 
-            var inventory = inventoryService.GetInventoryList();
+            var inventory = inventoryService.GetInventoryList().Where(x => x.Quantity != 0);
             var products = productService.GetAllProducts();
 
             if (inventory == null || !inventory.Any())

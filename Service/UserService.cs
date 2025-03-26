@@ -62,8 +62,11 @@ namespace Service
         {
             return UserRepository.GetByEmail(email);
         }
+        public User GetUserByID(int id)
+        {
+            return UserRepository.GetUserByID(id);
+        }
 
-      
         public Boolean UpdateUser(User u)
         {
             bool check = true;
@@ -73,6 +76,18 @@ namespace Service
                 return check;
             }
             UserRepository.Update(u);
+            return check;
+        }
+
+        public Boolean UpdateUserRole(User u)
+        {
+            bool check = false;
+
+            if (UserRepository.Update(u))
+            {
+                check = true;
+                return check;
+            }
             return check;
         }
         public User Login(string username, string password)

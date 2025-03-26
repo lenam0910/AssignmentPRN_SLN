@@ -34,10 +34,12 @@ namespace WPF.Admin
             Category category = (Category)CategoryGrid.SelectedItem;
             if (category == null)
             {
+                
                 MessageBox.Show("Hãy chọn loại để sửa !");
                 return;
             }
-
+            txtEditCategoryName.Text = category.CategoryName;
+            txtEditDescription.Text = category.Description;
             AddCategoryPanel.Visibility = Visibility.Collapsed;
             EditCategoryPanel.Visibility = Visibility.Visible;
         }
