@@ -62,6 +62,18 @@ namespace Service
             }
             return null;
         }
+        public OrderDetail GetOrdersDetailByOrderidAndWarehouseIDAndProductId(int warehouseId, int orderId,int productId)
+        {
+            var lst = repository.getAll();
+            foreach (var item in lst)
+            {
+                if (item.WarehouseId == warehouseId && item.OrderId == orderId && item.IsDeleted == false && item.ProductId == productId)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
 
         public bool AddOrderDetail(OrderDetail orderDetail)
         {

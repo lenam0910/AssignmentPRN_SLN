@@ -112,7 +112,7 @@ namespace WPF.User
             inventoryService = new InventoryService();
             categoryService = new();
 
-            var inventory = inventoryService.GetInventoryList().Where(x => x.Quantity != 0);
+            var inventory = inventoryService.GetInventoryList().Where(x => x.Quantity > 0).ToList();
             var products = productService.GetAllProducts();
 
             if (inventory == null || !inventory.Any())
@@ -185,7 +185,7 @@ namespace WPF.User
                     }
                 }
 
-                OrderDetail orderDetail = orderDetailService.GetOrdersDetailByOrderidAndWarehouseID(selectedProduct.Warehouse.WarehouseId, order.OrderId);
+                OrderDetail orderDetail = orderDetailService.GetOrdersDetailByOrderidAndWarehouseIDAndProductId(selectedProduct.Warehouse.WarehouseId, order.OrderId, selectedProduct.ProductId);
                 if (orderDetail == null)
                 {
                     if (quantity > getQuantityInven)

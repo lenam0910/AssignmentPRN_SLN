@@ -273,6 +273,7 @@ namespace WPF.Supplier
 
                 if (productService.UpdaterProduct(product))
                 {
+                    DeleteOldProductAvatar(product);
                     Title.Text = "Thêm Sản Phẩm";
                     addProduct.Visibility = Visibility.Visible;
                     stpBtn.Visibility = Visibility.Collapsed;
@@ -299,6 +300,13 @@ namespace WPF.Supplier
             Title.Text = "Thêm Sản Phẩm";
             addProduct.Visibility = Visibility.Visible;
             stpBtn.Visibility = Visibility.Collapsed;
+        }
+        private void DeleteOldProductAvatar(Product p)
+        {
+            if (!string.IsNullOrEmpty(p.Avatar) && File.Exists(p.Avatar))
+            {
+                File.Delete(supplier.Avatar);
+            }
         }
     }
 

@@ -149,6 +149,21 @@ namespace Service
             }
             return display;
         }
+
+        public Inventory GetInventoryByProductIdAndWarehouseId(int productId, int warehouseId)
+        {
+            var lst = repository.GetAllInventory();
+            var display = new Inventory();
+            foreach (var item in lst)
+            {
+                if (item.IsDeleted == false && item.WarehouseId == warehouseId && item.ProductId == productId)
+                {
+                    display = item;
+                    break;
+                }
+            }
+            return display;
+        }
     }
 
 }

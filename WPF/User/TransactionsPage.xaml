@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="Orders History" Loaded="Page_Loaded">
 
-    <Grid Background="#ECF0F1" Margin="10">
+    <Grid Background="White" Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
@@ -12,11 +12,11 @@
         <StackPanel Grid.Row="0" Background="White">
             <TextBlock Text="📦 Danh sách đơn hàng" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
 
-            <DataGrid x:Name="OrdersListView" AutoGenerateColumns="False" SelectionChanged="OrdersListView_SelectionChanged" HeadersVisibility="Column">
+            <DataGrid x:Name="OrdersListView" CanUserAddRows="False" AutoGenerateColumns="False" SelectionChanged="OrdersListView_SelectionChanged" HeadersVisibility="Column">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Mã Đơn" Binding="{Binding OrderId}" Width="80"/>
-                    <DataGridTextColumn Header="Ngày Đặt" Binding="{Binding OrderDate}" Width="120"/>
-                    <DataGridTextColumn Header="Trạng Thái" Binding="{Binding Status}" Width="120"/>
+                    <DataGridTextColumn Header="Mã Đơn" Binding="{Binding OrderId}" Width="*"/>
+                    <DataGridTextColumn Header="Ngày Đặt" Binding="{Binding OrderDate}" Width="*"/>
+                    <DataGridTextColumn Header="Trạng Thái" Binding="{Binding Status}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>
@@ -42,9 +42,9 @@
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Sản phẩm" Binding="{Binding Product.ProductName}" Width="200"/>
-                    <DataGridTextColumn Header="Số lượng" Binding="{Binding Quantity}" Width="80"/>
-                    <DataGridTextColumn Header="Giá" Binding="{Binding PriceAtOrder, StringFormat=\{0:C\}}" Width="120"/>
+                    <DataGridTextColumn Header="Sản phẩm" Binding="{Binding Product.ProductName}" Width="*"/>
+                    <DataGridTextColumn Header="Số lượng" Binding="{Binding Quantity}" Width="*"/>
+                    <DataGridTextColumn Header="Giá" Binding="{Binding PriceAtOrder, StringFormat=\{0:C\}}" Width="*"/>
                 </DataGrid.Columns>
             </DataGrid>
         </StackPanel>

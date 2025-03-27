@@ -26,6 +26,7 @@ namespace WPF.User
         private Order order;
         private ProductService productService;
         private InventoryService inventoryService;
+        private WarehousesService warehousesService;
         public OrdersPage()
         {
             
@@ -130,7 +131,7 @@ namespace WPF.User
             productService = new ProductService();
             orderDetailService = new OrderDetailService();
             orderService = new OrderService();
-
+            warehousesService = new WarehousesService();
             if (order == null || order.OrderDetails == null)
             {
                 MessageBox.Show("Bạn chưa có đơn hàng nào để thanh toán!");
@@ -139,7 +140,7 @@ namespace WPF.User
 
             if (order.Status != "Chờ xử lý")
             {
-                MessageBox.Show("Chỉ có thể thanh toán các đơn hàng có trạng thái 'Chờ xử lý'.");
+                MessageBox.Show("Giỏ hàng đang trống!");
                 return;
             }
 
@@ -159,23 +160,32 @@ namespace WPF.User
                 }
             }
 
-            var lstProduct = inventoryService.GetInventoryList();
-
             for (int i = lstOrder.Count - 1; i >= 0; i--)
             {
                 var orderItem = lstOrder[i];
                 bool productExistsAndNotDeleted = false;
 
-                foreach (var inventoryItem in lstProduct)
+                var inventoryItem = inventoryService.GetInventoryByProductIdAndWarehouseId(
+                    orderItem.ProductId,
+                    orderItem.WarehouseId
+                );
+
+                if (inventoryItem != null && inventoryItem.IsDeleted != true)
                 {
-                    if (orderItem.ProductId == inventoryItem.ProductId && inventoryItem.IsDeleted != true)
+                    productExistsAndNotDeleted = true;
+                    if (inventoryItem.Quantity < orderItem.Quantity)
                     {
-                        productExistsAndNotDeleted = true;
-                        inventoryItem.Quantity -= orderItem.Quantity;
-                        inventoryItem.Product = null;
-                        inventoryItem.Supplier = null;
-                        inventoryService.UpdateInventory(inventoryItem);
+                        MessageBox.Show($"Số lượng sản phẩm {inventoryItem.Product.ProductName} trong kho {inventoryItem.Warehouse.WarehouseId} không đủ!");
+                        return;
                     }
+                    inventoryItem.Quantity -= orderItem.Quantity;
+                    inventoryItem.Product = null;
+                    inventoryItem.Supplier = null;
+                    inventoryItem.Warehouse = null;
+                    inventoryService.UpdateInventory(inventoryItem);
+                    Warehouse whUpdate = warehousesService.GetWarehouseById(inventoryItem.WarehouseId);
+                    whUpdate.Capacity += orderItem.Quantity;
+                    warehousesService.UpdateWarehouses(whUpdate);
                 }
 
                 if (!productExistsAndNotDeleted)
@@ -185,8 +195,8 @@ namespace WPF.User
                 }
             }
 
+            // Cập nhật trạng thái đơn hàng
             order.Status = "Đặt hàng thành công!";
-
             if (orderService.updateOrder(order))
             {
                 NavigationService?.Navigate(new TransactionsPage());

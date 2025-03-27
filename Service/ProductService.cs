@@ -38,7 +38,13 @@ namespace Service
 
             return lstDis;
         }
+        public List<Product> GetAllProductsForTrans()
+        {
+            var lst = repository.GetAll();
+            
 
+            return lst;
+        }
         public List<Product> GetAllProductsForLog()
         {
             var lst = repository.GetAll();

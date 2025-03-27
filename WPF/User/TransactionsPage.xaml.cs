@@ -53,7 +53,7 @@ namespace WPF.User
 
             decimal total = lstOrder.Sum(item => item.PriceAtOrder);
 
-            var lstProduct = productService.GetAllProducts();
+            var lstProduct = productService.GetAllProductsForTrans();
 
             foreach (var item in lstOrder)
             {

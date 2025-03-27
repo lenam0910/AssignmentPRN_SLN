@@ -56,7 +56,10 @@ namespace WPF.Supplier
             var products = new List<Inventory>();
             foreach (var product in inventoryItems)
             {
-                products.Add(product);
+                if(product.Quantity > 0)
+                {
+                    products.Add(product);
+                }
             }
 
             ProductListBox.ItemsSource = products;

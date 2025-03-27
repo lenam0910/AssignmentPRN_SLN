@@ -54,9 +54,12 @@ namespace WPF.Supplier
             warehousesService = new();
             inventoryService = new();
 
-            var lst = inventoryService.GetInventoryListByWarehouseId(warehouseId);
+            var lst = inventoryService.GetInventoryListByWarehouseId(warehouseId).Where(x => x.Quantity >= 0).ToList();
+            if(lst.Count == 0)
+            {
+                MessageBox.Show("Hãy thêm sản phẩm", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
 
-           
 
             InventoryDataGrid.ItemsSource = lst;
         }
@@ -572,6 +575,7 @@ namespace WPF.Supplier
             productService = new();
             warehousesService = new();
             inventoryService = new();
+
             try
             {
                 warehouse = WarehouseComboBox.SelectedItem as Warehouse;
@@ -624,7 +628,9 @@ namespace WPF.Supplier
 
                 
                 selectedInventory.Quantity = selectedInventory.Quantity - quantityToMove;
-
+                selectedInventory.Product = null;
+                selectedInventory.Warehouse = null;
+                selectedInventory.Supplier = null;
                 if (!inventoryService.UpdateInventory(selectedInventory))
                 {
                     MessageBox.Show("Lỗi khi cập nhật kho nguồn!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -646,6 +652,9 @@ namespace WPF.Supplier
 
                 if (existingInventory != null)
                 {
+                    existingInventory.Product = null;
+                    existingInventory.Warehouse = null;
+                    existingInventory.Supplier = null;
                     existingInventory.Quantity += quantityToMove;
                     existingInventory.LastUpdated = DateTime.Now;
                     if (!inventoryService.UpdateInventory(existingInventory))
@@ -695,7 +704,6 @@ namespace WPF.Supplier
                 txtProductName.ItemsSource = productService.GetAllProductsBySupplierId(supplier.SupplierId);
                 txtProductName.DisplayMemberPath = "ProductName";
                 txtProductName.SelectedValuePath = "ProductId";
-                loadInvetory(warehouse.WarehouseId);
                 clear();
             }
             catch (Exception ex)
