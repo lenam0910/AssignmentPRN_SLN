@@ -5,7 +5,6 @@
         Background="#ECEFF1" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
 
     <Window.Resources>
-        <!-- Hiệu ứng hover cho Button -->
         <Style x:Key="SidebarButton" TargetType="Button">
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="Foreground" Value="White"/>
@@ -63,7 +62,6 @@
             <Button Content="🚪 Đăng Xuất" Background="#D32F2F" Foreground="White" FontSize="16" Style="{StaticResource SidebarButton}" Click="Logout_Click"/>
         </StackPanel>
 
-        <!-- Main Content -->
         <Border Grid.Column="1" Background="White" >
             <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Background="#FFFFFF"/>
         </Border>

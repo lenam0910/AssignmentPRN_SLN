@@ -69,7 +69,6 @@ namespace WPF.Admin
             Category category = (Category)CategoryGrid.SelectedItem;
             if (category != null)
             {
-                // Lấy giá trị từ input
                 string categoryName = txtEditCategoryName.Text.Trim();
                 string description = txtEditDescription.Text.Trim();
 
@@ -125,11 +124,9 @@ namespace WPF.Admin
 
         private void SaveCategory_Click(object sender, RoutedEventArgs e)
         {
-            // Lấy giá trị từ input và loại bỏ khoảng trắng thừa
             string categoryName = txtCategoryName.Text.Trim();
             string description = txtDescription.Text.Trim();
 
-            // Validation cho CategoryName
             if (string.IsNullOrEmpty(categoryName))
             {
                 MessageBox.Show("Tên thể loại không được để trống!");
@@ -141,19 +138,16 @@ namespace WPF.Admin
                 return;
             }
 
-            // Validation cho Description (tùy chọn)
             if (description.Length > 200)
             {
                 MessageBox.Show("Mô tả không được dài quá 200 ký tự!");
                 return;
             }
 
-            // Tạo đối tượng Category và gán giá trị
             Category category = new Category();
             category.CategoryName = categoryName;
             category.Description = description;
 
-            // Gọi service để thêm danh mục
             if (_categoryService.addCategorias(category))
             {
                 MessageBox.Show("Thêm thể loại thành công!");

@@ -5,7 +5,6 @@
       Title="Shopping" Loaded="Page_Loaded_1">
     <Grid Background="#F8F9FA">
 
-        <!-- Thanh điều hướng (Navbar) -->
         <Border Background="#2C3E50" Height="60" VerticalAlignment="Top">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -70,11 +69,9 @@
         </Grid>
 
 
-        <!-- Modal Chat GPT (mặc định ẩn) -->
         <Border x:Name="ChatGptPopup" Background="White" Width="250" Height="360" CornerRadius="10" BorderBrush="#BDC3C7" BorderThickness="1"
         Visibility="Collapsed" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="20">
             <StackPanel>
-                <!-- Thanh tiêu đề chứa văn bản + nút đóng -->
                 <Grid Background="#2C3E50" Height="30">
                     <TextBlock Text="💬 Tư vấn với ChatBot" FontSize="14" FontWeight="Bold" Foreground="White" VerticalAlignment="Center" Margin="10,0,0,0"/>
                     <Button Content="❌" Width="25" Height="25" FontSize="12" Foreground="White" Background="Transparent"
@@ -91,7 +88,6 @@
         </Border>
 
 
-        <!-- Nút tròn mở modal -->
         <Button x:Name="OpenChatButton" Width="50" Height="50" Background="#3498DB" Foreground="White" FontSize="18" 
                 Content="💬" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="20"
                 Click="OpenChatButton_Click"/>

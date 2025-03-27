@@ -37,11 +37,9 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="220"/>
-            <!-- Sidebar rộng hơn một chút -->
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Sidebar -->
         <StackPanel Background="#2C3E50" Width="220" >
             <Border CornerRadius="50" Background="White" Width="120" Height="120" HorizontalAlignment="Center">
                 <Image x:Name="avarImg" Source="{Binding User.Avatar}" Width="100" Height="100" Margin="10" ClipToBounds="True" Stretch="UniformToFill"/>
@@ -61,7 +59,6 @@
             <Button Content="🚪 Đăng Xuất" Background="#D32F2F" Foreground="White" FontSize="16" Style="{StaticResource SidebarButton}" Click="Logout_Click"/>
         </StackPanel>
 
-        <!-- Main Content -->
         <Border Grid.Column="1" Background="White" >
             <Frame x:Name="MainFrame" NavigationUIVisibility="Hidden" Content="{Binding CurrentView}"/>
         </Border>

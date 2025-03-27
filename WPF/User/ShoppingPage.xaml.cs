@@ -56,7 +56,7 @@ namespace WPF.User
         {
             if (chatHistory.Length > 0)
             {
-                chatHistory.AppendLine($"👤 Bạn: {userInput}"); // Chỉ thêm nếu không phải tin nhắn đầu tiên
+                chatHistory.AppendLine($"👤 Bạn: {userInput}"); 
             }
 
             string output = await chatBotAI.SendRequestAndGetResponse(userInput);
@@ -72,7 +72,7 @@ namespace WPF.User
 
         private async Task sendBot(string userInput)
         {
-            chatHistory.AppendLine($"👤 Bạn: {userInput}"); // Thêm tin nhắn của người dùng vào lịch sử
+            chatHistory.AppendLine($"👤 Bạn: {userInput}"); 
 
             string output = await chatBotAI.SendRequestAndGetResponse(userInput);
 
@@ -81,7 +81,7 @@ namespace WPF.User
                            .Replace("\n", Environment.NewLine)
                            .Replace("**", "");
 
-            chatHistory.AppendLine($"\n🤖 Tư vấn viên: {output}"); // Thêm phản hồi AI vào lịch sử
+            chatHistory.AppendLine($"\n🤖 Tư vấn viên: {output}"); 
 
         }
         private async void button1_Click(object sender, RoutedEventArgs e)
@@ -91,7 +91,7 @@ namespace WPF.User
 
             ChatInput.Clear();
             await sendBot(userInput);
-            ChatContent.Text = chatHistory.ToString(); // Cập nhật hiển thị chat
+            ChatContent.Text = chatHistory.ToString(); 
         }
 
         private void OpenChatButton_Click(object sender, RoutedEventArgs e)

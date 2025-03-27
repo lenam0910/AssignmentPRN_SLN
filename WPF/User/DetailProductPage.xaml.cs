@@ -61,7 +61,7 @@ namespace WPF.User
                 if (orderService.addOrder(order))
                 {
                     MessageBox.Show("Tạo giỏ hàng mới thành công!");
-                    order = orderService.GetOrderByUserId(user.UserId); // Lấy lại Order sau khi thêm
+                    order = orderService.GetOrderByUserId(user.UserId); 
                 }
             }
 

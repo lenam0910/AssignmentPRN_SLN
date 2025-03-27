@@ -90,12 +90,10 @@ namespace WPF.Supplier
                 selectedFilePath = openFileDialog.FileName;
                 fileName = System.IO.Path.GetFileName(selectedFilePath);
 
-                // Get the timestamp and append it to the filename
                 string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                 string fileNameWithTimestamp = System.IO.Path.GetFileNameWithoutExtension(fileName) + "_" + timestamp + System.IO.Path.GetExtension(fileName);
 
                 destinationPathSupplier = System.IO.Path.Combine(saveDirectorySupplier, fileNameWithTimestamp);
-                // Tạo thư mục nếu chưa có
                 Directory.CreateDirectory(saveDirectorySupplier);
 
 
@@ -124,18 +122,15 @@ namespace WPF.Supplier
                 selectedFilePath = openFileDialog.FileName;
                 fileName = System.IO.Path.GetFileName(selectedFilePath);
 
-                // Get the timestamp and append it to the filename
                 string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                 string fileNameWithTimestamp = System.IO.Path.GetFileNameWithoutExtension(fileName) + "_" + timestamp + System.IO.Path.GetExtension(fileName);
 
                 destinationPathUser = System.IO.Path.Combine(saveDirectoryUser, fileNameWithTimestamp);
 
-                // Tạo thư mục nếu chưa có
                 Directory.CreateDirectory(saveDirectoryUser);
 
 
 
-                // Hiển thị ảnh lên UI
                 imgUserAvatar.Source = new BitmapImage(new Uri(selectedFilePath));
                 imgUserAvatar.Visibility = Visibility.Visible;
 
@@ -145,7 +140,6 @@ namespace WPF.Supplier
         {
             try
             {
-                // Kiểm tra dữ liệu đầu vào
                 if (string.IsNullOrWhiteSpace(txtSupplierName.Text) ||
                     string.IsNullOrWhiteSpace(txtSupplierEmail.Text) ||
                     string.IsNullOrWhiteSpace(txtSupplierPhone.Text))
@@ -154,33 +148,28 @@ namespace WPF.Supplier
                     return;
                 }
 
-                // Kiểm tra email hợp lệ
                 if (!IsValidEmail(txtSupplierEmail.Text))
                 {
                     MessageBox.Show("Email không hợp lệ!");
                     return;
                 }
 
-                // Kiểm tra số điện thoại hợp lệ
                 if (!IsValidPhoneNumber(txtSupplierPhone.Text))
                 {
                     MessageBox.Show("Số điện thoại không hợp lệ!");
                     return;
                 }
 
-                // Cập nhật thông tin nhà cung cấp
                 supplier.SupplierName = txtSupplierName.Text.Trim();
                 supplier.Email = txtSupplierEmail.Text.Trim();
                 supplier.Phone = txtSupplierPhone.Text.Trim();
 
-                // Cập nhật Avatar nếu có thay đổi
                 if (imgSupplierAvatar.Source != null && !string.IsNullOrEmpty(destinationPathSupplier))
                 {
                     DeleteOldSupplierAvatar();
                     supplier.Avatar = destinationPathSupplier;
                 }
 
-                // Gọi service để cập nhật
                 if (_supplierService.UpdateSupplier(supplier))
                 {
                     if (imgSupplierAvatar.Source != null)

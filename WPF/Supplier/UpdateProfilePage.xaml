@@ -8,20 +8,15 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Tiêu đề -->
         <TextBlock Text="Cập Nhật Thông Tin" FontSize="24" FontWeight="Bold" Foreground="#37474F"
                    HorizontalAlignment="Center" Margin="0,10,0,20"/>
 
-        <!-- Nội dung chính -->
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="1*"/>
-                <!-- Thông tin User -->
                 <ColumnDefinition Width="1*"/>
-                <!-- Thông tin Supplier -->
             </Grid.ColumnDefinitions>
 
-            <!-- Cập nhật thông tin User -->
             <Border BorderBrush="#BDBDBD" BorderThickness="1" CornerRadius="10" Padding="20" Margin="10">
                 <StackPanel>
                     <TextBlock Text="Thông Tin Người Dùng" FontSize="18" FontWeight="Bold" Foreground="#37474F" Margin="0,0,0,10"/>
@@ -48,7 +43,6 @@
                 </StackPanel>
             </Border>
 
-            <!-- Cập nhật thông tin Supplier -->
             <Border BorderBrush="#BDBDBD" BorderThickness="1" CornerRadius="10" Padding="20" Margin="10" Grid.Column="1">
                 <StackPanel>
                     <TextBlock Text="Thông Tin Nhà Cung Cấp" FontSize="18" FontWeight="Bold" Foreground="#37474F" Margin="0,0,0,10"/>

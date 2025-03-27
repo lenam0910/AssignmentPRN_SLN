@@ -5,16 +5,12 @@
     <Grid Background="White" Margin="20">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Tiêu đề -->
             <RowDefinition Height="*"/>
-            <!-- Nội dung -->
         </Grid.RowDefinitions>
 
-        <!-- Tiêu đề -->
         <TextBlock Text="Thống Kê Tổng Quan" FontSize="24" FontWeight="Bold" Foreground="#37474F"
                    HorizontalAlignment="Center" Margin="0,10,0,20"/>
 
-        <!-- Nội dung chính -->
         <Grid Grid.Row="1" Margin="20">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
@@ -25,7 +21,6 @@
                 <ColumnDefinition Width="1*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Tổng Kho Hàng -->
             <Border Background="#2196F3" Padding="20" CornerRadius="12" Margin="10" Grid.Row="0" Grid.Column="0">
                 <StackPanel>
                     <TextBlock Text="Tổng Kho Hàng" FontSize="16" Foreground="White" TextAlignment="Center"/>
@@ -34,7 +29,6 @@
                 </StackPanel>
             </Border>
 
-            <!-- Tổng Sản Phẩm -->
             <Border Background="#4CAF50" Padding="20" CornerRadius="12" Margin="10" Grid.Row="0" Grid.Column="1">
                 <StackPanel>
                     <TextBlock Text="Tổng Sản Phẩm" FontSize="16" Foreground="White" TextAlignment="Center"/>
@@ -43,14 +37,6 @@
                 </StackPanel>
             </Border>
 
-            <!-- Tổng Giá Trị -->
-            <Border Background="#D32F2F" Padding="20" CornerRadius="12" Margin="10" Grid.Row="1" Grid.ColumnSpan="2">
-                <StackPanel>
-                    <TextBlock Text="Tổng Giá Trị" FontSize="16" Foreground="White" TextAlignment="Center"/>
-                    <TextBlock x:Name="txtTotalValue" FontSize="24" FontWeight="Bold" Foreground="White" 
-                               TextAlignment="Center" Margin="5"/>
-                </StackPanel>
-            </Border>
         </Grid>
     </Grid>
 </Page>

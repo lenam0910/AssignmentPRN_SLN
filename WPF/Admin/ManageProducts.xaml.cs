@@ -147,7 +147,6 @@ namespace WPF.Admin
             }
             else
             {
-                // Thêm sản phẩm mới
                 product = new Product
                 {
                     ProductName = productName,

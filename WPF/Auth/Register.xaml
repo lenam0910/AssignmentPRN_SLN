@@ -11,7 +11,7 @@
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Margin="0,5">
@@ -28,25 +28,21 @@
                         <TextBox x:Name="email" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
                     </StackPanel>
 
-                    <!-- Nhập Phone -->
                     <StackPanel Margin="0,5">
                         <TextBlock Text="SĐT" FontSize="14" Foreground="Gray"/>
                         <TextBox x:Name="phone" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
                     </StackPanel>
 
-                    <!-- Nhập Username -->
                     <StackPanel Margin="0,5">
                         <TextBlock Text="Tên đăng nhập" FontSize="14" Foreground="Gray"/>
                         <TextBox x:Name="uname" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
                     </StackPanel>
 
-                    <!-- Nhập Password -->
                     <StackPanel Margin="0,5">
                         <TextBlock Text="Mật khẩu" FontSize="14" Foreground="Gray"/>
                         <PasswordBox x:Name="pwd" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
                     </StackPanel>
 
-                    <!-- Nhập Địa chỉ -->
                     <StackPanel Margin="0,5">
                         <TextBlock Text="Địa chỉ" FontSize="14" Foreground="Gray"/>
                         <TextBox x:Name="txtAddress" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1"/>
@@ -54,7 +50,6 @@
                 </StackPanel>
 
                 <StackPanel Grid.Column="1" Margin="0,5">
-                    <!-- Nhập khu vực -->
                     <StackPanel Margin="0,5">
                         <TextBlock Text="Khu vực" FontSize="14" Foreground="Gray"/>
                         <ComboBox x:Name="txtArea" Width="250" Height="30" BorderBrush="Gray" BorderThickness="1">
@@ -124,13 +119,11 @@
                         </ComboBox>
                     </StackPanel>
 
-                    <!-- Nhập Date of Birth -->
                     <StackPanel Margin="0,5">
                         <TextBlock Text="Ngày tháng năm sinh" FontSize="14" Foreground="Gray"/>
                         <DatePicker x:Name="dobPicker" Width="250" Height="30"/>
                     </StackPanel>
 
-                    <!-- Chọn Gender -->
                     <StackPanel Margin="0,5">
                         <TextBlock Text="Giới tính" FontSize="14" Foreground="Gray"/>
                         <ComboBox x:Name="genderComboBox" Width="250" Height="30">

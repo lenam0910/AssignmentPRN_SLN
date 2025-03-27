@@ -15,14 +15,12 @@
             <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
        
-        <!-- Hình ảnh sản phẩm -->
         <Border Grid.Column="0" Background="White" Padding="8" CornerRadius="8">
             <Image Source="{Binding Product.Avatar}" Width="200" Height="200" Stretch="UniformToFill"/>
         </Border>
         <Button Content="🔙 Trở về" Background="Transparent" Foreground="#2C3E50" FontSize="14"
      HorizontalAlignment="Left" VerticalAlignment="Top" Padding="10,5" Margin="10"
      Click="GoBack_Click"/>
-        <!-- Thông tin sản phẩm -->
         <StackPanel Grid.Column="1" Background="White" Margin="10,0,0,0" VerticalAlignment="Center">
             <TextBlock Text="{Binding Product.ProductName}" FontSize="20" FontWeight="Bold" Foreground="#2C3E50"/>
             <TextBlock>
@@ -40,7 +38,6 @@
             <TextBlock Text="Mô tả sản phẩm:" FontSize="14" FontWeight="Bold" Margin="0,8,0,4"/>
             <TextBlock Text="{Binding Product.Description}" FontSize="12" TextWrapping="Wrap" Foreground="#2C3E50" MaxWidth="400"/>
 
-            <!-- Ô chỉnh sửa số lượng -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,12,0,12">
                 <TextBlock Text="Số lượng:" FontSize="14" Foreground="#333" Margin="0,0,5,0"/>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -51,7 +48,6 @@
 
             </StackPanel>
 
-            <!-- Nút hành động -->
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" >
                 <Button Content="🛒 Thêm vào giỏ hàng" Background="#3498DB" Foreground="White" FontSize="14" Padding="8,4" 
                         Width="160" Height="40" Cursor="Hand" Click="AddToCart_Click"/>

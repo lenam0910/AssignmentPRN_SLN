@@ -102,10 +102,10 @@ namespace WPF.Supplier
             }
 
             DateTime from = dpFromDate.SelectedDate.Value;
-            from = from.Date; // Đầu ngày: 00:00:00
+            from = from.Date; 
 
             DateTime to = dpToDate.SelectedDate.Value;
-            to = to.Date.AddHours(23).AddMinutes(59).AddSeconds(59); // Cuối ngày: 23:59:59
+            to = to.Date.AddHours(23).AddMinutes(59).AddSeconds(59); 
 
             if (from > to)
             {

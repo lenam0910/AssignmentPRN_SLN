@@ -7,7 +7,6 @@
 
     <Grid Background="#F8F9FA">
 
-        <!-- Thanh điều hướng -->
         <Border Background="#2C3E50" Height="60" VerticalAlignment="Top">
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -21,7 +20,6 @@
             </Grid>
         </Border>
 
-        <!-- Danh sách đơn hàng -->
         <StackPanel Margin="20,80,20,80">
             <ListView x:Name="OrdersListView" Background="White" BorderBrush="#D1D1D1" BorderThickness="1" 
                Padding="10" MinHeight="100" MaxHeight="500" ScrollViewer.VerticalScrollBarVisibility="Auto" av:ItemsSource="{av:SampleData ItemCount=5}" SelectionChanged="OrdersListView_SelectionChanged">
@@ -35,11 +33,9 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
 
-                                <!-- Hình ảnh sản phẩm -->
                                 <Image Source="{Binding Product.Avatar, FallbackValue=/Images/default.png}" 
                                 Width="90" Height="90" Stretch="UniformToFill" Margin="10"/>
 
-                                <!-- Thông tin sản phẩm -->
                                 <StackPanel Grid.Column="1" Margin="10,0,0,0" VerticalAlignment="Center">
                                     <TextBlock Text="{Binding Product.ProductName}" FontSize="16" FontWeight="Bold"/>
                                     <TextBlock Text="{Binding Product.Price, StringFormat=Giá: \{0:C\}}" FontSize="14" Foreground="#E74C3C" Margin="0,5,0,0"/>
@@ -52,7 +48,6 @@
                                     <TextBlock Text="{Binding PriceAtOrder, StringFormat=Tổng: \{0:C\}}" FontSize="16" Foreground="#E74C3C" FontWeight="Bold"/>
                                 </StackPanel>
 
-                                <!-- Hành động -->
                                 <StackPanel Grid.Column="2" Orientation="Vertical" HorizontalAlignment="Right" Margin="10,0,0,0">
                                     <Button Content="🗑️ Xóa" Background="#E74C3C" Foreground="White" Padding="5,2" 
                                      BorderThickness="0" Cursor="Hand" Margin="5" Click="DeleteItem_Click"/>
@@ -66,7 +61,6 @@
         </StackPanel>
 
 
-        <!-- Tổng tiền + Mua hàng -->
         <Border Background="White" BorderBrush="#BDC3C7" BorderThickness="1" Height="60" VerticalAlignment="Bottom">
             <Grid>
                 <Grid.ColumnDefinitions>

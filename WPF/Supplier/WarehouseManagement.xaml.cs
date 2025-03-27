@@ -117,28 +117,24 @@ namespace WPF.Supplier
         {
             try
             {
-                // Kiểm tra supplier có tồn tại không
                 if (supplier == null)
                 {
                     MessageBox.Show("Không tìm thấy thông tin nhà cung cấp!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                // Kiểm tra thông tin đầu vào
                 if (string.IsNullOrWhiteSpace(txtWarehouseName.Text) || string.IsNullOrWhiteSpace(txtLocation.Text))
                 {
                     MessageBox.Show("Vui lòng nhập đầy đủ thông tin kho hàng!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // Kiểm tra sức chứa hợp lệ
                 if (!int.TryParse(txtCapacity.Text.Trim(), out int capacity) || capacity <= 0)
                 {
                     MessageBox.Show("Sức chứa phải là một số nguyên lớn hơn 0!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                // Tạo đối tượng Warehouse mới
                 Warehouse newWarehouse = new Warehouse
                 {
                     WarehouseName = txtWarehouseName.Text.Trim(),
@@ -147,7 +143,6 @@ namespace WPF.Supplier
                     SupplierId = supplier.SupplierId
                 };
 
-                // Thêm kho hàng vào database
                 if (warehouseService.AddWarehouses(newWarehouse))
                 {
                     MessageBox.Show("Thêm kho hàng thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);

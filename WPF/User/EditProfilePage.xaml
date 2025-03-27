@@ -18,13 +18,11 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <!-- Ảnh đại diện và nút chọn ảnh -->
             <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="10">
                 <Image x:Name="imgUserAvatar" Width="120" Height="120" Visibility="Visible" Stretch="UniformToFill" Margin="0,0,0,10" />
                 <Button Content="Chọn Ảnh" Click="ChangeUserAvatar_Click" HorizontalAlignment="Center"/>
             </StackPanel>
 
-            <!-- Form nhập thông tin -->
             <StackPanel Grid.Column="1" Margin="20,0,0,0">
                 <TextBlock Text="Họ và tên:" FontSize="14" FontWeight="Bold"/>
                 <TextBox x:Name="txtFullName" Height="30" Margin="0,5,0,10"/>
@@ -43,7 +41,6 @@
             </StackPanel>
         </Grid>
 
-        <!-- Nút lưu -->
         <Button Content="💾 Lưu thay đổi" Background="#27AE60" Foreground="White" FontSize="16" Height="40" Margin="0,20" Click="Button_Click" Grid.Row="2" HorizontalAlignment="Center" Width="200"/>
     </Grid>
 </Page>

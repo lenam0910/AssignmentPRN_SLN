@@ -85,18 +85,15 @@ namespace WPF.User
                 selectedFilePath = openFileDialog.FileName;
                 fileName = System.IO.Path.GetFileName(selectedFilePath);
 
-                // Get the timestamp and append it to the filename
                 string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                 string fileNameWithTimestamp = System.IO.Path.GetFileNameWithoutExtension(fileName) + "_" + timestamp + System.IO.Path.GetExtension(fileName);
 
                 destinationPathUser = System.IO.Path.Combine(saveDirectoryUser, fileNameWithTimestamp);
 
-                // Tạo thư mục nếu chưa có
                 Directory.CreateDirectory(saveDirectoryUser);
 
 
 
-                // Hiển thị ảnh lên UI
                 imgUserAvatar.Source = new BitmapImage(new Uri(selectedFilePath));
                 imgUserAvatar.Visibility = Visibility.Visible;
 
@@ -106,7 +103,6 @@ namespace WPF.User
         {
             try
             {
-                // Kiểm tra các trường nhập liệu
                 if (string.IsNullOrWhiteSpace(txtFullName.Text) ||
                     string.IsNullOrWhiteSpace(txtUserEmail.Text) ||
                     string.IsNullOrWhiteSpace(txtUserPhone.Text) ||
@@ -116,41 +112,35 @@ namespace WPF.User
                     return;
                 }
 
-                // Kiểm tra email hợp lệ
                 if (!IsValidEmail(txtUserEmail.Text))
                 {
                     MessageBox.Show("Email không hợp lệ!");
                     return;
                 }
 
-                // Kiểm tra số điện thoại hợp lệ
                 if (!IsValidPhoneNumber(txtUserPhone.Text))
                 {
                     MessageBox.Show("Số điện thoại không hợp lệ!");
                     return;
                 }
 
-                // Cập nhật thông tin người dùng
                 user.FullName = txtFullName.Text.Trim();
                 user.Email = txtUserEmail.Text.Trim();
                 user.Phone = txtUserPhone.Text.Trim();
                 user.Address = txtUserAddress.Text.Trim();
 
-                // Chỉ cập nhật mật khẩu nếu người dùng nhập mật khẩu mới
                 if (!string.IsNullOrWhiteSpace(txtPassword.Password))
                 {
                     string hassPass = HashPassword(txtPassword.Password);
                     user.Password = hassPass;
                 }
 
-                // Cập nhật ảnh đại diện nếu có thay đổi
                 if (imgUserAvatar.Source != null && !string.IsNullOrEmpty(destinationPathUser))
                 {
                     DeleteOldUserAvatar();
                     user.Avatar = destinationPathUser;
                 }
 
-                // Gọi service để cập nhật người dùng
                 bool isUpdated = userService.UpdateUser(user);
                 if (isUpdated)
                 {
