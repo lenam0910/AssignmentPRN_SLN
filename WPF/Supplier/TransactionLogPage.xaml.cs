@@ -20,15 +20,11 @@ namespace WPF.Supplier
         private SupplierService supplierService;
         private DataAccess.Models.User user;
         private DataAccess.Models.Supplier supplier;
-        private ProductService productService;
-        private WarehousesService warehousesService;
-        private UserService userService;
+    
         private List<TransactionLog> transactionLogsLst;
         public TransactionLogPage()
         {
-            warehousesService = new WarehousesService();
-            productService = new();
-            userService = new();
+        
             user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             supplierService = new SupplierService();
             service = new TransactionLogService();
@@ -41,55 +37,14 @@ namespace WPF.Supplier
             transactionLogsLst = lstTran();
             dgTransactionLogs.ItemsSource = transactionLogsLst;
         }
-
+        private List<TransactionLog> lstAll()
+        {
+            var lst = service.GetAllTransactions();
+            return lst;
+        }
         private List<TransactionLog> lstTran()
         {
             var lst = service.GetAllBySupplierID(supplierService.GetSupplierByUserId(user.UserId).SupplierId);
-            var lstProduct = productService.GetAllProductsForLog();   
-            var lstWare = warehousesService.getAll();
-            var lstSupplier = supplierService.GetAllSuppliers();
-            var lstUser = userService.getAll();
-            foreach (var pr in lst)
-            {
-                foreach (var item in lstProduct)
-                {
-                    if (item.ProductId == pr.ProductId)
-                    {
-                        pr.Product = item;
-                    }
-                }
-            }
-            foreach (var pr in lst)
-            {
-                foreach (var item in lstWare)
-                {
-                    if (pr.WarehouseId == item.WarehouseId)
-                    {
-                        pr.Warehouse = item;
-                    }
-                }
-
-            }
-            foreach (var pr in lst)
-            {
-                foreach (var item in lstSupplier)
-                {
-                    if (pr.SupplierId == item.SupplierId)
-                    {
-                        pr.Supplier = item;
-                    }
-                }
-            }
-            foreach (var pr in lst)
-            {
-                foreach (var item in lstUser)
-                {
-                    if (pr.UserId == item.UserId)
-                    {
-                        pr.User = item;
-                    }
-                }
-            }
             return lst;
         }
 
@@ -113,7 +68,6 @@ namespace WPF.Supplier
                 return;
             }
 
-            // Chuẩn hóa múi giờ (nếu cần)
             from = from.ToUniversalTime();
             to = to.ToUniversalTime();
             if(txtSearch.Text.Equals("Tìm sản phẩm", StringComparison.OrdinalIgnoreCase))
@@ -181,6 +135,14 @@ namespace WPF.Supplier
 
                 List<TransactionLog> list = lstTran();
 
+                foreach (var item in list)
+                {
+                    item.Product = null;
+                    item.Warehouse = null;
+                    item.Supplier = null;
+                    item.User = null;
+                }
+
                 string jsonContent = JsonSerializer.Serialize(list, jsonOption);
 
                 File.WriteAllText(jsonSaveFile.FileName, jsonContent);
@@ -199,6 +161,20 @@ namespace WPF.Supplier
             {
                 string jsonText = File.ReadAllText(jsonFile.FileName);
                 List<TransactionLog> lst = JsonSerializer.Deserialize<List<TransactionLog>>(jsonText);
+                var lstOrigin = lstAll();
+                foreach (var item in lst)
+                {
+                    foreach(var item2 in lstOrigin)
+                    {
+                        if(item.TransactionId == item2.TransactionId)
+                        {
+                            item.Product = item2.Product;
+                            item.Warehouse = item2.Warehouse;
+                            item.Supplier = item2.Supplier;
+                            item.User = item2.User;
+                        }
+                    }
+                }
                 transactionLogsLst = lst;
                 dgTransactionLogs.ItemsSource = transactionLogsLst;
 

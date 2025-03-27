@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataAccess.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Repository
 {
@@ -23,7 +24,7 @@ namespace Repository
 
         public List<TransactionLog> GetAll()
         {
-            return _prnContext.TransactionLogs.ToList();
+            return _prnContext.TransactionLogs.Include(x=>x.Product).Include(y => y.Warehouse).Include(z => z.Supplier).Include(a => a.User).AsNoTracking().ToList();  
         }
         public void Add(TransactionLog transactionLog)
         {
