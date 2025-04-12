@@ -158,7 +158,7 @@ namespace WPF.Supplier
                 cbCategory.SelectedValue = selectedProduct.CategoryId;
                 txtDescription.Text = selectedProduct.Description;
 
-                if (!string.IsNullOrEmpty(selectedProduct.Avatar))
+                if (!string.IsNullOrEmpty(selectedProduct.Avatar) && File.Exists(selectedProduct.Avatar))
                 {
                     imgProduct.Visibility = Visibility.Visible;
                     imgProduct.Source = new BitmapImage(new Uri(selectedProduct.Avatar));
@@ -166,6 +166,7 @@ namespace WPF.Supplier
                 else
                 {
                     imgProduct.Source = null;
+                    imgProduct.Visibility = Visibility.Collapsed;
                 }
                 addProduct.Visibility = Visibility.Collapsed;
                 stpBtn.Visibility = Visibility.Visible;

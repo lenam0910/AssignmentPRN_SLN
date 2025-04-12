@@ -9,7 +9,7 @@ namespace WPF
 {
     public partial class Register : Window
     {
-        private string saveDirectory = @"C:\Users\THIS PC\Desktop\prn211\AssignmentPRN_SLN\DataAccess\Images\Avar\";
+        private string saveDirectory = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\";
         private readonly UserService service;
         private string selectedFilePath;
         private string fileName;

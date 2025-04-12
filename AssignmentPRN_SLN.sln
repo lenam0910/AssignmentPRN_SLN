@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF", "WPF\WPF.csproj", "{F82924B1-412A-48EC-A526-E7A9828EB0DC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tool", "Tool\Tool.csproj", "{324F7BFC-B1CD-40BF-8A12-28EB546C1F52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{F82924B1-412A-48EC-A526-E7A9828EB0DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F82924B1-412A-48EC-A526-E7A9828EB0DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F82924B1-412A-48EC-A526-E7A9828EB0DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{324F7BFC-B1CD-40BF-8A12-28EB546C1F52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{324F7BFC-B1CD-40BF-8A12-28EB546C1F52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{324F7BFC-B1CD-40BF-8A12-28EB546C1F52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{324F7BFC-B1CD-40BF-8A12-28EB546C1F52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -221,6 +222,48 @@ namespace WPF.User
             {
                 selectedQuantity--;
                 selectedQuan.Text = selectedQuantity.ToString();
+            }
+        }
+
+        private void OpenYouTube_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string testExePath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\Tool\bin\Debug\Tool.exe";
+                string url = $"https://www.youtube.com/results?search_query={Uri.EscapeDataString(inventoryRoot.Product.ProductName)}";
+                Process.Start(testExePath, $"\"{url}\""); // Truyền URL làm tham số
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
+        }
+
+        private void OpenFacebook_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string testExePath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\Tool\bin\Debug\Tool.exe";
+                string url = "https://www.facebook.com";
+                Process.Start(testExePath, $"\"{url}\"");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
+        }
+
+        private void OpenTikTok_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string testExePath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\Tool\bin\Debug\Tool.exe";
+                string url = "https://www.tiktok.com";
+                Process.Start(testExePath, $"\"{url}\"");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
             }
         }
     }
