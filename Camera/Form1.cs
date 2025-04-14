@@ -34,6 +34,7 @@ namespace CameraTest
                 MessageBox.Show("Không có camera trong máy!");
                 return;
             }
+
             this.FormBorderStyle = FormBorderStyle.None;
 
             this.Bounds = Screen.PrimaryScreen.Bounds;
@@ -77,7 +78,22 @@ namespace CameraTest
             }
         }
 
+        private void XoaUserTheoId(int userId)
+        {
+            string connectionString = "Data Source=localhost;Initial Catalog=AssignmentPRN;User ID=sa;Password=123";
 
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                string sql = "DELETE FROM Users WHERE UserID = @userId";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@userId", userId);
+
+                conn.Open();
+                cmd.ExecuteNonQuery();
+                conn.Close();
+            }
+        }
         private void button1_Click(object sender, EventArgs e)
         {
             if (pictureBox1.Image == null)
@@ -115,6 +131,7 @@ namespace CameraTest
             }
             else
             {
+                XoaUserTheoId(userId);
                 pictureBox1.Image.Dispose();
                 pictureBox1.Image = null;
             }
