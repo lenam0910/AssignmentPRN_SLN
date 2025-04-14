@@ -166,5 +166,7 @@ namespace CameraTest
                 imageCamera = null;
             }
         }
+
+       
     }
 }

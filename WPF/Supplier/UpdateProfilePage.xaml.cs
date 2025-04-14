@@ -1,4 +1,5 @@
 ﻿
+using System.Drawing;
 using System.IO;
 
 using System.Text.RegularExpressions;
@@ -6,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 
 using System.Windows.Media.Imaging;
-
+using QRCoder;
 using Service;
 
 namespace WPF.Supplier
@@ -284,5 +285,34 @@ namespace WPF.Supplier
             }
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string input = user.UserId.ToString();
+
+            using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+            using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(input, QRCodeGenerator.ECCLevel.H))
+            using (QRCode qrCode = new QRCode(qrCodeData))
+            using (Bitmap qrBitmap = qrCode.GetGraphic(20))
+            using (MemoryStream ms = new MemoryStream())
+            {
+                qrBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                ms.Position = 0;
+
+                BitmapImage qrImage = new BitmapImage();
+                qrImage.BeginInit();
+                qrImage.CacheOption = BitmapCacheOption.OnLoad;
+                qrImage.StreamSource = ms;
+                qrImage.EndInit();
+
+                imgQRCode.Source = qrImage;
+                qrOverlay.Visibility = Visibility.Visible;
+            }
+        }
+
+        private void CloseOverlay_Click(object sender, RoutedEventArgs e)
+        {
+            imgQRCode.Source = null;
+            qrOverlay.Visibility = Visibility.Collapsed;
+        }
     }
 }

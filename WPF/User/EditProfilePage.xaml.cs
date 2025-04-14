@@ -1,5 +1,6 @@
 ﻿ using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,7 +16,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using DataAccess.Models;
+using QRCoder;
 using Service;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace WPF.User
 {
@@ -33,7 +36,7 @@ namespace WPF.User
         public EditProfilePage()
         {
             userService = new UserService();
-            user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
+            user = System.Windows.Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             InitializeComponent();
             Load();
         }
@@ -182,6 +185,36 @@ namespace WPF.User
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
             Load();
+        }
+
+        private void CloseOverlay_Click(object sender, RoutedEventArgs e)
+        {
+            imgQRCode.Source = null;
+            qrOverlay.Visibility = Visibility.Collapsed;
+        }
+
+        private void btnGenerateQR_Click(object sender, RoutedEventArgs e)
+        {
+            string input = user.UserId.ToString();
+
+            using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
+            using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(input, QRCodeGenerator.ECCLevel.H))
+            using (QRCode qrCode = new QRCode(qrCodeData))
+            using (Bitmap qrBitmap = qrCode.GetGraphic(20))
+            using (MemoryStream ms = new MemoryStream())
+            {
+                qrBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                ms.Position = 0;
+
+                BitmapImage qrImage = new BitmapImage();
+                qrImage.BeginInit();
+                qrImage.CacheOption = BitmapCacheOption.OnLoad;
+                qrImage.StreamSource = ms;
+                qrImage.EndInit();
+
+                imgQRCode.Source = qrImage;
+                qrOverlay.Visibility = Visibility.Visible;
+            }
         }
     }
 }

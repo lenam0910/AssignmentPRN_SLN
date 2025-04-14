@@ -38,8 +38,10 @@
 
                     <TextBlock Text="Địa Chỉ:"/>
                     <TextBox x:Name="txtUserAddress" Margin="0,5"/>
-
-                    <Button Content="Lưu Người Dùng" Background="#4CAF50" Foreground="White" Click="SaveUser_Click" Margin="10,10,0,0"/>
+                    <StackPanel Orientation="Horizontal" >
+                        <Button Content="Lưu Người Dùng" Background="#4CAF50" Foreground="White" Click="SaveUser_Click" Margin="10,10,0,0"/>
+                        <Button Content="Tạo mã QR đăng nhập" Background="#2980B9" Foreground="White"  Margin="10,10,0,0" Click="Button_Click"/>
+                    </StackPanel>
                 </StackPanel>
             </Border>
 
@@ -61,6 +63,30 @@
                     <TextBox x:Name="txtSupplierPhone" Margin="0,5"/>
 
                     <Button Content="Lưu Nhà Cung Cấp" Background="#2196F3" Foreground="White" Click="SaveSupplier_Click" Margin="10,10,0,0"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+        <Grid x:Name="qrOverlay"
+Background="#AA000000" 
+      Visibility="Collapsed"
+HorizontalAlignment="Stretch"
+VerticalAlignment="Stretch"
+Grid.RowSpan="3"
+      Panel.ZIndex="999">
+
+            <Border Background="White"
+      Padding="20"
+      CornerRadius="10"
+      HorizontalAlignment="Center"
+      VerticalAlignment="Center">
+                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="📷 Mã QR của bạn" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" HorizontalAlignment="Center"/>
+                    <Image x:Name="imgQRCode"
+             Width="200"
+             Height="200"
+             Stretch="Uniform"
+             Margin="0,0,0,10"/>
+                    <Button Content="Đóng" Width="100" Click="CloseOverlay_Click" HorizontalAlignment="Center"/>
                 </StackPanel>
             </Border>
         </Grid>

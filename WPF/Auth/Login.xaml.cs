@@ -136,5 +136,10 @@ namespace WPF
         {
             RememberMe();
         }
+
+        private void qrLogin_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
