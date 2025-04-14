@@ -31,6 +31,7 @@ namespace WPF
             if (userId.HasValue)
             {
                 loginWindow.AutoLogin(userId.Value);
+
             }
         }
     }

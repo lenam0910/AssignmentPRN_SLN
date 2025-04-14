@@ -153,7 +153,7 @@ namespace WPF
                         break;
                 }
 
-                this.Close();
+                this.Hide();
             }
             catch (Exception ex)
             {
@@ -191,6 +191,7 @@ namespace WPF
             {
                 string testExePath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\ScannerQR\bin\Debug\ScannerQR.exe";
                 Process.Start(testExePath); 
+                this.Hide(); 
             }
             catch (Exception ex)
             {

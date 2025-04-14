@@ -13,63 +13,59 @@ using AForge.Video;
 using AForge.Video.DirectShow;
 using ZXing;
 
-
 namespace ScannerQR
 {
-    public partial class Form1: Form
+    public partial class Form1 : Form
     {
         private FilterInfoCollection filterInfoCollection;
-        VideoCaptureDevice videoCaptureDevice;
+        private VideoCaptureDevice videoCaptureDevice;
+        private bool isLoggedIn = false; // Cờ để kiểm tra trạng thái đăng nhập
 
         public Form1()
         {
-            if (videoCaptureDevice != null && videoCaptureDevice.IsRunning)
-            {
-                videoCaptureDevice.Stop();
-                videoCaptureDevice = null;
-            }
             InitializeComponent();
             filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            if (filterInfoCollection.Count == 0 || filterInfoCollection == null)
+            if (filterInfoCollection.Count == 0)
             {
-                MessageBox.Show("Không có camera trong máy!");
+                MessageBox.Show("Không có camera trong máy!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            
-
             videoCaptureDevice = new VideoCaptureDevice(filterInfoCollection[0].MonikerString);
             videoCaptureDevice.NewFrame += new NewFrameEventHandler(videoCaptureDevice_NewFrame);
             videoCaptureDevice.Start();
 
-            if (timer1 == null)
-            {
-                timer1 = new Timer();
-                timer1.Interval = 100; // Đặt khoảng thời gian quét (100ms)
-                timer1.Tick += timer1_Tick;
-            }
-            timer1.Start();
-            timer1.Start();
+            
+            timer1.Start(); 
         }
 
         private void videoCaptureDevice_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
-
+            if (pictureBox1.InvokeRequired)
+            {
+                pictureBox1.Invoke(new Action(() => pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone()));
+            }
+            else
+            {
+                pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
+            }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if(videoCaptureDevice != null && videoCaptureDevice.IsRunning)
+            if (videoCaptureDevice != null && videoCaptureDevice.IsRunning)
             {
                 videoCaptureDevice.Stop();
+            }
+            if (timer1 != null)
+            {
                 timer1.Stop();
-
             }
         }
+
         private User LayUserTheoId(int userId)
         {
             string connectionString = "Data Source=localhost;Initial Catalog=AssignmentPRN;User ID=sa;Password=123";
@@ -78,7 +74,6 @@ namespace ScannerQR
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 string sql = "SELECT * FROM Users WHERE UserID = @userId AND IsDeleted = 0";
-
                 SqlCommand cmd = new SqlCommand(sql, conn);
                 cmd.Parameters.AddWithValue("@userId", userId);
 
@@ -113,66 +108,99 @@ namespace ScannerQR
 
             return user;
         }
+
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (pictureBox1.Image != null)
+            if (isLoggedIn || pictureBox1.Image == null) 
             {
-                BarcodeReader barcodeReader = new BarcodeReader();
-                Result result = barcodeReader.Decode((Bitmap)pictureBox1.Image);
-                if (result != null)
+                return;
+            }
+
+            BarcodeReader barcodeReader = new BarcodeReader();
+            Result result = barcodeReader.Decode((Bitmap)pictureBox1.Image);
+            if (result != null)
+            {
+                try
                 {
-                    try
+                    string qrCodeText = result.Text;
+                    if (int.TryParse(qrCodeText, out int id))
                     {
-                        string qrCodeText = result.Text;
-                        if (int.TryParse(qrCodeText, out int id))
+                        User user = LayUserTheoId(id);
+                        if (user != null)
                         {
-                            User user = LayUserTheoId(id);
-                            if (user != null)
+                            isLoggedIn = true;
+                            videoCaptureDevice.Stop();
+                            videoCaptureDevice = null;
+                            timer1.Stop();
+                            MessageBox.Show($"Đăng nhập thành công: {user.FullName}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                            
+
+                            try
                             {
-                                MessageBox.Show($"Đăng nhập thành công: {user.FullName}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                videoCaptureDevice.Stop();
-                                timer1.Stop();
-
-                                try
+                                string wpfAppPath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\WPF\bin\Debug\net9.0-windows\WPF.exe";
+                                if (!System.IO.File.Exists(wpfAppPath))
                                 {
-                                    string wpfAppPath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\WPF\bin\Debug\net9.0-windows\WPF.exe"; 
-
-                                    if (!System.IO.File.Exists(wpfAppPath))
-                                    {
-                                        MessageBox.Show($"Không tìm thấy WPF.exe tại: {wpfAppPath}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                        return;
-                                    }
-                                    Application.Exit();
-
-                                    Process.Start(wpfAppPath, $"--userId {user.UserID}");
-                                }
-                                catch (Exception ex)
-                                {
-                                    MessageBox.Show($"Lỗi khi khởi động ứng dụng WPF: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    MessageBox.Show($"Không tìm thấy WPF.exe tại: {wpfAppPath}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     return;
                                 }
 
-                                this.Close();
+                                Process.Start(wpfAppPath, $"--userId {user.UserID}");
+                                this.Close(); 
                             }
-                            else
+                            catch (Exception ex)
                             {
-                                MessageBox.Show("Không tìm thấy người dùng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                MessageBox.Show($"Lỗi khi khởi động ứng dụng WPF: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                isLoggedIn = false; 
+                                return;
                             }
                         }
                         else
                         {
-                            MessageBox.Show("Mã QR không chứa ID hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Không tìm thấy người dùng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        MessageBox.Show($"Lỗi khi xử lý mã QR: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Mã QR không chứa ID hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi xử lý mã QR: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (videoCaptureDevice != null && videoCaptureDevice.IsRunning)
+            {
+                videoCaptureDevice.Stop();
+            }
+            if (timer1 != null)
+            {
+                timer1.Stop();
+            }
+            try
+            {
+                string wpfAppPath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\WPF\bin\Debug\net9.0-windows\WPF.exe";
+                if (!System.IO.File.Exists(wpfAppPath))
+                {
+                    MessageBox.Show($"Không tìm thấy WPF.exe tại: {wpfAppPath}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                Process.Start(wpfAppPath);
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi khởi động ứng dụng WPF: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+        }
     }
-    
 
     public class User
     {
