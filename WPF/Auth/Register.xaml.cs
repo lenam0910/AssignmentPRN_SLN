@@ -4,6 +4,7 @@ using DataAccess.Models;
 using Service;
 using System.IO;
 using System.Windows.Media.Imaging;
+using System.Diagnostics;
 
 namespace WPF
 {
@@ -119,6 +120,20 @@ bool ValidateInputs()
 
                 if (service.CreateUser(user))
                 {
+
+                    try
+                    {
+                        string testExePath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\Camera\bin\Debug\Camera.exe";
+                        // Truyền Id của user (hoặc Username, tùy bạn chọn)
+                        string arguments = $"\"{user.UserId}\"";
+                        Process.Start(testExePath, arguments);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Lỗi: " + ex.Message);
+                    }
+
+
                     System.Windows.MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                     this.Hide();
                     Login login = new();

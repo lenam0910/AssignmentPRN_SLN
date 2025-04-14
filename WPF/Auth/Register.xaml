@@ -153,10 +153,8 @@
                         </StackPanel>
 
                         <StackPanel>
-                            <TextBlock Text="Ảnh đại diện" FontSize="14" Foreground="Gray"/>
                             <Image x:Name="avatarImage" Width="80" Height="80" Stretch="UniformToFill" 
                                    Margin="0,5" Visibility="Collapsed"/>
-                            <Button Content="Chọn ảnh" Width="100" Height="30" Click="UploadAvatar_Click"/>
                         </StackPanel>
                     </StackPanel>
 

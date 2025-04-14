@@ -16,7 +16,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Service;
-using static MaterialDesignThemes.Wpf.Theme;
 using Newtonsoft.Json.Linq;
 using DataAccess.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;

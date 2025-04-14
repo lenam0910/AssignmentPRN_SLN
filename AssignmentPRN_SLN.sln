@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WPF", "WPF\WPF.csproj", "{F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tool", "Tool\Tool.csproj", "{324F7BFC-B1CD-40BF-8A12-28EB546C1F52}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Camera", "Camera\Camera.csproj", "{05D8C656-F4A9-4B66-84C0-4A22EFB7DE07}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{324F7BFC-B1CD-40BF-8A12-28EB546C1F52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{324F7BFC-B1CD-40BF-8A12-28EB546C1F52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{324F7BFC-B1CD-40BF-8A12-28EB546C1F52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05D8C656-F4A9-4B66-84C0-4A22EFB7DE07}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05D8C656-F4A9-4B66-84C0-4A22EFB7DE07}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05D8C656-F4A9-4B66-84C0-4A22EFB7DE07}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05D8C656-F4A9-4B66-84C0-4A22EFB7DE07}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
