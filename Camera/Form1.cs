@@ -34,18 +34,30 @@ namespace CameraTest
                 MessageBox.Show("Không có camera trong máy!");
                 return;
             }
+            this.FormBorderStyle = FormBorderStyle.None;
+
+            this.Bounds = Screen.PrimaryScreen.Bounds;
+
+            this.TopMost = true;
+
+            this.CreateParams.ExStyle |= 0x80;
+
 
             string[] args = Environment.GetCommandLineArgs();
             if (args.Length > 1)
             {
                 userId = int.Parse(args[1]);
-                MessageBox.Show($"Nhận được User ID: {userId}");
+                MessageBox.Show($"Chào mừng người dùng ID: {userId}");
             }
             else
             {
                 MessageBox.Show("Không nhận được User ID!");
             }
+
+          
         }
+
+     
 
         private void LuuAnhVaoDatabase(int userId, string imagePath)
         {
@@ -107,7 +119,6 @@ namespace CameraTest
                 pictureBox1.Image = null;
             }
 
-            imageCamera.Start();
         }
 
 
