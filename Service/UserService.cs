@@ -64,6 +64,11 @@ namespace Service
         }
         public User GetUserByID(int id)
         {
+            User u = UserRepository.GetUserByID(id);
+            if (u == null || u.IsDeleted == true)
+            {
+                return null;
+            }
             return UserRepository.GetUserByID(id);
         }
 

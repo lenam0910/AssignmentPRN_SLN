@@ -1,4 +1,5 @@
 ﻿
+using System.Diagnostics;
 using System.Windows;
 
 using Service;
@@ -113,6 +114,53 @@ namespace WPF
             }
         }
 
+        public void AutoLogin(int userId)
+        {
+            try
+            {
+                var account = userService.GetUserByID(userId);
+                if (account == null || account.IsDeleted)
+                {
+                    MessageBox.Show("Tài khoản không tồn tại hoặc đã bị xóa!", "Lỗi đăng nhập", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                var supplier = supplierService.GetSupplierByUserId(account.UserId);
+                Application.Current.Properties["UserAccount"] = account;
+
+                switch (account.RoleId)
+                {
+                    case 1:
+                        new AdminDashboard().Show();
+                        break;
+                    case 2:
+                        new UserDashboard().Show();
+                        break;
+                    default:
+                        if (supplier == null || supplier.IsDeleted == true)
+                        {
+                            new RegisterSupplier().Show();
+                        }
+                        else if (supplier.IsApproved == true && supplier.IsDeleted == false)
+                        {
+                            new SupplierDashboard().Show();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Tài khoản nhà cung cấp của bạn chưa được kiểm duyệt!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                            return;
+                        }
+                        break;
+                }
+
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Đã xảy ra lỗi: {ex.Message}", "Lỗi hệ thống", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private string HashPassword(string password)
         {
             return Convert.ToBase64String(System.Security.Cryptography.SHA256.Create()
@@ -139,7 +187,15 @@ namespace WPF
 
         private void qrLogin_Click(object sender, RoutedEventArgs e)
         {
-
+            try
+            {
+                string testExePath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\ScannerQR\bin\Debug\ScannerQR.exe";
+                Process.Start(testExePath); 
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
         }
     }
 }
