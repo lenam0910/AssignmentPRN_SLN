@@ -38,7 +38,7 @@
                 <StackPanel Margin="2" HorizontalAlignment="Left">
                     <Button x:Name="qrLogin" Content="Đăng nhập bằng QR" FontWeight="Bold"
             Background="Transparent" BorderThickness="0" 
-            FontSize="12" Foreground="Blue" Cursor="Hand"
+            FontSize="12" Foreground="Blue" Cursor="Hand" Click="qrLogin_Click"
             />
                 </StackPanel>
                 
