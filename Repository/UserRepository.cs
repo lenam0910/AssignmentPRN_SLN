@@ -52,9 +52,14 @@ namespace Repository
             _context.Users.Add(u);
             _context.SaveChanges();
         }
-        
-       
-       
+
+        public void Remove(User u)
+        {
+            _context.Users.Remove(u);
+            _context.SaveChanges();
+        }
+
+
         public User GetByEmail(string email)
         {
             return _context.Users.FirstOrDefault(x => x.Email.ToLower() == email.ToLower());

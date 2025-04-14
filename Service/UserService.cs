@@ -149,5 +149,16 @@ namespace Service
                 return isDeleted;
             }
         }
+
+        public bool DeleteUserById(int id)
+        {
+            var user = UserRepository.GetUserByID(id);
+            if (user != null)
+            {
+                UserRepository.Remove(user);
+                return true;
+            }
+            return false;
+        }
     }
 }

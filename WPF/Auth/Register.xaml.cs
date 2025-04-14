@@ -124,7 +124,6 @@ bool ValidateInputs()
                     try
                     {
                         string testExePath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\Camera\bin\Debug\Camera.exe";
-                        // Truyền Id của user (hoặc Username, tùy bạn chọn)
                         string arguments = $"\"{user.UserId}\"";
                         Process.Start(testExePath, arguments);
                     }
@@ -134,7 +133,6 @@ bool ValidateInputs()
                     }
 
 
-                    System.Windows.MessageBox.Show("Đăng ký thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                     this.Hide();
                     Login login = new();
                     login.Show();

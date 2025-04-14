@@ -61,6 +61,11 @@ namespace WPF
                     MessageBox.Show("Tên đăng nhập hoặc mật khẩu không đúng!", "Lỗi đăng nhập", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
+                if (string.IsNullOrEmpty(account.Avatar)) {
+                    MessageBox.Show("Bạn chưa cập nhật hình ảnh khi đăng ký! Vui lòng đăng ký lại!", "Lỗi đăng ký", MessageBoxButton.OK, MessageBoxImage.Error);
+                    userService.DeleteUserById(account.UserId);
+                    return;
+                }
 
                 var supplier = supplierService.GetSupplierByUserId(account.UserId);
 
