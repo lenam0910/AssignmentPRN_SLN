@@ -56,8 +56,7 @@
             </StackPanel>
 
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left"
-                        Margin="20">
-                <!-- Nút YouTube -->
+                        Margin="0 20 0 0">
                 <Button Background="#FF0000" Foreground="White" Width="120" Height="40" Cursor="Hand" Click="OpenYouTube_Click" Margin="0,0,5,0">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <TextBlock Text="📺" FontSize="20" Margin="0,0,5,0"/>
@@ -65,19 +64,7 @@
                     </StackPanel>
                 </Button>
 
-                <Button Background="#3B5998" Foreground="White" Width="120" Height="40" Cursor="Hand" Click="OpenFacebook_Click" Margin="0,0,5,0">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="📘" FontSize="20" Margin="0,0,5,0"/>
-                        <TextBlock Text="Facebook" FontSize="14" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
-
-                <Button Background="#000000" Foreground="White" Width="120" Height="40" Cursor="Hand" Click="OpenTikTok_Click">
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="🎵" FontSize="20" Margin="0,0,5,0"/>
-                        <TextBlock Text="TikTok" FontSize="14" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
+                
             </StackPanel>
         </StackPanel>
     </Grid>

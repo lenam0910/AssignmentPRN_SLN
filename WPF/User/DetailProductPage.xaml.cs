@@ -239,32 +239,6 @@ namespace WPF.User
             }
         }
 
-        private void OpenFacebook_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string testExePath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\Tool\bin\Debug\Tool.exe";
-                string url = "https://www.facebook.com";
-                Process.Start(testExePath, $"\"{url}\"");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi: " + ex.Message);
-            }
-        }
-
-        private void OpenTikTok_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                string testExePath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\Tool\bin\Debug\Tool.exe";
-                string url = "https://www.tiktok.com";
-                Process.Start(testExePath, $"\"{url}\"");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi: " + ex.Message);
-            }
-        }
+       
     }
 }

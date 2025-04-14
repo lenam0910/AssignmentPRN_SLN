@@ -149,5 +149,7 @@ namespace CameraTest
                 imageCamera = null;
             }
         }
+
+       
     }
 }
