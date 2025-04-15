@@ -1,7 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using AForge.Video;
 using AForge.Video.DirectShow;
@@ -13,17 +19,21 @@ namespace ScannerQR
     {
         private FilterInfoCollection filterInfoCollection;
         private VideoCaptureDevice videoCaptureDevice;
-        private readonly BarcodeReader barcodeReader = new BarcodeReader();
+        private string lastScannedQrCode = null; 
         private bool isProcessing = false; 
 
         public Form1()
         {
+            if (videoCaptureDevice != null && videoCaptureDevice.IsRunning)
+            {
+                videoCaptureDevice.Stop();
+                videoCaptureDevice = null;
+            }
             InitializeComponent();
             filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            if (filterInfoCollection == null || filterInfoCollection.Count == 0)
+            if (filterInfoCollection.Count == 0 || filterInfoCollection == null)
             {
-                MessageBox.Show("Không có camera trong máy!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                this.Close();
+                MessageBox.Show("Không có camera trong máy!");
                 return;
             }
         }
@@ -31,27 +41,21 @@ namespace ScannerQR
         private void Form1_Load(object sender, EventArgs e)
         {
             videoCaptureDevice = new VideoCaptureDevice(filterInfoCollection[0].MonikerString);
-            videoCaptureDevice.NewFrame += videoCaptureDevice_NewFrame;
+            videoCaptureDevice.NewFrame += new NewFrameEventHandler(videoCaptureDevice_NewFrame);
             videoCaptureDevice.Start();
 
-            timer1 = new Timer
+            if (timer1 == null)
             {
-                Interval = 500 
-            };
-            timer1.Tick += timer1_Tick;
+                timer1 = new Timer();
+                timer1.Interval = 100; 
+                timer1.Tick += timer1_Tick;
+            }
             timer1.Start();
         }
 
         private void videoCaptureDevice_NewFrame(object sender, NewFrameEventArgs eventArgs)
         {
-            if (pictureBox1.InvokeRequired)
-            {
-                pictureBox1.Invoke(new Action(() => pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone()));
-            }
-            else
-            {
-                pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
-            }
+            pictureBox1.Image = (Bitmap)eventArgs.Frame.Clone();
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
@@ -59,9 +63,6 @@ namespace ScannerQR
             if (videoCaptureDevice != null && videoCaptureDevice.IsRunning)
             {
                 videoCaptureDevice.Stop();
-            }
-            if (timer1 != null)
-            {
                 timer1.Stop();
             }
         }
@@ -71,45 +72,40 @@ namespace ScannerQR
             string connectionString = "Data Source=localhost;Initial Catalog=AssignmentPRN;User ID=sa;Password=123";
             User user = null;
 
-            try
+            using (SqlConnection conn = new SqlConnection(connectionString))
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                string sql = "SELECT * FROM Users WHERE UserID = @userId AND IsDeleted = 0";
+
+                SqlCommand cmd = new SqlCommand(sql, conn);
+                cmd.Parameters.AddWithValue("@userId", userId);
+
+                conn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
                 {
-                    string sql = "SELECT * FROM Users WHERE UserID = @userId AND IsDeleted = 0";
-                    using (SqlCommand cmd = new SqlCommand(sql, conn))
+                    user = new User
                     {
-                        cmd.Parameters.AddWithValue("@userId", userId);
-                        conn.Open();
-                        using (SqlDataReader reader = cmd.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                user = new User
-                                {
-                                    UserID = reader.GetInt32(reader.GetOrdinal("UserID")),
-                                    SupplierID = reader.IsDBNull(reader.GetOrdinal("SupplierID")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("SupplierID")),
-                                    Username = reader.GetString(reader.GetOrdinal("Username")),
-                                    Password = reader.GetString(reader.GetOrdinal("Password")),
-                                    FullName = reader.GetString(reader.GetOrdinal("FullName")),
-                                    Email = reader.GetString(reader.GetOrdinal("Email")),
-                                    Phone = reader.IsDBNull(reader.GetOrdinal("Phone")) ? null : reader.GetString(reader.GetOrdinal("Phone")),
-                                    DateOfBirth = reader.IsDBNull(reader.GetOrdinal("DateOfBirth"))
-                                        ? (DateTime?)null
-                                        : reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
-                                    Gender = reader.IsDBNull(reader.GetOrdinal("Gender")) ? null : reader.GetString(reader.GetOrdinal("Gender")),
-                                    RoleID = reader.GetInt32(reader.GetOrdinal("RoleID")),
-                                    Avatar = reader.IsDBNull(reader.GetOrdinal("Avatar")) ? null : reader.GetString(reader.GetOrdinal("Avatar")),
-                                    Address = reader.IsDBNull(reader.GetOrdinal("Address")) ? null : reader.GetString(reader.GetOrdinal("Address")),
-                                    IsDeleted = reader.GetBoolean(reader.GetOrdinal("IsDeleted"))
-                                };
-                            }
-                        }
-                    }
+                        UserID = reader.GetInt32(reader.GetOrdinal("UserID")),
+                        SupplierID = reader.IsDBNull(reader.GetOrdinal("SupplierID")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("SupplierID")),
+                        Username = reader.GetString(reader.GetOrdinal("Username")),
+                        Password = reader.GetString(reader.GetOrdinal("Password")),
+                        FullName = reader.GetString(reader.GetOrdinal("FullName")),
+                        Email = reader.GetString(reader.GetOrdinal("Email")),
+                        Phone = reader.IsDBNull(reader.GetOrdinal("Phone")) ? null : reader.GetString(reader.GetOrdinal("Phone")),
+                        DateOfBirth = reader.IsDBNull(reader.GetOrdinal("DateOfBirth"))
+                            ? (DateTime?)null
+                            : reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
+                        Gender = reader.IsDBNull(reader.GetOrdinal("Gender")) ? null : reader.GetString(reader.GetOrdinal("Gender")),
+                        RoleID = reader.GetInt32(reader.GetOrdinal("RoleID")),
+                        Avatar = reader.IsDBNull(reader.GetOrdinal("Avatar")) ? null : reader.GetString(reader.GetOrdinal("Avatar")),
+                        Address = reader.IsDBNull(reader.GetOrdinal("Address")) ? null : reader.GetString(reader.GetOrdinal("Address")),
+                        IsDeleted = reader.GetBoolean(reader.GetOrdinal("IsDeleted"))
+                    };
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Lỗi khi truy vấn cơ sở dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                reader.Close();
+                conn.Close();
             }
 
             return user;
@@ -118,28 +114,31 @@ namespace ScannerQR
         private void timer1_Tick(object sender, EventArgs e)
         {
             if (isProcessing || pictureBox1.Image == null)
-            {
-                return;
-            }
+                return; 
 
-            isProcessing = true; 
-            try
+            BarcodeReader barcodeReader = new BarcodeReader();
+            Result result = barcodeReader.Decode((Bitmap)pictureBox1.Image);
+            if (result != null)
             {
-                Result result = barcodeReader.Decode((Bitmap)pictureBox1.Image);
-                if (result != null)
+                string qrCodeText = result.Text;
+                if (qrCodeText == lastScannedQrCode)
                 {
-                    string qrCodeText = result.Text;
+                    return; 
+                }
+
+                isProcessing = true; 
+                timer1.Stop(); 
+                lastScannedQrCode = qrCodeText; 
+
+                try
+                {
                     if (int.TryParse(qrCodeText, out int id))
                     {
                         User user = LayUserTheoId(id);
                         if (user != null)
                         {
-                            timer1.Stop();
-                            if (videoCaptureDevice != null && videoCaptureDevice.IsRunning)
-                            {
-                                videoCaptureDevice.Stop();
-                            }
                             MessageBox.Show($"Đăng nhập thành công: {user.FullName}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            videoCaptureDevice.Stop();
 
                             try
                             {
@@ -148,11 +147,9 @@ namespace ScannerQR
                                 {
                                     MessageBox.Show($"Không tìm thấy WPF.exe tại: {wpfAppPath}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                     isProcessing = false;
+                                    lastScannedQrCode = null; 
                                     timer1.Start();
-                                    if (videoCaptureDevice != null)
-                                    {
-                                        videoCaptureDevice.Start();
-                                    }
+                                    videoCaptureDevice.Start();
                                     return;
                                 }
 
@@ -163,31 +160,41 @@ namespace ScannerQR
                             {
                                 MessageBox.Show($"Lỗi khi khởi động ứng dụng WPF: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                                 isProcessing = false;
+                                lastScannedQrCode = null; 
                                 timer1.Start();
-                                if (videoCaptureDevice != null)
-                                {
-                                    videoCaptureDevice.Start();
-                                }
+                                videoCaptureDevice.Start();
                             }
                         }
                         else
                         {
                             MessageBox.Show("Không tìm thấy người dùng!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            isProcessing = false;
+                            lastScannedQrCode = null; 
+                            timer1.Start();
+                            videoCaptureDevice.Start();
                         }
                     }
                     else
                     {
                         MessageBox.Show("Mã QR không chứa ID hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        isProcessing = false;
+                        lastScannedQrCode = null; 
+                        timer1.Start();
+                        videoCaptureDevice.Start();
                     }
                 }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Lỗi khi xử lý mã QR: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    isProcessing = false;
+                    lastScannedQrCode = null;
+                    timer1.Start();
+                    videoCaptureDevice.Start();
+                }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"Lỗi khi xử lý mã QR: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                isProcessing = false; 
+                isProcessing = false;
             }
         }
 
