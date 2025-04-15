@@ -1,13 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Data.SqlClient;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using AForge.Video;
 using AForge.Video.DirectShow;
@@ -19,15 +13,17 @@ namespace ScannerQR
     {
         private FilterInfoCollection filterInfoCollection;
         private VideoCaptureDevice videoCaptureDevice;
-        private bool isLoggedIn = false; // Cờ để kiểm tra trạng thái đăng nhập
+        private readonly BarcodeReader barcodeReader = new BarcodeReader();
+        private bool isProcessing = false; 
 
         public Form1()
         {
             InitializeComponent();
             filterInfoCollection = new FilterInfoCollection(FilterCategory.VideoInputDevice);
-            if (filterInfoCollection.Count == 0)
+            if (filterInfoCollection == null || filterInfoCollection.Count == 0)
             {
                 MessageBox.Show("Không có camera trong máy!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                this.Close();
                 return;
             }
         }
@@ -35,11 +31,15 @@ namespace ScannerQR
         private void Form1_Load(object sender, EventArgs e)
         {
             videoCaptureDevice = new VideoCaptureDevice(filterInfoCollection[0].MonikerString);
-            videoCaptureDevice.NewFrame += new NewFrameEventHandler(videoCaptureDevice_NewFrame);
+            videoCaptureDevice.NewFrame += videoCaptureDevice_NewFrame;
             videoCaptureDevice.Start();
 
-            
-            timer1.Start(); 
+            timer1 = new Timer
+            {
+                Interval = 500 
+            };
+            timer1.Tick += timer1_Tick;
+            timer1.Start();
         }
 
         private void videoCaptureDevice_NewFrame(object sender, NewFrameEventArgs eventArgs)
@@ -71,39 +71,45 @@ namespace ScannerQR
             string connectionString = "Data Source=localhost;Initial Catalog=AssignmentPRN;User ID=sa;Password=123";
             User user = null;
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            try
             {
-                string sql = "SELECT * FROM Users WHERE UserID = @userId AND IsDeleted = 0";
-                SqlCommand cmd = new SqlCommand(sql, conn);
-                cmd.Parameters.AddWithValue("@userId", userId);
-
-                conn.Open();
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                if (reader.Read())
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    user = new User
+                    string sql = "SELECT * FROM Users WHERE UserID = @userId AND IsDeleted = 0";
+                    using (SqlCommand cmd = new SqlCommand(sql, conn))
                     {
-                        UserID = reader.GetInt32(reader.GetOrdinal("UserID")),
-                        SupplierID = reader.IsDBNull(reader.GetOrdinal("SupplierID")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("SupplierID")),
-                        Username = reader.GetString(reader.GetOrdinal("Username")),
-                        Password = reader.GetString(reader.GetOrdinal("Password")),
-                        FullName = reader.GetString(reader.GetOrdinal("FullName")),
-                        Email = reader.GetString(reader.GetOrdinal("Email")),
-                        Phone = reader.IsDBNull(reader.GetOrdinal("Phone")) ? null : reader.GetString(reader.GetOrdinal("Phone")),
-                        DateOfBirth = reader.IsDBNull(reader.GetOrdinal("DateOfBirth"))
-                            ? (DateTime?)null
-                            : reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
-                        Gender = reader.IsDBNull(reader.GetOrdinal("Gender")) ? null : reader.GetString(reader.GetOrdinal("Gender")),
-                        RoleID = reader.GetInt32(reader.GetOrdinal("RoleID")),
-                        Avatar = reader.IsDBNull(reader.GetOrdinal("Avatar")) ? null : reader.GetString(reader.GetOrdinal("Avatar")),
-                        Address = reader.IsDBNull(reader.GetOrdinal("Address")) ? null : reader.GetString(reader.GetOrdinal("Address")),
-                        IsDeleted = reader.GetBoolean(reader.GetOrdinal("IsDeleted"))
-                    };
+                        cmd.Parameters.AddWithValue("@userId", userId);
+                        conn.Open();
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                user = new User
+                                {
+                                    UserID = reader.GetInt32(reader.GetOrdinal("UserID")),
+                                    SupplierID = reader.IsDBNull(reader.GetOrdinal("SupplierID")) ? (int?)null : reader.GetInt32(reader.GetOrdinal("SupplierID")),
+                                    Username = reader.GetString(reader.GetOrdinal("Username")),
+                                    Password = reader.GetString(reader.GetOrdinal("Password")),
+                                    FullName = reader.GetString(reader.GetOrdinal("FullName")),
+                                    Email = reader.GetString(reader.GetOrdinal("Email")),
+                                    Phone = reader.IsDBNull(reader.GetOrdinal("Phone")) ? null : reader.GetString(reader.GetOrdinal("Phone")),
+                                    DateOfBirth = reader.IsDBNull(reader.GetOrdinal("DateOfBirth"))
+                                        ? (DateTime?)null
+                                        : reader.GetDateTime(reader.GetOrdinal("DateOfBirth")),
+                                    Gender = reader.IsDBNull(reader.GetOrdinal("Gender")) ? null : reader.GetString(reader.GetOrdinal("Gender")),
+                                    RoleID = reader.GetInt32(reader.GetOrdinal("RoleID")),
+                                    Avatar = reader.IsDBNull(reader.GetOrdinal("Avatar")) ? null : reader.GetString(reader.GetOrdinal("Avatar")),
+                                    Address = reader.IsDBNull(reader.GetOrdinal("Address")) ? null : reader.GetString(reader.GetOrdinal("Address")),
+                                    IsDeleted = reader.GetBoolean(reader.GetOrdinal("IsDeleted"))
+                                };
+                            }
+                        }
+                    }
                 }
-
-                reader.Close();
-                conn.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi truy vấn cơ sở dữ liệu: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return user;
@@ -111,16 +117,16 @@ namespace ScannerQR
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (isLoggedIn || pictureBox1.Image == null) 
+            if (isProcessing || pictureBox1.Image == null)
             {
                 return;
             }
 
-            BarcodeReader barcodeReader = new BarcodeReader();
-            Result result = barcodeReader.Decode((Bitmap)pictureBox1.Image);
-            if (result != null)
+            isProcessing = true; 
+            try
             {
-                try
+                Result result = barcodeReader.Decode((Bitmap)pictureBox1.Image);
+                if (result != null)
                 {
                     string qrCodeText = result.Text;
                     if (int.TryParse(qrCodeText, out int id))
@@ -128,13 +134,12 @@ namespace ScannerQR
                         User user = LayUserTheoId(id);
                         if (user != null)
                         {
-                            isLoggedIn = true;
-                            videoCaptureDevice.Stop();
-                            videoCaptureDevice = null;
                             timer1.Stop();
+                            if (videoCaptureDevice != null && videoCaptureDevice.IsRunning)
+                            {
+                                videoCaptureDevice.Stop();
+                            }
                             MessageBox.Show($"Đăng nhập thành công: {user.FullName}", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                            
 
                             try
                             {
@@ -142,17 +147,27 @@ namespace ScannerQR
                                 if (!System.IO.File.Exists(wpfAppPath))
                                 {
                                     MessageBox.Show($"Không tìm thấy WPF.exe tại: {wpfAppPath}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    isProcessing = false;
+                                    timer1.Start();
+                                    if (videoCaptureDevice != null)
+                                    {
+                                        videoCaptureDevice.Start();
+                                    }
                                     return;
                                 }
 
                                 Process.Start(wpfAppPath, $"--userId {user.UserID}");
-                                this.Close(); 
+                                this.Close();
                             }
                             catch (Exception ex)
                             {
                                 MessageBox.Show($"Lỗi khi khởi động ứng dụng WPF: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                isLoggedIn = false; 
-                                return;
+                                isProcessing = false;
+                                timer1.Start();
+                                if (videoCaptureDevice != null)
+                                {
+                                    videoCaptureDevice.Start();
+                                }
                             }
                         }
                         else
@@ -165,10 +180,14 @@ namespace ScannerQR
                         MessageBox.Show("Mã QR không chứa ID hợp lệ!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Lỗi khi xử lý mã QR: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi xử lý mã QR: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isProcessing = false; 
             }
         }
 
@@ -182,6 +201,7 @@ namespace ScannerQR
             {
                 timer1.Stop();
             }
+
             try
             {
                 string wpfAppPath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\WPF\bin\Debug\net9.0-windows\WPF.exe";
@@ -197,7 +217,6 @@ namespace ScannerQR
             catch (Exception ex)
             {
                 MessageBox.Show($"Lỗi khi khởi động ứng dụng WPF: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
             }
         }
     }

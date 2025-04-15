@@ -55,10 +55,10 @@ namespace CameraTest
                 MessageBox.Show("Không nhận được User ID!");
             }
 
-          
+
         }
 
-     
+
 
         private void LuuAnhVaoDatabase(int userId, string imagePath)
         {
@@ -125,16 +125,17 @@ namespace CameraTest
 
                     MessageBox.Show("Đăng ký thành công!", "Thông báo");
                 }
+                else
+                {
+                    XoaUserTheoId(userId);
+                    pictureBox1.Image.Dispose();
+                    pictureBox1.Image = null;
+                }
                 imageCamera.Stop();
                 imageCamera = null;
-                this.Close(); 
+                this.Close();
             }
-            else
-            {
-                XoaUserTheoId(userId);
-                pictureBox1.Image.Dispose();
-                pictureBox1.Image = null;
-            }
+
 
         }
 
@@ -167,6 +168,6 @@ namespace CameraTest
             }
         }
 
-       
+
     }
 }
