@@ -17,6 +17,96 @@ namespace Service
             Random random = new Random();
             return random.Next(100000, 999999).ToString(); // Sinh số ngẫu nhiên 6 chữ số
         }
+
+        public bool SendQRCodeEmail(string to, MemoryStream ms)
+        {
+            bool send = false;
+            string from = "lenam7546@gmail.com";
+            string subject = "Mã QR của bạn";
+            string pass = "unvnxqphjvvkmxlj";
+
+            try
+            {
+                // Create email with QR code attachment
+                string body = $@"
+                <html>
+                <head>
+                    <style>
+                        body {{
+                            font-family: Arial, sans-serif;
+                            background-color: #f4f4f4;
+                            text-align: center;
+                            padding: 20px;
+                        }}
+                        .container {{
+                            background: #ffffff;
+                            padding: 20px;
+                            border-radius: 8px;
+                            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+                            max-width: 500px;
+                            margin: auto;
+                        }}
+                        .header {{
+                            background: #0078D4;
+                            padding: 15px;
+                            border-radius: 8px 8px 0px 0px;
+                            color: white;
+                            font-size: 22px;
+                            font-weight: bold;
+                        }}
+                        .footer {{
+                            font-size: 12px;
+                            color: #7f8c8d;
+                            margin-top: 20px;
+                        }}
+                    </style>
+                </head>
+                <body>
+                    <div class='container'>
+                        <div class='header'>
+                            Mã QR của bạn
+                        </div>
+                        <p>Xin chào,</p>
+                        <p>Đây là mã QR của bạn. Vui lòng sử dụng mã này để xác thực.</p>
+                        <img src='cid:qrcode' alt='QR Code' style='max-width:200px;'/>
+                        <p class='footer'>Nếu bạn không yêu cầu mã QR này, hãy bỏ qua email này.</p>
+                        <p class='footer'>Trân trọng,<br>Đội ngũ hỗ trợ</p>
+                    </div>
+                </body>
+                </html>";
+
+                MailMessage mail = new MailMessage();
+                mail.From = new MailAddress(from);
+                mail.To.Add(to);
+                mail.Subject = subject;
+                mail.Body = body;
+                mail.IsBodyHtml = true;
+
+                // Add QR code as inline attachment
+                ms.Position = 0; // Đảm bảo vị trí stream ở đầu
+                Attachment inline = new Attachment(ms, "qrcode.png", "image/png");
+                inline.ContentDisposition.Inline = true;
+                inline.ContentId = "qrcode";
+                mail.Attachments.Add(inline);
+
+                // Send email
+                using (SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587))
+                {
+                    smtp.EnableSsl = true;
+                    smtp.Credentials = new NetworkCredential(from, pass);
+                    smtp.Send(mail);
+                }
+
+                send = true;
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return send;
+        }
+
         public bool SendEmail(string to, string OTP)
         {
 
@@ -99,7 +189,7 @@ namespace Service
     </html>";
 
 
-            pass = "unvnxqphjvvkmxlj"; // Mật khẩu ứng dụng Gmail
+            pass = "unvnxqphjvvkmxlj"; 
 
             try
             {

@@ -1,5 +1,6 @@
 ﻿
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 
 using System.Text.RegularExpressions;
@@ -22,7 +23,7 @@ namespace WPF.Supplier
         private string fileName;
         private string destinationPathUser = null;
         private string destinationPathSupplier = null;
-
+        private EmailSenderService emailSenderService;
         private UserService _userService;
         private SupplierService _supplierService;
         private DataAccess.Models.User user;
@@ -32,6 +33,7 @@ namespace WPF.Supplier
             user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             _userService = new UserService();
             _supplierService = new SupplierService();
+            emailSenderService = new EmailSenderService();  
             supplier = _supplierService.GetSupplierByUserId(user.UserId);
             InitializeComponent();
             Load();
@@ -288,6 +290,7 @@ namespace WPF.Supplier
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             string input = user.UserId.ToString();
+            string userEmail = user.Email; // Giả sử user có property Email
 
             using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
             using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(input, QRCodeGenerator.ECCLevel.H))
@@ -295,7 +298,7 @@ namespace WPF.Supplier
             using (Bitmap qrBitmap = qrCode.GetGraphic(20))
             using (MemoryStream ms = new MemoryStream())
             {
-                qrBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                qrBitmap.Save(ms, ImageFormat.Png);
                 ms.Position = 0;
 
                 BitmapImage qrImage = new BitmapImage();
@@ -306,6 +309,13 @@ namespace WPF.Supplier
 
                 imgQRCode.Source = qrImage;
                 qrOverlay.Visibility = Visibility.Visible;
+
+                ms.Position = 0;
+                bool emailSent = emailSenderService.SendQRCodeEmail(userEmail, ms);
+                if (emailSent)
+                {
+                    MessageBox.Show("Mã QR đã được gửi đến email của bạn!");
+                }
             }
         }
 

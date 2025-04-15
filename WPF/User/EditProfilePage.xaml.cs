@@ -1,6 +1,7 @@
 ﻿ using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -33,8 +34,10 @@ namespace WPF.User
         private string fileName;
         private DataAccess.Models.User user;
         private string destinationPathUser = null;
+        private EmailSenderService emailSenderService;
         public EditProfilePage()
         {
+            emailSenderService = new();
             userService = new UserService();
             user = System.Windows.Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             InitializeComponent();
@@ -196,6 +199,7 @@ namespace WPF.User
         private void btnGenerateQR_Click(object sender, RoutedEventArgs e)
         {
             string input = user.UserId.ToString();
+            string userEmail = user.Email; // Giả sử user có property Email
 
             using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
             using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(input, QRCodeGenerator.ECCLevel.H))
@@ -203,7 +207,7 @@ namespace WPF.User
             using (Bitmap qrBitmap = qrCode.GetGraphic(20))
             using (MemoryStream ms = new MemoryStream())
             {
-                qrBitmap.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+                qrBitmap.Save(ms, ImageFormat.Png);
                 ms.Position = 0;
 
                 BitmapImage qrImage = new BitmapImage();
@@ -214,6 +218,13 @@ namespace WPF.User
 
                 imgQRCode.Source = qrImage;
                 qrOverlay.Visibility = Visibility.Visible;
+
+                ms.Position = 0; 
+                bool emailSent = emailSenderService.SendQRCodeEmail(userEmail, ms);
+                if (emailSent)
+                {
+                    MessageBox.Show("Mã QR đã được gửi đến email của bạn!");
+                }
             }
         }
     }
