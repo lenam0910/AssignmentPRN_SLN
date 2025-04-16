@@ -130,6 +130,7 @@ namespace CameraTest
                     XoaUserTheoId(userId);
                     pictureBox1.Image.Dispose();
                     pictureBox1.Image = null;
+                    MessageBox.Show("Đăng ký thất bại!", "Thông báo");
                 }
                 imageCamera.Stop();
                 imageCamera = null;
@@ -168,6 +169,6 @@ namespace CameraTest
             }
         }
 
-
+        
     }
 }
