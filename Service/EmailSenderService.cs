@@ -67,7 +67,7 @@ namespace Service
                             Mã QR của bạn
                         </div>
                         <p>Xin chào,</p>
-                        <p>Đây là mã QR của bạn. Vui lòng sử dụng mã này để xác thực.</p>
+                        <p>Đây là mã QR của bạn. Vui lòng sử dụng mã này để đăng nhập.</p>
                         <img src='cid:qrcode' alt='QR Code' style='max-width:200px;'/>
                         <p class='footer'>Nếu bạn không yêu cầu mã QR này, hãy bỏ qua email này.</p>
                         <p class='footer'>Trân trọng,<br>Đội ngũ hỗ trợ</p>

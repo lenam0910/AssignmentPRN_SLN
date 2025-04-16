@@ -290,7 +290,7 @@ namespace WPF.Supplier
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             string input = user.UserId.ToString();
-            string userEmail = user.Email; // Giả sử user có property Email
+            string userEmail = user.Email; 
 
             using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
             using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(input, QRCodeGenerator.ECCLevel.H))
