@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Tool"
         xmlns:cfs="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         mc:Ignorable="d"
-        Title="YouTube" Height="450" Width="800">
+        Title="Tool" Height="450" Width="800">
     <Grid>
         <cfs:ChromiumWebBrowser x:Name="utube" />
     </Grid>

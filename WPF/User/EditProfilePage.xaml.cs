@@ -19,17 +19,18 @@ using System.Windows.Shapes;
 using DataAccess.Models;
 using QRCoder;
 using Service;
+using WPF.Admin;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace WPF.User
 {
-    /// <summary>
-    /// Interaction logic for EditProfilePage.xaml
-    /// </summary>
+    /// <summary>  
+    /// Interaction logic for EditProfilePage.xaml  
+    /// </summary>  
     public partial class EditProfilePage : Page
     {
-        private string saveDirectoryUser = @"C:\Users\ADMIN\Desktop\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\";
-        private  UserService userService;
+        private string saveDirectoryUser = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\";
+        private UserService userService;
         private string selectedFilePath;
         private string fileName;
         private DataAccess.Models.User user;
@@ -66,17 +67,8 @@ namespace WPF.User
                 imgUserAvatar = null;
             }
 
-           
-        }
 
-        private void DeleteOldUserAvatar()
-        {
-            if (!string.IsNullOrEmpty(user.Avatar) && File.Exists(user.Avatar))
-            {
-                File.Delete(user.Avatar);
-            }
         }
-        
 
         private void saveAvatar()
         {
@@ -97,8 +89,6 @@ namespace WPF.User
                 destinationPathUser = System.IO.Path.Combine(saveDirectoryUser, fileNameWithTimestamp);
 
                 Directory.CreateDirectory(saveDirectoryUser);
-
-
 
                 imgUserAvatar.Source = new BitmapImage(new Uri(selectedFilePath));
                 imgUserAvatar.Visibility = Visibility.Visible;
@@ -135,7 +125,7 @@ namespace WPF.User
                 user.Phone = txtUserPhone.Text.Trim();
                 user.Address = txtUserAddress.Text.Trim();
 
-                if (!string.IsNullOrWhiteSpace(txtPassword.Password))
+                if (!string.IsNullOrWhiteSpace(txtPassword.Password) && !txtPassword.Password.ToString().Equals(user.Password.ToString()))
                 {
                     string hassPass = HashPassword(txtPassword.Password);
                     user.Password = hassPass;
@@ -143,7 +133,6 @@ namespace WPF.User
 
                 if (imgUserAvatar.Source != null && !string.IsNullOrEmpty(destinationPathUser))
                 {
-                    DeleteOldUserAvatar();
                     user.Avatar = destinationPathUser;
                 }
 
@@ -152,8 +141,16 @@ namespace WPF.User
                 {
                     if (imgUserAvatar.Source != null && !string.IsNullOrEmpty(destinationPathUser))
                     {
-                        Console.WriteLine(destinationPathUser);
+
                         saveAvatar();
+                        foreach (Window window in System.Windows.Application.Current.Windows)
+                        {
+                            if (window is UserDashboard userDashboard)
+                            {
+                                userDashboard.RefreshUserProfile();
+                                break;
+                            }
+                        }
                     }
                     MessageBox.Show("Sửa thông tin người dùng thành công!");
                 }
@@ -199,7 +196,7 @@ namespace WPF.User
         private void btnGenerateQR_Click(object sender, RoutedEventArgs e)
         {
             string input = user.UserId.ToString();
-            string userEmail = user.Email; // Giả sử user có property Email
+            string userEmail = user.Email; // Giả sử user có property Email  
 
             using (QRCodeGenerator qrGenerator = new QRCodeGenerator())
             using (QRCodeData qrCodeData = qrGenerator.CreateQrCode(input, QRCodeGenerator.ECCLevel.H))
@@ -219,7 +216,7 @@ namespace WPF.User
                 imgQRCode.Source = qrImage;
                 qrOverlay.Visibility = Visibility.Visible;
 
-                ms.Position = 0; 
+                ms.Position = 0;
                 bool emailSent = emailSenderService.SendQRCodeEmail(userEmail, ms);
                 if (emailSent)
                 {

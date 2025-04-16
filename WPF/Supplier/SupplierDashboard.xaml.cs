@@ -92,5 +92,23 @@ namespace WPF.Supplier
         {
             MainFrame.Navigate(new ProductIncomePage());
         }
+
+        public void RefreshUserProfile()
+        {
+            var user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
+            if (user != null)
+            {
+                if (!string.IsNullOrEmpty(user.Avatar))
+                {
+                    string imagePath = user.Avatar;
+                    if (File.Exists(imagePath))
+                    {
+                        avaSupplier.Source = null;
+                        avaSupplier.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+                    }
+                }
+            }
+        }
+
     }
 }

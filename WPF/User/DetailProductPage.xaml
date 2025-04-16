@@ -63,8 +63,20 @@
                         <TextBlock Text="YouTube" FontSize="14" VerticalAlignment="Center"/>
                     </StackPanel>
                 </Button>
+                <Button Background="#4285F4" Foreground="White" Width="120" Height="40" Cursor="Hand" Click="OpenGoogle_Click" Margin="0,0,5,0">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="🌐" FontSize="20" Margin="0,0,5,0"/>
+                        <TextBlock Text="Google" FontSize="14" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
 
-                
+                <Button Background="#000000" Foreground="White" Width="120" Height="40" Cursor="Hand" Click="OpenTikTok_Click">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="🎵" FontSize="20" Margin="0,0,5,0"/>
+                        <TextBlock Text="TikTok" FontSize="14" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
             </StackPanel>
         </StackPanel>
     </Grid>

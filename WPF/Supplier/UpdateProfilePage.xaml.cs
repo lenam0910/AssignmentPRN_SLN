@@ -10,14 +10,15 @@ using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using QRCoder;
 using Service;
+using WPF.User;
 
 namespace WPF.Supplier
 {
 
     public partial class UpdateProfilePage : Page
     {
-        private string saveDirectoryUser = @"C:\Users\ADMIN\Desktop\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\";
-        private string saveDirectorySupplier = @"C:\Users\ADMIN\Desktop\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Supplier\";
+        private string saveDirectoryUser = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\";
+        private string saveDirectorySupplier = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\WPF\Supplier\";
 
         private string selectedFilePath;
         private string fileName;
@@ -226,7 +227,7 @@ namespace WPF.Supplier
                 user.Phone = txtUserPhone.Text.Trim();
                 user.Address = txtUserAddress.Text.Trim();
 
-                if (!string.IsNullOrWhiteSpace(txtPassword.Password))
+                if (!string.IsNullOrWhiteSpace(txtPassword.Password) && !txtPassword.Password.ToString().Equals(user.Password.ToString()))
                 {
                     string hassPass = HashPassword(txtPassword.Password);
                     user.Password = hassPass;
@@ -234,7 +235,6 @@ namespace WPF.Supplier
 
                 if (imgUserAvatar.Source != null && !string.IsNullOrEmpty(destinationPathUser))
                 {
-                    DeleteOldUserAvatar();
                     user.Avatar = destinationPathUser;
                 }
 
@@ -242,7 +242,16 @@ namespace WPF.Supplier
                 {
                     if (imgUserAvatar.Source != null)
                     {
+
                         saveAvatar();
+                        foreach (Window window in System.Windows.Application.Current.Windows)
+                        {
+                            if (window is SupplierDashboard supplierDashboard)
+                            {
+                                supplierDashboard.RefreshUserProfile();
+                                break;
+                            }
+                        }
                     }
                     MessageBox.Show("Sửa thông tin người dùng thành công!");
                 }
@@ -271,13 +280,7 @@ namespace WPF.Supplier
 
 
 
-        private void DeleteOldUserAvatar()
-        {
-            if (!string.IsNullOrEmpty(user.Avatar) && File.Exists(user.Avatar))
-            {
-                File.Delete(user.Avatar);
-            }
-        }
+       
 
         private void DeleteOldSupplierAvatar()
         {

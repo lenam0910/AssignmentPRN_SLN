@@ -35,6 +35,22 @@ namespace WPF.User
             login.Show();
             this.Hide();
         }
+        public void RefreshUserProfile()
+        {
+            var user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
+            if (user != null)
+            {
+                if (!string.IsNullOrEmpty(user.Avatar))
+                {
+                    string imagePath = user.Avatar;
+                    if (File.Exists(imagePath))
+                    {
+                        avarImg.Source = null;
+                        avarImg.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
+                    }
+                }
+            }
+        }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {

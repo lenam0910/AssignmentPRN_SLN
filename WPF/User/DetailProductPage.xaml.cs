@@ -239,6 +239,32 @@ namespace WPF.User
             }
         }
 
-       
+        private void OpenGoogle_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string testExePath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\Tool\bin\Debug\Tool.exe";
+                string url = $"https://www.google.com/search?q={Uri.EscapeDataString(inventoryRoot.Product.ProductName)}";
+                Process.Start(testExePath, $"\"{url}\"");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
+        }
+
+        private void OpenTikTok_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                string testExePath = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\Tool\bin\Debug\Tool.exe";
+                string url = $"https://www.tiktok.com/search?q={Uri.EscapeDataString(inventoryRoot.Product.ProductName)}";
+                Process.Start(testExePath, $"\"{url}\"");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi: " + ex.Message);
+            }
+        }
     }
 }
