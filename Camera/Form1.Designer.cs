@@ -33,6 +33,8 @@
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -79,11 +81,33 @@
             this.label2.Text = "VUI LÒNG CHỤP ẢNH ĐỂ TẠO TÀI KHOẢN NẾU KHÔNG SẼ BỊ HỦY ĐĂNG KÝ";
             this.label2.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(1102, 629);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(95, 29);
+            this.button2.TabIndex = 4;
+            this.button2.Text = "Chụp lại";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(12, 629);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(95, 29);
+            this.button3.TabIndex = 5;
+            this.button3.Text = "Thoát";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1297, 670);
+            this.Controls.Add(this.button3);
+            this.Controls.Add(this.button2);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
@@ -108,6 +132,8 @@
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button button3;
     }
 }
 

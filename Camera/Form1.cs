@@ -94,6 +94,8 @@ namespace CameraTest
                 conn.Close();
             }
         }
+
+      
         private void button1_Click(object sender, EventArgs e)
         {
             if (pictureBox1.Image == null)
@@ -112,34 +114,24 @@ namespace CameraTest
             if (result == DialogResult.Yes)
             {
                 saveFileDialog1.InitialDirectory = @"D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Avar\";
-
                 saveFileDialog1.FileName = $"avatar_{userId}.jpg";
 
                 if (saveFileDialog1.ShowDialog() == DialogResult.OK)
                 {
                     pictureBox1.Image.Save(saveFileDialog1.FileName);
-
                     string savedPath = saveFileDialog1.FileName;
-
                     LuuAnhVaoDatabase(userId, savedPath);
-
                     MessageBox.Show("Đăng ký thành công!", "Thông báo");
-                }
-                else
-                {
-                    XoaUserTheoId(userId);
-                    pictureBox1.Image.Dispose();
-                    pictureBox1.Image = null;
-                    MessageBox.Show("Đăng ký thất bại!", "Thông báo");
                 }
                 imageCamera.Stop();
                 imageCamera = null;
                 this.Close();
+
             }
 
 
+            
         }
-
 
 
         private void imageCamera_NewFrame(object sender, NewFrameEventArgs eventArgs)
@@ -169,6 +161,49 @@ namespace CameraTest
             }
         }
 
-        
+        private void button2_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (imageCamera != null && imageCamera.IsRunning)
+                {
+                    imageCamera.SignalToStop();
+                    imageCamera.WaitForStop();
+                    imageCamera = null;
+                }
+
+                if (pictureBox1.Image != null)
+                {
+                    pictureBox1.Image.Dispose();
+                    pictureBox1.Image = null;
+                }
+
+                if (camera == null || camera.Count == 0)
+                {
+                    MessageBox.Show("Không có camera trong máy!");
+                    return;
+                }
+
+                imageCamera = new VideoCaptureDevice(camera[0].MonikerString);
+                imageCamera.NewFrame += new NewFrameEventHandler(imageCamera_NewFrame);
+                imageCamera.Start();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Đã xảy ra lỗi khi chụp lại: {ex.Message}", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            XoaUserTheoId(userId);
+            pictureBox1.Image.Dispose();
+            pictureBox1.Image = null;
+            imageCamera.Stop();
+            imageCamera = null;
+            MessageBox.Show("Đăng ký thất bại!", "Thông báo");
+            this.Close();
+
+        }
     }
 }
