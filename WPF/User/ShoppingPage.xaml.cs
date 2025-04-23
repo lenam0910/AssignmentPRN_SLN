@@ -16,21 +16,18 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Service;
-using Newtonsoft.Json.Linq;
 using DataAccess.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Collections.ObjectModel;
 
 namespace WPF.User
 {
-    /// <summary>
-    /// Interaction logic for ShoppingPage.xaml
-    /// </summary>
     public partial class ShoppingPage : System.Windows.Controls.Page
     {
         private ChatBotAI chatBotAI;
         private ProductService productService;
-        private StringBuilder chatHistory;
+        private StringBuilder chatHistory; // Lưu toàn bộ lịch sử (bao gồm cả câu của user)
+        private StringBuilder displayHistory; // Chỉ lưu câu của bot để hiển thị
         private SupplierService supplierService;
         private InventoryService inventoryService;
         private CategoryService categoryService;
@@ -39,50 +36,56 @@ namespace WPF.User
         private OrderDetailService orderDetailService;
         private List<Product> productLst;
         private WarehousesService WarehousesService;
+
         public ShoppingPage()
         {
-         
             user = System.Windows.Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             chatBotAI = new();
-           
             chatHistory = new StringBuilder();
+            displayHistory = new StringBuilder(); // Khởi tạo displayHistory
             InitializeComponent();
         }
 
-
-
         private async Task helpBot(string userInput)
         {
+            // Lưu câu của user vào chatHistory
             if (chatHistory.Length > 0)
             {
-                chatHistory.AppendLine($"👤 Bạn: {userInput}"); 
+                chatHistory.AppendLine($"👤 Bạn: {userInput}");
             }
+           
 
             string output = await chatBotAI.SendRequestAndGetResponse(userInput);
 
-            // Xử lý xuống dòng
-            output = output.Replace("\\n", Environment.NewLine)
-                           .Replace("\n", Environment.NewLine)
-                           .Replace("**", "");
+            output = output.Replace("🤖 Tư vấn viên: ", "")
+                          .Replace("\\n", Environment.NewLine)
+                          .Replace("\n", Environment.NewLine)
+                          .Replace("**", "")
+                          .Trim();
 
-            chatHistory.AppendLine($"\n🤖 Tư vấn viên: {output}");
+            // Lưu câu của bot vào cả chatHistory và displayHistory
+            chatHistory.AppendLine($"🤖 Tư vấn viên: {output}");
+            displayHistory.AppendLine($"🤖 Tư vấn viên: {output}");
         }
-
 
         private async Task sendBot(string userInput)
         {
-            chatHistory.AppendLine($"👤 Bạn: {userInput}"); 
+            // Lưu câu của user vào chatHistory
+            displayHistory.AppendLine($"👤 Bạn: {userInput}");
 
             string output = await chatBotAI.SendRequestAndGetResponse(userInput);
 
-            // Xử lý xuống dòng
-            output = output.Replace("\\n", Environment.NewLine)
+            output = output.Replace("🤖 Tư vấn viên: ", "")
+                           .Replace("\\n", Environment.NewLine)
                            .Replace("\n", Environment.NewLine)
-                           .Replace("**", "");
+                           .Replace("**", "")
+                           .Trim();
 
-            chatHistory.AppendLine($"\n🤖 Tư vấn viên: {output}"); 
-
+            // Lưu câu của bot vào cả chatHistory và displayHistory
+            chatHistory.AppendLine($"🤖 Tư vấn viên: {output}");
+            displayHistory.AppendLine($"🤖 Tư vấn viên: {output}");
         }
+
         private async void button1_Click(object sender, RoutedEventArgs e)
         {
             string userInput = ChatInput.Text;
@@ -90,7 +93,7 @@ namespace WPF.User
 
             ChatInput.Clear();
             await sendBot(userInput);
-            ChatContent.Text = chatHistory.ToString(); 
+            ChatContent.Text = displayHistory.ToString(); // Hiển thị displayHistory thay vì chatHistory
         }
 
         private void OpenChatButton_Click(object sender, RoutedEventArgs e)
@@ -103,8 +106,8 @@ namespace WPF.User
         {
             ChatGptPopup.Visibility = Visibility.Collapsed;
             OpenChatButton.Visibility = Visibility.Visible;
-
         }
+
         private void load()
         {
             productService = new ProductService();
@@ -117,10 +120,8 @@ namespace WPF.User
             if (inventory == null || !inventory.Any())
             {
                 MessageBox.Show("Danh sách sản phẩm trống!");
-                return; 
+                return;
             }
-
-           
 
             CategoryFilter.ItemsSource = categoryService.getAll();
             CategoryFilter.DisplayMemberPath = "CategoryName";
@@ -129,6 +130,7 @@ namespace WPF.User
 
             CategoryFilter.SelectedItem = null;
         }
+
         private void Page_Loaded_1(object sender, RoutedEventArgs e)
         {
             load();
@@ -136,24 +138,16 @@ namespace WPF.User
 
         private async void lstProduct_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
             Inventory product = lstProduct.SelectedItem as Inventory;
             if (product != null)
             {
-                string input = $"GIới thiệu ngắn gọn về ưu điểm và nhược điểm của sản phẩm" + product.Product.ProductName + " này cho tôi, bạn với tư cách một người tư vấn sản phẩm";
+                string input = $"Giới thiệu ngắn gọn về ưu điểm và nhược điểm của sản phẩm " + product.Product.ProductName + " này cho tôi, bạn với tư cách một người tư vấn sản phẩm";
                 await helpBot(input);
                 ChatGptPopup.Visibility = Visibility.Visible;
                 OpenChatButton.Visibility = Visibility.Collapsed;
-                ChatContent.Text = chatHistory.ToString();
-
+                ChatContent.Text = displayHistory.ToString(); // Hiển thị displayHistory thay vì chatHistory
             }
-
-
         }
-
-
-
-        
 
         private void BuyNowButton_Click(object sender, RoutedEventArgs e)
         {
@@ -170,9 +164,6 @@ namespace WPF.User
                 int quantity = 1;
                 int getQuantityInven = inventoryService.getTotalQuantityByProductId(selectedProduct.ProductId);
 
-
-               
-
                 Order order = orderService.GetOrderByUserId(user.UserId);
                 if (order == null)
                 {
@@ -180,7 +171,7 @@ namespace WPF.User
                     if (orderService.addOrder(order))
                     {
                         MessageBox.Show("Tạo giỏ hàng mới thành công!");
-                        order = orderService.GetOrderByUserId(user.UserId); 
+                        order = orderService.GetOrderByUserId(user.UserId);
                     }
                 }
 
@@ -226,8 +217,6 @@ namespace WPF.User
             }
         }
 
-
-
         private void SearchBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             categoryService = new CategoryService();
@@ -271,10 +260,9 @@ namespace WPF.User
                     }
                 }
             }
-        
+
             lstProduct.ItemsSource = null;
             lstProduct.ItemsSource = productLst;
-            
         }
 
         private void CategoryFilter_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -319,9 +307,8 @@ namespace WPF.User
                         }
                     }
                 }
-               
             }
-         
+
             lstProduct.ItemsSource = null;
             lstProduct.ItemsSource = productLst;
         }
@@ -337,5 +324,3 @@ namespace WPF.User
         }
     }
 }
-
-

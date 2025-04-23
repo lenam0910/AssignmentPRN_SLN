@@ -98,6 +98,7 @@ namespace WPF.Supplier
             var user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             if (user != null)
             {
+                txtBlockHead.Text = " " + user.Username;
                 if (!string.IsNullOrEmpty(user.Avatar))
                 {
                     string imagePath = user.Avatar;

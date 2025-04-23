@@ -139,10 +139,20 @@ namespace WPF.User
                 bool isUpdated = userService.UpdateUser(user);
                 if (isUpdated)
                 {
+                    foreach (Window window in System.Windows.Application.Current.Windows)
+                    {
+                        if (window is UserDashboard userDashboard)
+                        {
+                            System.Windows.Application.Current.Properties["UserAccount"] = user;
+                            userDashboard.RefreshUserProfile();
+                            break;
+                        }
+                    }
                     if (imgUserAvatar.Source != null && !string.IsNullOrEmpty(destinationPathUser))
                     {
 
                         saveAvatar();
+
                         foreach (Window window in System.Windows.Application.Current.Windows)
                         {
                             if (window is UserDashboard userDashboard)

@@ -170,7 +170,6 @@ namespace WPF.Supplier
 
                 if (imgSupplierAvatar.Source != null && !string.IsNullOrEmpty(destinationPathSupplier))
                 {
-                    DeleteOldSupplierAvatar();
                     supplier.Avatar = destinationPathSupplier;
                 }
 
@@ -240,7 +239,8 @@ namespace WPF.Supplier
 
                 if (_userService.UpdateUser(user))
                 {
-                    if (imgUserAvatar.Source != null)
+                    
+                    if (!string.IsNullOrEmpty(selectedFilePath))
                     {
 
                         saveAvatar();

@@ -5,6 +5,7 @@ using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using System.Windows;
 using Newtonsoft.Json.Linq;
+
 using Service;
 
 namespace WPF.User
@@ -105,7 +106,7 @@ namespace WPF.User
             }
             else
             {
-                return $"Lỗi API: {response.StatusCode} - {response.ReasonPhrase}\nChi tiết: {responseBody}";
+                return $"Chat Bot chưa được kích hoạt, vui lòng đợi để Admin kích hoạt!";
             }
         }
 

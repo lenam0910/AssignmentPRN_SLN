@@ -40,6 +40,7 @@ namespace WPF.User
             var user = Application.Current.Properties["UserAccount"] as DataAccess.Models.User;
             if (user != null)
             {
+                
                 if (!string.IsNullOrEmpty(user.Avatar))
                 {
                     string imagePath = user.Avatar;
@@ -49,7 +50,11 @@ namespace WPF.User
                         avarImg.Source = new BitmapImage(new Uri(imagePath, UriKind.Absolute));
                     }
                 }
+                this.DataContext = null;
+                this.DataContext = user;
             }
+            MainFrame.Navigate(new EditProfilePage());
+
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
