@@ -238,12 +238,8 @@ VALUES
 -- ✅ Chèn dữ liệu mẫu vào bảng Products
 INSERT INTO Products (ProductName, CategoryID, QuantityInStock, Price,Avatar, SupplierID, Description) 
 VALUES 
-(N'Laptop Dell XPS', 1, 50, 15,'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Product\dell-xps-13-9340-ultra-5-xpsu5934w1-1-750x500.jpg', 1, N'Laptop Dell XPS 13, màn hình 13 inch, core i7'),
-(N'Laptop Acer Nito', 1, 50, 15,'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Product\67823_hacom_acer_nitro_5_an515_58_14.jpeg', 1, N'Laptop Acer Nitro 5 , màn hình 15 inch, core i7'),
-(N'Máy giặt Samsung', 3, 30, 500,'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Product\', 1, N'Máy giặt Samsung 8kg, cửa trước'),
-(N'Máy giặt LG', 3, 30, 500,'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Product\', 1, N'Máy giặt Samsung 8kg, cửa trước'),
-(N'Winner X', 10, 30, 5000,'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Product\g3ulKhFwiWtQsCpT69qI.png', 1, N'xe may chay bang xang'),
-(N'Sh 150i', 10, 30, 8000,'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Product\Sh125i.png', 1, N'xe tay ga');
+(N'Laptop Dell XPS', 1, 50, 15,'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Product\250_21483_dell_xps_14_9440_platinum__logo.jpg', 1, N'Laptop Dell XPS 13, màn hình 13 inch, core i7'),
+(N'Máy giặt Samsung', 3, 30, 500,'D:\FPTU\Kì5\PRN212\AssignmentPRN\AssignmentPRN_SLN\DataAccess\Images\Product\Untitled-1-112.jpg', 1, N'Máy giặt Samsung 8kg, cửa trước')
 
 
 

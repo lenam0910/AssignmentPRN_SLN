@@ -41,7 +41,7 @@
                         <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="10" Margin="5"
                     Padding="10" Background="White">
                             <StackPanel Orientation="Horizontal" Margin="5">
-                                <Image Source="{Binding Avatar}" Width="100" Height="100" Margin="0,0,10,0" 
+                                <Image Source="{Binding Product.Avatar}" Width="100" Height="100" Margin="0,0,10,0" 
                            Stretch="UniformToFill" ClipToBounds="True">
                                     <Image.Style>
                                         <Style TargetType="Image">
